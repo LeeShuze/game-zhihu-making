@@ -20,6 +20,8 @@
     panel.hidden = false;
     settingsBtn?.setAttribute("aria-expanded", "true");
     refreshSaveList();
+    refreshProgressList();
+    syncAiUI();
     syncSoundUI();
     syncDisplayUI();
   }
@@ -47,6 +49,86 @@
       pane.hidden = pane.dataset.settingsPane !== tab;
     });
     if (tab === "save") refreshSaveList();
+    if (tab === "progress") refreshProgressList();
+    if (tab === "ai") syncAiUI();
+  }
+
+  function refreshProgressList() {
+    const list = document.getElementById("progressNodeList");
+    if (!list) return;
+    const nodes = window.Story?.listProgressNodes?.() || [];
+    const curIdx = window.Story?.getBeatIndex?.() ?? 0;
+    const farIdx = window.Story?.getFarthestBeatIndex?.() ?? 0;
+    if (!nodes.length) {
+      list.innerHTML = `<p class="save-slot-summary">暂无进度节点。开始游戏后会出现。</p>`;
+      return;
+    }
+    const currentNode = [...nodes].filter((n) => n.index <= curIdx).pop();
+    list.innerHTML = nodes
+      .map((node) => {
+        const locked = node.index > farIdx;
+        const isCur = currentNode && currentNode.index === node.index;
+        const canBack = !locked && node.index < curIdx;
+        const canFwd = !locked && node.index > curIdx && node.index <= farIdx;
+        return `
+          <article class="progress-node ${isCur ? "is-current" : ""} ${locked ? "is-locked" : ""}" data-node-index="${node.index}">
+            <p class="progress-node-title">${escapeHtml(node.title)}</p>
+            <div class="progress-node-actions">
+              <button type="button" data-progress-act="back" data-index="${node.index}" ${canBack ? "" : "disabled"}>回退</button>
+              <button type="button" data-progress-act="fwd" data-index="${node.index}" ${canFwd ? "" : "disabled"}>快进</button>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+  }
+
+  function syncAiUI() {
+    const cfg = window.GalAI?.getConfig?.() || window.GalAI?.DEFAULTS || {};
+    const enabled = document.getElementById("aiEnabled");
+    const endpoint = document.getElementById("aiEndpoint");
+    const model = document.getElementById("aiModel");
+    const key = document.getElementById("aiApiKey");
+    const hint = document.getElementById("aiHint");
+    if (enabled) enabled.checked = !!cfg.enabled;
+    if (endpoint) {
+      endpoint.value =
+        cfg.endpoint ||
+        window.GalAI?.DEFAULTS?.endpoint ||
+        "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
+    }
+    if (model) model.value = cfg.model || "qwen-plus";
+    if (key) key.value = cfg.apiKey || "";
+    if (hint) {
+      const err = window.GalAI?.getLastError?.();
+      hint.textContent = err
+        ? `上次错误：${err}`
+        : "国内推荐：阿里云百炼地址 + 模型 qwen-plus；可只填到 /v1，会自动补 /chat/completions";
+    }
+  }
+
+  function saveAiSettings() {
+    const cfg = window.GalAI?.setConfig?.({
+      enabled: !!document.getElementById("aiEnabled")?.checked,
+      endpoint: document.getElementById("aiEndpoint")?.value?.trim() || "",
+      model: document.getElementById("aiModel")?.value?.trim() || "",
+      apiKey: document.getElementById("aiApiKey")?.value?.trim() || "",
+    });
+    syncAiUI();
+    toast(
+      cfg?.enabled && cfg?.apiKey
+        ? "AI 设置已保存"
+        : "已保存（需勾选启用并填写 Key）"
+    );
+  }
+
+  async function testAiConnection() {
+    saveAiSettings();
+    toast("正在测试…");
+    const result = await window.GalAI?.testConnection?.();
+    syncAiUI();
+    if (result?.ok) toast("连接成功");
+    else toast(`连接失败：${result?.error || "未知错误"}`);
   }
 
   function refreshSaveList() {
@@ -209,6 +291,21 @@
       const btn = e.target.closest("[data-save-act]");
       if (!btn || btn.disabled) return;
       onSaveAction(btn.dataset.saveAct, Number(btn.dataset.slot));
+    });
+
+    document.getElementById("progressNodeList")?.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-progress-act]");
+      if (!btn || btn.disabled) return;
+      const index = Number(btn.dataset.index);
+      close();
+      const ok = await window.Story?.jumpTo?.(index);
+      if (!ok) toast("无法跳转到该节点");
+      else toast(btn.dataset.progressAct === "back" ? "已回退" : "已快进");
+    });
+
+    document.getElementById("aiSaveBtn")?.addEventListener("click", saveAiSettings);
+    document.getElementById("aiTestBtn")?.addEventListener("click", () => {
+      testAiConnection();
     });
 
     panel.querySelectorAll("[data-vol]").forEach((input) => {

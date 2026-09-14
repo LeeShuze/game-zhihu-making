@@ -20,6 +20,7 @@ window.STORY_CH17_19 = {
       type: "narration",
       text: "我一路往下，看到了很多熟悉又陌生的诡异。\n有寻亲路上惨死的男孩，有被校园霸凌致死的少年。\n我选择一一开解他们，并宽慰了他们。\n……",
       clearSprites: true,
+      progress: "§16 中层开解",
     },
     { type: "scene", scene: "floor30_living" },
     {
@@ -205,6 +206,33 @@ window.STORY_CH17_19 = {
       type: "narration",
       text: "正是红姐和俊哥。\n从一开始，一个唱红脸，一个唱白脸，试图博得玩家们的信任。",
       clearSprites: true,
+    },
+    {
+      type: "choice",
+      id: "branch_floor09",
+      progress: "§18 岔路 · 九层陷阱",
+      prompt: "红姐命令你交出全部拜访卡片。你打算——",
+      slots: [
+        { side: "left", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
+        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+      ],
+      options: [
+        {
+          id: "canon",
+          label: "解开外套，掏出家人给的菜刀反杀。",
+          canon: true,
+        },
+        {
+          id: "hog_surrender",
+          label: "把卡片交出去求饶。",
+          ending: "hog_slaughter",
+        },
+        {
+          id: "hog_barehand",
+          label: "空着手硬刚。",
+          ending: "hog_slaughter",
+        },
+      ],
     },
     {
       type: "narration",

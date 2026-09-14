@@ -107,6 +107,11 @@
         return;
       }
 
+      if (action === "progress") {
+        window.SettingsUI?.open?.("progress");
+        return;
+      }
+
       if (action === "skip") {
         window.Story?.skipToggle?.();
         syncToggles();

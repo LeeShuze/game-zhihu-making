@@ -68,6 +68,7 @@ window.STORY_CH07_12 = {
       unlock: "home",
       exploreScene: "master_bedroom",
       hint: "自由探索中。在主卧点击思思可继续剧情（进入第二天）。",
+      progress: "§7 第一夜之后",
       resumeNpc: {
         scene: "master_bedroom",
         name: "思思",
@@ -530,6 +531,7 @@ window.STORY_CH07_12 = {
       unlock: "home",
       exploreScene: "floor30_living",
       hint: "自由探索中。在客厅点击断头可继续剧情（领取家人馈赠）。",
+      progress: "§12 出门前",
       resumeNpc: {
         scene: "floor30_living",
         name: "断头",
@@ -679,6 +681,7 @@ window.STORY_CH07_12 = {
       unlock: "visit",
       exploreScene: "floor30_outside",
       hint: "自由探索中。下到 29 层门外，将鼠标移到门上显示「敲门」后点击可继续。",
+      progress: "§13 拜访邻居",
       resumeNpc: {
         scene: "floor29_outside",
         hotspotId: "aptDoor",

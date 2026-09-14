@@ -436,6 +436,7 @@ window.STORY_CH20_END = {
       type: "narration",
       text: "万里迢迢，唯念君安。\n\n——「幸福之家」· 完 ——",
       clearSprites: true,
+      progress: "结局 · 唯念君安",
     },
     { type: "horror", set: 0 },
   ],

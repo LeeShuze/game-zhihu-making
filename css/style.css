@@ -905,3 +905,143 @@ body[data-aspect="fit"] .stage {
   flex: 1 1 auto;
   line-height: 1.35;
 }
+
+
+.progress-node-list {
+  display: grid;
+  gap: 8px;
+  max-height: min(52vh, 420px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.progress-node {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.progress-node.is-current {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.progress-node.is-locked {
+  opacity: 0.45;
+}
+
+.progress-node-title {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.progress-node-actions {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.progress-node-actions button {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  color: #f2f2f2;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.progress-node-actions button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ai-settings {
+  display: grid;
+  gap: 12px;
+  max-width: 460px;
+}
+
+.ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+
+.ai-field {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.ai-field input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.28);
+  color: #f5f5f5;
+  font: inherit;
+}
+
+.story-fail {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 10, 14, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.story-fail[hidden] {
+  display: none !important;
+}
+
+.story-fail-card {
+  width: min(440px, 86%);
+  padding: 22px 22px 18px;
+  border-radius: 12px;
+  background: rgba(22, 24, 30, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  color: #f5f5f5;
+}
+
+.story-fail-kicker {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #c9a0a0;
+}
+
+.story-fail-card h2 {
+  margin: 0 0 10px;
+  font-size: 22px;
+}
+
+.story-fail-card p#storyFailText {
+  margin: 0 0 16px;
+  white-space: pre-wrap;
+  line-height: 1.65;
+  color: rgba(245, 245, 245, 0.88);
+  font-size: 14px;
+}

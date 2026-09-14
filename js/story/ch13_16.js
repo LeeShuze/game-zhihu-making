@@ -23,6 +23,7 @@ window.STORY_CH13_16 = {
       type: "narration",
       text: "刚抵达 29 层。\n通过群消息得知，这层的玩家早就嘎了。",
       clearSprites: true,
+      progress: "§13 29 层",
     },
     { type: "scene", scene: "floor29_door_open" },
     {

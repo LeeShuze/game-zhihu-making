@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>幸福之家</title>
-    <link rel="stylesheet" href="css/style.css?v=npc2" />
+    <link rel="stylesheet" href="css/style.css?v=choiceAI2" />
     <link rel="stylesheet" href="css/dialogue.css?v=body34g" />
   </head>
   <body data-aspect="16-9" style="--aspect-w: 16; --aspect-h: 9">
@@ -68,6 +68,7 @@
       <nav class="vn-menu" id="vnMenu" aria-label="游戏菜单">
         <button type="button" class="vn-menu-btn" data-action="back">回退</button>
         <button type="button" class="vn-menu-btn" data-action="history">历史</button>
+        <button type="button" class="vn-menu-btn" data-action="progress">进度</button>
         <button type="button" class="vn-menu-btn" data-action="skip">跳过</button>
         <button type="button" class="vn-menu-btn" data-action="auto" aria-pressed="false">自动</button>
         <button type="button" class="vn-menu-btn" data-action="save">保存</button>
@@ -79,6 +80,8 @@
           <aside class="settings-nav" aria-label="设置分类">
             <p class="settings-nav-title" id="settingsTitle">设置</p>
             <button type="button" class="settings-nav-btn is-active" data-settings-tab="save" aria-selected="true">存档</button>
+            <button type="button" class="settings-nav-btn" data-settings-tab="progress" aria-selected="false">进度</button>
+            <button type="button" class="settings-nav-btn" data-settings-tab="ai" aria-selected="false">AI</button>
             <button type="button" class="settings-nav-btn" data-settings-tab="sound" aria-selected="false">声音</button>
             <button type="button" class="settings-nav-btn" data-settings-tab="display" aria-selected="false">画面</button>
             <button type="button" class="settings-nav-btn settings-nav-danger" data-settings-tab="title" aria-selected="false">返回主菜单</button>
@@ -93,6 +96,44 @@
                 <p>选择槽位保存或读取进度</p>
               </header>
               <div class="save-slot-list" id="saveSlotList"></div>
+            </section>
+
+            <section class="settings-pane" data-settings-pane="progress" hidden>
+              <header class="settings-pane-head">
+                <h2>进度</h2>
+                <p>回退到已过节点，或快进到曾到达的最远节点</p>
+              </header>
+              <div class="progress-node-list" id="progressNodeList"></div>
+            </section>
+
+            <section class="settings-pane" data-settings-pane="ai" hidden>
+              <header class="settings-pane-head">
+                <h2>AI 支线</h2>
+                <p>固定失败结局；偏离选项的过程可由 AI 生成。未填密钥时用本地备用失败线。</p>
+              </header>
+              <div class="ai-settings">
+                <label class="sound-mute">
+                  <input type="checkbox" id="aiEnabled" />
+                  <span>启用 AI 生成失败过程</span>
+                </label>
+                <label class="ai-field">
+                  <span>接口地址</span>
+                  <input type="text" id="aiEndpoint" placeholder="https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" />
+                </label>
+                <label class="ai-field">
+                  <span>模型</span>
+                  <input type="text" id="aiModel" placeholder="qwen-plus" />
+                </label>
+                <label class="ai-field">
+                  <span>API Key</span>
+                  <input type="password" id="aiApiKey" placeholder="sk-..." autocomplete="off" />
+                </label>
+                <div class="ai-actions">
+                  <button type="button" class="settings-action-btn" id="aiSaveBtn">保存 AI 设置</button>
+                  <button type="button" class="settings-action-btn" id="aiTestBtn">测试连接</button>
+                </div>
+                <p class="ai-hint" id="aiHint">国内推荐：阿里云百炼地址 + 模型 qwen-plus</p>
+              </div>
             </section>
 
             <section class="settings-pane" data-settings-pane="sound" hidden>
@@ -210,21 +251,40 @@
           </div>
         </div>
       </div>
+      <div class="story-confirm" id="storyChoicePanel" hidden>
+        <div class="story-confirm-dock" role="dialog" aria-modal="true" aria-labelledby="storyChoicePrompt">
+          <div class="story-confirm-dialog">
+            <p class="story-confirm-text" id="storyChoicePrompt">你打算怎么做？</p>
+          </div>
+          <div class="story-confirm-choices" id="storyChoiceList" role="group" aria-label="剧情选项"></div>
+        </div>
+      </div>
+
+      <div class="story-fail" id="storyFail" hidden>
+        <div class="story-fail-card" role="dialog" aria-modal="true" aria-labelledby="storyFailTitle">
+          <p class="story-fail-kicker">Bad End</p>
+          <h2 id="storyFailTitle">存活失败</h2>
+          <p id="storyFailText"></p>
+          <button type="button" class="settings-action-btn" id="storyFailRetry">回到岔路</button>
+        </div>
+      </div>
     </div>
 
     <script src="js/scenes.js?v=elevator2"></script>
-    <script src="js/dialogue.js?v=body34g"></script>
-    <script src="js/story/ch01_06.js"></script>
-    <script src="js/story/ch07_12.js?v=npc2"></script>
-    <script src="js/story/ch13_16.js"></script>
-    <script src="js/story/ch17_19.js"></script>
-    <script src="js/story/ch20_end.js"></script>
-    <script src="js/story.js"></script>
+    <script src="js/dialogue.js?v=choiceAI1"></script>
+    <script src="js/story/endings.js?v=choiceAI1"></script>
+    <script src="js/story/ch01_06.js?v=choiceAI1"></script>
+    <script src="js/story/ch07_12.js?v=choiceAI1"></script>
+    <script src="js/story/ch13_16.js?v=choiceAI1"></script>
+    <script src="js/story/ch17_19.js?v=choiceAI1"></script>
+    <script src="js/story/ch20_end.js?v=choiceAI1"></script>
+    <script src="js/ai.js?v=choiceAI2"></script>
+    <script src="js/story.js?v=choiceAI2"></script>
     <script src="js/horror.js"></script>
     <script src="js/save.js"></script>
     <script src="js/audio.js"></script>
-    <script src="js/menu.js"></script>
-    <script src="js/settings.js"></script>
+    <script src="js/menu.js?v=choiceAI1"></script>
+    <script src="js/settings.js?v=choiceAI2"></script>
     <script src="js/game.js?v=npc2"></script>
   </body>
 </html>

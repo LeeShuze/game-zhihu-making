@@ -4,12 +4,15 @@
   let currentStory = null;
   let lastDialogueIndex = null;
   let cancelToken = { cancelled: false };
+  let farthestBeatIndex = 0;
   /** 剧情循环内等待的「回退到上一对话框」请求 */
   let pendingBack = false;
 
   function isDialogueBeat(beat) {
     if (!beat || !beat.text) return false;
-    return !["scene", "variant", "wait", "horror", "pause"].includes(beat.type);
+    return !["scene", "variant", "wait", "horror", "pause", "choice"].includes(
+      beat.type
+    );
   }
 
   /** 合并多章为一条时间线，保证跨章回退可用 */
@@ -249,6 +252,46 @@
     if (kind === "wait") {
       await wait(beat.ms || 400);
     }
+
+    if (kind === "choice") {
+      return handleChoice(beat);
+    }
+  }
+
+  function recentContext(limit = 4) {
+    const items = window.GalDialogue?.getHistory?.() || [];
+    return items
+      .slice(-limit)
+      .map((it) => `${it.speaker || "旁白"}：${it.text || ""}`)
+      .join(" / ")
+      .slice(0, 400);
+  }
+
+  function hideFailPanel() {
+    const el = document.getElementById("storyFail");
+    if (el) el.hidden = true;
+  }
+
+  function waitFailRetry(ending) {
+    const el = document.getElementById("storyFail");
+    const title = document.getElementById("storyFailTitle");
+    const text = document.getElementById("storyFailText");
+    const btn = document.getElementById("storyFailRetry");
+    if (!el || !btn) return Promise.resolve();
+    if (title) title.textContent = ending.title || "存活失败";
+    if (text) {
+      text.textContent = [ending.text, ending.system].filter(Boolean).join("\n\n");
+    }
+    el.hidden = false;
+    return new Promise((resolve) => {
+      const onClick = (e) => {
+        e.stopPropagation();
+        btn.removeEventListener("click", onClick);
+        el.hidden = true;
+        resolve();
+      };
+      btn.addEventListener("click", onClick);
+    });
   }
 
   async function runDialogueBeat(beat, { recordHistory = true } = {}) {
@@ -267,6 +310,62 @@
     );
   }
 
+  async function playGeneratedBeats(beats, token) {
+    for (const b of beats || []) {
+      if (token?.cancelled) return;
+      if (b.type === "horror") {
+        window.HorrorMeter?.applyBeat?.(b);
+        await wait(160);
+        continue;
+      }
+      if (b.text) await runDialogueBeat(b);
+    }
+  }
+
+  async function handleChoice(beat) {
+    const option = await window.GalDialogue?.showChoices?.({
+      prompt: beat.prompt,
+      options: beat.options,
+      slots: beat.slots,
+    });
+    if (!option) return "choice-retry";
+    if (option.canon) return;
+
+    const ending =
+      window.STORY_ENDINGS?.[option.ending] || window.STORY_ENDINGS.sisi_kill;
+    window.MenuUI?.toast?.("偏离原剧情，生成短失败线…");
+    const gen = await window.GalAI?.generateFailBeats?.({
+      prompt: beat.prompt,
+      optionId: option.id,
+      optionLabel: option.label,
+      ending,
+      context: recentContext(),
+    });
+    if (gen?.source === "ai") {
+      window.MenuUI?.toast?.("AI 已生成失败过程");
+    } else {
+      const why = gen?.error || window.GalAI?.getLastError?.() || "未知原因";
+      window.MenuUI?.toast?.(`AI 不可用：${why}`);
+    }
+    await playGeneratedBeats(gen?.beats || [], cancelToken);
+    if (ending.horror != null) {
+      window.HorrorMeter?.set?.(ending.horror, { animate: true });
+    }
+    if (ending.text) {
+      await runDialogueBeat({
+        type: "narration",
+        text: ending.text,
+        clearSprites: true,
+      });
+    }
+    if (ending.system) {
+      await runDialogueBeat({ type: "system", text: ending.system });
+    }
+    await waitFailRetry(ending);
+    window.GalDialogue?.hideChoices?.();
+    return "choice-retry";
+  }
+
   async function playStory(
     story,
     { fromIndex = 0, replay = false, resetHorror = true, unlockOnEnd = true } = {}
@@ -282,6 +381,7 @@
     beatIndex = Math.max(0, fromIndex);
     if (fromIndex === 0 && !replay && resetHorror) {
       window.HorrorMeter?.set?.(0, { animate: false });
+      farthestBeatIndex = 0;
     } else if (fromIndex > 0) {
       window.HorrorMeter?.set?.(computeHorrorUpTo(fromIndex - 1), { animate: false });
     }
@@ -305,7 +405,14 @@
       if (!isDialogueBeat(beat)) {
         const metaResult = await runMetaBeat(beat);
         if (token.cancelled) break;
-        if (metaResult === "pause") break;
+        if (metaResult === "pause") {
+          farthestBeatIndex = Math.max(farthestBeatIndex, beatIndex);
+          break;
+        }
+        if (metaResult === "choice-retry") {
+          farthestBeatIndex = Math.max(farthestBeatIndex, beatIndex);
+          continue;
+        }
         // 换场景 / 等 meta 过程中点了回退：立刻回到上一对话框并还原场景
         if (pendingBack) {
           pendingBack = false;
@@ -315,6 +422,7 @@
             continue;
           }
         }
+        farthestBeatIndex = Math.max(farthestBeatIndex, beatIndex);
         beatIndex += 1;
         continue;
       }
@@ -337,6 +445,7 @@
       }
 
       beatIndex += 1;
+      farthestBeatIndex = Math.max(farthestBeatIndex, beatIndex);
     }
 
     playing = false;
@@ -355,6 +464,8 @@
     cancelToken.cancelled = true;
     pendingBack = false;
     window.GalDialogue?.setSkipMode?.(false);
+    window.GalDialogue?.hideChoices?.();
+    hideFailPanel();
     playing = false;
   }
 
@@ -368,6 +479,7 @@
       sceneId: window.Game?.getCurrentScene?.() || null,
       livingVariant: window.Game?.getVariant?.("floor30_living") || "dirty",
       horror: window.HorrorMeter?.get?.() ?? 0,
+      farthestBeatIndex,
       pause: pauseState.active
         ? {
             checkpointId: pauseState.checkpointId,
@@ -401,6 +513,10 @@
     const resolved = resolveStoryById(data.storyId);
     const story = resolved?.story;
     currentStory = story;
+    farthestBeatIndex = Math.max(
+      Number(data.farthestBeatIndex) || 0,
+      Number(data.beatIndex) || 0
+    );
 
     if (data.pause?.resumeFromIndex != null && story) {
       pauseState = {
@@ -469,6 +585,43 @@
     return true;
   }
 
+  function listProgressNodes() {
+    const story = currentStory || buildMainStory();
+    if (!story?.beats) return [];
+    return story.beats
+      .map((b, index) =>
+        b.progress
+          ? {
+              index,
+              id: b.id || `node-${index}`,
+              title: b.progress,
+            }
+          : null
+      )
+      .filter(Boolean);
+  }
+
+  async function jumpTo(index) {
+    const story = currentStory || buildMainStory();
+    if (!story?.beats?.length) return false;
+    const dest = Math.max(0, Math.min(Number(index) || 0, story.beats.length - 1));
+    if (dest > farthestBeatIndex) {
+      window.MenuUI?.toast?.("尚未到达该节点");
+      return false;
+    }
+    stopStory();
+    window.GalDialogue?.hideChoices?.();
+    hideFailPanel();
+    clearPause();
+    window.Game?.setExplorationEnabled?.(false);
+    await playStory(story, {
+      fromIndex: dest,
+      resetHorror: false,
+      unlockOnEnd: true,
+    });
+    return true;
+  }
+
   window.Story = {
     playStory,
     stopStory,
@@ -478,6 +631,9 @@
     isPaused: () => pauseState.active,
     getPauseState: () => ({ ...pauseState }),
     getBeatIndex: () => beatIndex,
+    getFarthestBeatIndex: () => farthestBeatIndex,
+    listProgressNodes,
+    jumpTo,
     getSaveData,
     loadSaveData,
     back,

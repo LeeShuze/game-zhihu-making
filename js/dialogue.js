@@ -255,6 +255,62 @@
     });
   }
 
+  const CHOICE_ICON = `<span class="story-choice-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="18" height="18">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6" />
+      <path d="M7.5 10.2c0-2.1 1.9-3.7 4.5-3.7s4.5 1.6 4.5 3.7c0 1.5-1 2.7-2.5 3.3v1.1h-4v-1.1c-1.5-.6-2.5-1.8-2.5-3.3z" fill="currentColor"/>
+      <circle cx="12" cy="17.2" r="1" fill="currentColor" />
+    </svg>
+  </span>`;
+
+  function showChoices({ prompt, options, slots }) {
+    const panel = document.getElementById("storyChoicePanel");
+    const promptEl = document.getElementById("storyChoicePrompt");
+    const list = document.getElementById("storyChoiceList");
+    if (!panel || !list) return Promise.resolve(null);
+
+    window.GalDialogue?.setSkipMode?.(false);
+    window.GalDialogue?.setAutoMode?.(false);
+    window.MenuUI?.syncToggles?.();
+
+    const stage = document.getElementById("stage");
+    const ui = stage ? ensureUI(stage) : null;
+    if (ui && slots?.length) {
+      ui.layer.hidden = false;
+      ui.layer.classList.add("is-active");
+      setSlots(ui, slots, null);
+    }
+
+    promptEl.textContent = prompt || "你打算怎么做？";
+    list.innerHTML = "";
+    panel.hidden = false;
+
+    return new Promise((resolve) => {
+      const finish = (opt) => {
+        panel.hidden = true;
+        list.innerHTML = "";
+        resolve(opt);
+      };
+      (options || []).forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "story-choice";
+        btn.innerHTML = `${CHOICE_ICON}<span class="story-choice-label"></span>`;
+        btn.querySelector(".story-choice-label").textContent = opt.label;
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          finish(opt);
+        });
+        list.appendChild(btn);
+      });
+    });
+  }
+
+  function hideChoices() {
+    const panel = document.getElementById("storyChoicePanel");
+    if (panel) panel.hidden = true;
+  }
+
   function showBeat(beat, opts = {}) {
     if (!beat) return Promise.resolve("done");
     if (beat.lines) {
@@ -284,6 +340,8 @@
   window.GalDialogue = {
     playDialogue,
     showBeat,
+    showChoices,
+    hideChoices,
     advance: () => activeSession?.advance?.(),
     back: () => activeSession?.back?.() || false,
     hasSession: () => !!activeSession && !activeSession.locked,

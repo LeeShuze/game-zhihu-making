@@ -35,6 +35,7 @@ window.STORY_CH01_06 = {
       type: "narration",
       text: "车祸死后，一阵白光闪过，我来到一栋大楼前。\n耳边响起诡异的机械音。",
       clearSprites: true,
+      progress: "§1 入局",
     },
     { type: "horror", set: 8 },
     {
@@ -157,6 +158,7 @@ window.STORY_CH01_06 = {
       unlock: "outside",
       exploreScene: "downstairs",
       hint: "自由探索中。乘电梯到 30 层，将鼠标移到门上显示「敲门」后点击可继续。",
+      progress: "§2 选房 / 敲门",
       resumeNpc: {
         scene: "floor30_outside",
         hotspotId: "aptDoor",
@@ -200,6 +202,33 @@ window.STORY_CH01_06 = {
       text: "小孩阴森一笑，猛地朝我扑来，冰凉的小手掐住了我的脖子。",
     },
     { type: "horror", set: 28 },
+    {
+      type: "choice",
+      id: "branch_sisi_strangle",
+      progress: "§3 岔路 · 见思思",
+      prompt: "她掐住了你的脖子。你打算——",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_blood_enter.png", name: "？？？" },
+        { side: "right", sprite: "assets/chars/ningnian_daily_front.png", name: "宁念" },
+      ],
+      options: [
+        {
+          id: "canon",
+          label: "顺势把她搂进怀里，摸到湿漉漉的裙子。",
+          canon: true,
+        },
+        {
+          id: "sisi_push",
+          label: "尖叫着把她推开。",
+          ending: "sisi_kill",
+        },
+        {
+          id: "sisi_fight",
+          label: "把她当怪物打回去。",
+          ending: "sisi_kill",
+        },
+      ],
+    },
     {
       type: "narration",
       text: "我顺势把她搂在怀里，摸到她裙子是湿漉漉的，立刻不满地说——",
@@ -352,6 +381,33 @@ window.STORY_CH01_06 = {
       ],
     },
     { type: "horror", set: 18 },
+    {
+      type: "choice",
+      id: "branch_boss_scold",
+      progress: "§4 岔路 · 断头登场",
+      prompt: "断头大 Boss 把思思打飞了。你接下来——",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "？？？" },
+      ],
+      options: [
+        {
+          id: "canon",
+          label: "冲上去护娃，顺手薅住他的腹肌认亲。",
+          canon: true,
+        },
+        {
+          id: "boss_kneel",
+          label: "立刻求饶，说自己不是这家人。",
+          ending: "boss_wrath",
+        },
+        {
+          id: "boss_insult",
+          label: "骂他是怪物、变态。",
+          ending: "boss_wrath",
+        },
+      ],
+    },
     {
       type: "narration",
       text: "我忍不了了，一骨碌从沙发上爬起来。\n本想给他一巴掌，手一滑——薅住了他的腹肌。啧，这手感，没忍住多摸了两把。",
