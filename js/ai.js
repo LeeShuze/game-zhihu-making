@@ -11,6 +11,7 @@
   };
 
   let lastError = "";
+  let skipUntilOk = false;
 
   function getConfig() {
     try {
@@ -119,7 +120,7 @@
     lastError = "";
     const endpoint = normalizeEndpoint(cfg.endpoint);
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 25000);
+    const timer = setTimeout(() => ctrl.abort(), 8000);
     try {
       const body = {
         model: cfg.model || DEFAULTS.model,
@@ -174,6 +175,9 @@
           data?.code ||
           rawText.slice(0, 160) ||
           `HTTP ${res.status}`;
+        if (/overdue|good standing|欠费|Access denied/i.test(msg)) {
+          skipUntilOk = true;
+        }
         throw new Error(msg);
       }
 
@@ -228,6 +232,10 @@
       lastError = "未填写 API Key";
       return { beats: local, source: "fallback", error: lastError };
     }
+    if (skipUntilOk) {
+      lastError = "账号异常（欠费/未开通），已改用本地失败线";
+      return { beats: local, source: "fallback", error: lastError };
+    }
     try {
       const raw = await chatCompletions(cfg, buildPrompt(payload));
       const beats = parseJsonBeats(raw);
@@ -251,6 +259,7 @@
     try {
       const raw = await chatCompletions(cfg, '只输出 JSON：{"ok":true}');
       lastError = "";
+      skipUntilOk = false;
       return { ok: true, preview: String(raw).slice(0, 120) };
     } catch (_) {
       return { ok: false, error: lastError || "测试失败" };

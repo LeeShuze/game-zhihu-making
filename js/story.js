@@ -270,6 +270,15 @@
   function hideFailPanel() {
     const el = document.getElementById("storyFail");
     if (el) el.hidden = true;
+    setGenerating(false);
+  }
+
+  function setGenerating(on, text) {
+    const el = document.getElementById("storyGenerating");
+    const label = document.getElementById("storyGeneratingText");
+    if (!el) return;
+    if (text && label) label.textContent = text;
+    el.hidden = !on;
   }
 
   function waitFailRetry(ending) {
@@ -284,12 +293,23 @@
     }
     el.hidden = false;
     return new Promise((resolve) => {
-      const onClick = (e) => {
-        e.stopPropagation();
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
         btn.removeEventListener("click", onClick);
+        clearInterval(poll);
         el.hidden = true;
         resolve();
       };
+      const onClick = (e) => {
+        e.stopPropagation();
+        finish();
+      };
+      // 「回退」在失败面板期间只会置 pendingBack；此处一并结束等待
+      const poll = setInterval(() => {
+        if (pendingBack || cancelToken.cancelled) finish();
+      }, 80);
       btn.addEventListener("click", onClick);
     });
   }
@@ -310,58 +330,128 @@
     );
   }
 
+  function restoreHorrorAtBeat(index) {
+    const i = Math.max(0, index == null ? beatIndex : index);
+    window.HorrorMeter?.set?.(computeHorrorUpTo(i), { animate: false });
+  }
+
   async function playGeneratedBeats(beats, token) {
     for (const b of beats || []) {
-      if (token?.cancelled) return;
+      if (token?.cancelled || pendingBack) return "back";
       if (b.type === "horror") {
         window.HorrorMeter?.applyBeat?.(b);
         await wait(160);
         continue;
       }
-      if (b.text) await runDialogueBeat(b);
+      if (b.text) {
+        const result = await runDialogueBeat(b);
+        if (result === "back" || pendingBack) return "back";
+      }
     }
   }
 
   async function handleChoice(beat) {
-    const option = await window.GalDialogue?.showChoices?.({
+    const token = cancelToken;
+    // 再次进入岔路时，惊悚值应对齐到该 choice beat（不含失败支线）
+    restoreHorrorAtBeat(beatIndex);
+
+    let option = null;
+    const choiceWait = window.GalDialogue?.showChoices?.({
       prompt: beat.prompt,
       options: beat.options,
       slots: beat.slots,
     });
-    if (!option) return "choice-retry";
+    // 岔路面板等待期间点「回退」：取消选项并交给主循环还原世界
+    if (choiceWait && typeof choiceWait.then === "function") {
+      option = await new Promise((resolve) => {
+        let settled = false;
+        const done = (v) => {
+          if (settled) return;
+          settled = true;
+          clearInterval(poll);
+          resolve(v);
+        };
+        choiceWait.then((v) => done(v));
+        const poll = setInterval(() => {
+          if (pendingBack || token.cancelled) {
+            window.GalDialogue?.hideChoices?.();
+            done(null);
+          }
+        }, 80);
+      });
+    }
+
+    if (pendingBack) {
+      // 保留 pendingBack，主循环 choice-retry 后走 handleBackToPrevDialogue
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+    if (!option || token.cancelled) {
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
     if (option.canon) return;
 
     const ending =
       window.STORY_ENDINGS?.[option.ending] || window.STORY_ENDINGS.sisi_kill;
-    window.MenuUI?.toast?.("偏离原剧情，生成短失败线…");
-    const gen = await window.GalAI?.generateFailBeats?.({
-      prompt: beat.prompt,
-      optionId: option.id,
-      optionLabel: option.label,
-      ending,
-      context: recentContext(),
-    });
-    if (gen?.source === "ai") {
-      window.MenuUI?.toast?.("AI 已生成失败过程");
-    } else {
-      const why = gen?.error || window.GalAI?.getLastError?.() || "未知原因";
-      window.MenuUI?.toast?.(`AI 不可用：${why}`);
+    window.GalDialogue?.showGenerating?.({ slots: beat.slots });
+    let gen;
+    try {
+      gen = await window.GalAI?.generateFailBeats?.({
+        prompt: beat.prompt,
+        optionId: option.id,
+        optionLabel: option.label,
+        ending,
+        context: recentContext(),
+      });
+    } finally {
+      window.GalDialogue?.hideGenerating?.();
     }
-    await playGeneratedBeats(gen?.beats || [], cancelToken);
+    if (token.cancelled || pendingBack) {
+      pendingBack = false;
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+    const beats =
+      gen?.beats?.length > 0
+        ? gen.beats
+        : window.STORY_BRANCH_FALLBACKS?.[option.id] || [];
+    const genResult = await playGeneratedBeats(beats, token);
+    if (token.cancelled || genResult === "back" || pendingBack) {
+      pendingBack = false;
+      restoreHorrorAtBeat(beatIndex);
+      window.GalDialogue?.hideChoices?.();
+      return "choice-retry";
+    }
     if (ending.horror != null) {
       window.HorrorMeter?.set?.(ending.horror, { animate: true });
     }
     if (ending.text) {
-      await runDialogueBeat({
+      const result = await runDialogueBeat({
         type: "narration",
         text: ending.text,
         clearSprites: true,
       });
+      if (result === "back" || pendingBack) {
+        pendingBack = false;
+        restoreHorrorAtBeat(beatIndex);
+        window.GalDialogue?.hideChoices?.();
+        return "choice-retry";
+      }
     }
     if (ending.system) {
-      await runDialogueBeat({ type: "system", text: ending.system });
+      const result = await runDialogueBeat({ type: "system", text: ending.system });
+      if (result === "back" || pendingBack) {
+        pendingBack = false;
+        restoreHorrorAtBeat(beatIndex);
+        window.GalDialogue?.hideChoices?.();
+        return "choice-retry";
+      }
     }
     await waitFailRetry(ending);
+    // 「回到岔路」或失败面板上的「回退」：回到 choice，并还原失败支线前的惊悚值
+    pendingBack = false;
+    restoreHorrorAtBeat(beatIndex);
     window.GalDialogue?.hideChoices?.();
     return "choice-retry";
   }
@@ -375,6 +465,7 @@
     cancelToken = { cancelled: false };
     const token = cancelToken;
     pendingBack = false;
+    hideFailPanel();
 
     playing = true;
     currentStory = story;
@@ -411,6 +502,19 @@
         }
         if (metaResult === "choice-retry") {
           farthestBeatIndex = Math.max(farthestBeatIndex, beatIndex);
+          // 失败支线可能把惊悚拉到 100；回到岔路时必须按时间线重算
+          restoreHorrorAtBeat(beatIndex);
+          // 在岔路上点「回退」：退到上一对话框（restoreWorldUpTo 会还原惊悚）
+          if (pendingBack) {
+            pendingBack = false;
+            const ok = await handleBackToPrevDialogue(beatIndex, {
+              popHistory: false,
+            });
+            if (ok) {
+              suppressHistoryOnce = true;
+              continue;
+            }
+          }
           continue;
         }
         // 换场景 / 等 meta 过程中点了回退：立刻回到上一对话框并还原场景

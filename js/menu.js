@@ -1,5 +1,5 @@
 (() => {
-  function toast(msg) {
+  function toast(msg, duration = 1400) {
     const stage = document.getElementById("stage");
     if (!stage) return;
     let el = stage.querySelector(".toast");
@@ -11,7 +11,8 @@
     el.textContent = msg;
     el.classList.add("is-on");
     clearTimeout(el._t);
-    el._t = setTimeout(() => el.classList.remove("is-on"), 1400);
+    const ms = Math.max(1400, Number(duration) || 1400);
+    el._t = setTimeout(() => el.classList.remove("is-on"), ms);
   }
 
   function renderHistory() {

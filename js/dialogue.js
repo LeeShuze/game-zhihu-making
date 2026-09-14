@@ -187,6 +187,7 @@
         ui.nameEl.textContent =
           line.speaker ||
           (type === "system" ? "系统" : type === "danmaku" ? "弹幕" : "");
+        ui.dialog.classList.remove("is-generating");
         ui.textEl.textContent = line.text || "";
         ui.dialog.classList.add("is-visible");
         if (recordHistory) pushHistory(line);
@@ -263,6 +264,8 @@
     </svg>
   </span>`;
 
+  let choiceFinish = null;
+
   function showChoices({ prompt, options, slots }) {
     const panel = document.getElementById("storyChoicePanel");
     const promptEl = document.getElementById("storyChoicePrompt");
@@ -286,11 +289,16 @@
     panel.hidden = false;
 
     return new Promise((resolve) => {
+      let settled = false;
       const finish = (opt) => {
+        if (settled) return;
+        settled = true;
+        choiceFinish = null;
         panel.hidden = true;
         list.innerHTML = "";
         resolve(opt);
       };
+      choiceFinish = () => finish(null);
       (options || []).forEach((opt) => {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -307,8 +315,52 @@
   }
 
   function hideChoices() {
+    if (choiceFinish) {
+      choiceFinish();
+      return;
+    }
     const panel = document.getElementById("storyChoicePanel");
     if (panel) panel.hidden = true;
+  }
+
+  /** 对话框内三点：等待 AI / 本地失败线生成，不可点击推进 */
+  function showGenerating({ slots } = {}) {
+    const stage = document.getElementById("stage");
+    if (!stage) return;
+    if (activeSession?.abort) activeSession.abort(true);
+    clearAutoTimer();
+
+    const ui = ensureUI(stage);
+    ui.layer.hidden = false;
+    ui.layer.classList.add("is-active");
+    if (slots?.length) setSlots(ui, slots, null);
+
+    ui.nameEl.textContent = "";
+    ui.dialog.classList.remove("is-system", "is-danmaku");
+    ui.dialog.classList.add("is-visible", "is-generating");
+    ui.textEl.innerHTML =
+      '<span class="vn-generating-dots" aria-label="正在生成"><i></i><i></i><i></i></span>';
+
+    const block = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    ui.advanceEl.onclick = block;
+    ui.dialog.onclick = (e) => e.stopPropagation();
+    ui.dialog.style.pointerEvents = "auto";
+  }
+
+  function hideGenerating() {
+    const stage = document.getElementById("stage");
+    if (!stage) return;
+    const layer = stage.querySelector(".vn-layer");
+    if (!layer) return;
+    const dialog = layer.querySelector(".vn-dialog");
+    const textEl = layer.querySelector(".vn-dialog-text");
+    if (dialog) dialog.classList.remove("is-generating");
+    if (textEl && dialog?.classList.contains("is-visible")) {
+      /* 留给后续 showBeat 覆盖正文 */
+    }
   }
 
   function showBeat(beat, opts = {}) {
@@ -342,6 +394,8 @@
     showBeat,
     showChoices,
     hideChoices,
+    showGenerating,
+    hideGenerating,
     advance: () => activeSession?.advance?.(),
     back: () => activeSession?.back?.() || false,
     hasSession: () => !!activeSession && !activeSession.locked,
