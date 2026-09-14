@@ -5,12 +5,236 @@
   let lastDialogueIndex = null;
   let cancelToken = { cancelled: false };
   let farthestBeatIndex = 0;
+  let playGen = 0;
   /** 剧情循环内等待的「回退到上一对话框」请求 */
   let pendingBack = false;
 
+  /** flavorChoice 选项后台预生成缓存：id -> { promise, result } */
+  const flavorOptCache = new Map();
+  /** 刚播完的旁支对白，供正史句回退时再走进去 */
+  let lastFlavorPlayback = null;
+
+  function flavorCacheKey(beat) {
+    return beat?.id || beat?.progress || "";
+  }
+
+  function flavorBeatIndex(beat, fallback) {
+    const beats = currentStory?.beats || [];
+    if (beat?.id) {
+      const hit = beats.findIndex((b) => b.id === beat.id && b.type === "flavorChoice");
+      if (hit >= 0) return hit;
+    }
+    if (typeof fallback === "number" && fallback >= 0) return fallback;
+    return beatIndex;
+  }
+
+  function flavorStoryContext(atIndex, limit = 12) {
+    const beats = currentStory?.beats || [];
+    const end = atIndex == null ? beatIndex : atIndex;
+    const bits = [];
+    for (let i = end - 1; i >= 0 && bits.length < limit; i -= 1) {
+      const b = beats[i];
+      if (!b?.text) continue;
+      if (
+        ["scene", "variant", "wait", "horror", "pause", "choice", "flavorChoice"].includes(
+          b.type
+        )
+      ) {
+        continue;
+      }
+      const who =
+        b.speaker ||
+        (b.type === "narration" ? "旁白" : b.type === "system" ? "系统" : b.type === "danmaku" ? "弹幕" : "");
+      bits.unshift(
+        `${who}：${String(b.text)
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, 90)}`
+      );
+    }
+    return bits.join("\n").slice(0, 1200);
+  }
+
+  function flavorAiPayload(beat, atIndex) {
+    const idx = flavorBeatIndex(beat, atIndex);
+    const slots = [...(beat.slots || []), ...(beat.extraSlots || [])];
+    return {
+      prompt: beat.prompt,
+      canon: beat.canon,
+      mode: beat.mode || "",
+      npcHint: beat.npcHint,
+      plotHint: beat.plotHint,
+      resumeHint: beat.resumeHint,
+      forbid: beat.forbid,
+      optionCount: beat.optionCount,
+      sampleLabel: beat.sampleLabel,
+      optionTopic: beat.optionTopic,
+      roundSpeakers: beat.roundSpeakers,
+      presentChars: slots.map((s) => s.name).filter(Boolean).join("、"),
+      sideHints: beat.sideHints,
+      sideIntents: beat.sideIntents,
+      sideOptions: beat.sideOptions,
+      context: flavorStoryContext(idx),
+    };
+  }
+
+  function shuffleCopy(list) {
+    const a = (list || []).slice();
+    for (let i = a.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  /** 四人各一句：立绘换成当前说话人在左、宁念在右，出场顺序当场打乱 */
+  function arrangeRoundReplies(beats, speakers, allSlots) {
+    const names = (speakers || []).filter(Boolean);
+    const ning = allSlots.find((s) => s.name === "宁念");
+    const byName = new Map();
+    for (const b of beats || []) {
+      if (b?.type !== "say" || !names.includes(b.speaker) || byName.has(b.speaker)) continue;
+      byName.set(b.speaker, b);
+    }
+    return shuffleCopy(names)
+      .map((name) => {
+        const line = byName.get(name);
+        if (!line?.text) return null;
+        const who = allSlots.find((s) => s.name === name);
+        const talkSlots = [
+          who ? { ...who, side: "left" } : null,
+          ning ? { ...ning, side: "right" } : null,
+        ].filter(Boolean);
+        return decorateFlavorBeats(
+          [
+            {
+              ...line,
+              side: "left",
+              sprite: who?.sprite || line.sprite,
+              slots: talkSlots,
+            },
+          ],
+          talkSlots
+        )[0];
+      })
+      .filter(Boolean);
+  }
+
+  function flavorAllSlots(beat) {
+    const seen = new Set();
+    const out = [];
+    for (const s of [...(beat.slots || []), ...(beat.extraSlots || [])]) {
+      if (!s?.name || seen.has(s.name)) continue;
+      seen.add(s.name);
+      out.push(s);
+    }
+    return out;
+  }
+
+  function canonFlavorOpt(beat) {
+    return {
+      id: beat.canon?.id || "canon",
+      label: beat.canon?.label || "继续。",
+      intent: beat.canon?.intent || "",
+      canon: true,
+    };
+  }
+
+  /** 开局/续播时后台预拉合流选项；一次只拉下一处，避免连打接口 */
+  function prefetchFlavorOptions(story, fromIndex = 0) {
+    if (!story?.beats?.length) return;
+    const start = Math.max(0, fromIndex | 0);
+    for (let i = start; i < story.beats.length; i += 1) {
+      const beat = story.beats[i];
+      if (beat?.type !== "flavorChoice") continue;
+      const key = flavorCacheKey(beat);
+      if (!key) continue;
+      const existing = flavorOptCache.get(key);
+      if (existing?.promise && !existing.result) return;
+      if (existing?.result?.source === "ai") continue;
+      const token = Symbol(key);
+      const payload = flavorAiPayload(beat, i);
+      const promise = Promise.resolve()
+        .then(() => window.GalAI?.generateFlavorOptions?.(payload))
+        .then((gen) => {
+          const cur = flavorOptCache.get(key);
+          if (cur?.token !== token) return gen;
+          const result =
+            gen?.source === "ai" && gen.options?.length
+              ? {
+                  ok: true,
+                  source: "ai",
+                  canonLabel: beat.canon?.label,
+                  options: gen.options,
+                  _canon: canonFlavorOpt(beat),
+                  error: "",
+                }
+              : {
+                  ok: false,
+                  source: "error",
+                  canonLabel: beat.canon?.label,
+                  options: [],
+                  _canon: canonFlavorOpt(beat),
+                  error: gen?.error || window.GalAI?.getLastError?.() || "预生成失败",
+                };
+          flavorOptCache.set(key, { promise, result, token });
+          return result;
+        })
+        .catch((err) => {
+          const cur = flavorOptCache.get(key);
+          if (cur?.token !== token) return null;
+          const result = {
+            ok: false,
+            source: "error",
+            options: [],
+            _canon: canonFlavorOpt(beat),
+            error: err?.message || window.GalAI?.getLastError?.() || "预生成失败",
+          };
+          flavorOptCache.set(key, { promise, result, token });
+          return result;
+        });
+      flavorOptCache.set(key, { promise, result: null, token });
+      break;
+    }
+  }
+
+  function clearFlavorOptCache() {
+    flavorOptCache.clear();
+  }
+
+  async function resolveFlavorOptions(beat, { allowWait = true, forceRetry = false } = {}) {
+    const key = flavorCacheKey(beat);
+    const fail = {
+      ok: false,
+      source: "error",
+      options: [],
+      _canon: canonFlavorOpt(beat),
+      error: window.GalAI?.getLastError?.() || "无 AI 选项",
+    };
+    if (!key) return fail;
+
+    if (forceRetry) flavorOptCache.delete(key);
+
+    let entry = flavorOptCache.get(key);
+    if (!entry || (entry.result && entry.result.source !== "ai")) {
+      if (entry?.result?.source === "error") flavorOptCache.delete(key);
+      prefetchFlavorOptions({ beats: [beat] }, 0);
+      entry = flavorOptCache.get(key);
+    }
+    if (entry?.result?.source === "ai") return entry.result;
+    if (allowWait && entry?.promise) {
+      try {
+        return (await entry.promise) || fail;
+      } catch (_) {
+        return fail;
+      }
+    }
+    return entry?.result || fail;
+  }
+
   function isDialogueBeat(beat) {
     if (!beat || !beat.text) return false;
-    return !["scene", "variant", "wait", "horror", "pause", "choice"].includes(
+    return !["scene", "variant", "wait", "horror", "pause", "choice", "flavorChoice"].includes(
       beat.type
     );
   }
@@ -181,6 +405,32 @@
     return null;
   }
 
+  /** 紧挨在当前句前面的选项（中间只允许 horror/wait） */
+  function findOwningChoiceIndex(fromIndex) {
+    if (!currentStory?.beats) return null;
+    for (let i = fromIndex - 1; i >= 0; i -= 1) {
+      const b = currentStory.beats[i];
+      if (!b) continue;
+      if (b.type === "flavorChoice" || b.type === "choice") return i;
+      if (b.type === "horror" || b.type === "wait") continue;
+      return null;
+    }
+    return null;
+  }
+
+  function rememberFlavorPlayback(index, lines, slots) {
+    const list = (lines || []).filter((b) => b && b.text).map((b) => ({ ...b }));
+    lastFlavorPlayback = list.length
+      ? { beatIndex: index, lines: list, slots: slots || null }
+      : null;
+  }
+
+  function clearFlavorPlaybackAt(index) {
+    if (index == null || lastFlavorPlayback?.beatIndex === index) {
+      lastFlavorPlayback = null;
+    }
+  }
+
   function computeHorrorUpTo(targetIndex) {
     if (!currentStory?.beats) return 0;
     let horror = 0;
@@ -285,6 +535,290 @@
     if (kind === "choice") {
       return handleChoice(beat);
     }
+
+    if (kind === "flavorChoice") {
+      return handleFlavorChoice(beat);
+    }
+  }
+
+  function decorateFlavorBeats(beats, slots) {
+    if (!slots?.length) return beats || [];
+    return (beats || []).map((b) => {
+      if (b.type !== "say" || b.sprite) return { ...b };
+      const hit = slots.find((s) => s.name && b.speaker && s.name === b.speaker);
+      if (!hit) return { ...b };
+      return { ...b, sprite: hit.sprite, side: hit.side || b.side };
+    });
+  }
+
+  function findHoldLine(beat) {
+    const slots = beat?.slots || [];
+    for (let i = beatIndex - 1; i >= 0; i -= 1) {
+      const b = currentStory?.beats?.[i];
+      if (!isDialogueBeat(b)) continue;
+      const named = (b.slots || slots).find((s) => s.name && s.name === b.speaker);
+      return {
+        speaker:
+          b.speaker ||
+          (b.type === "system" ? "系统" : b.type === "danmaku" ? "弹幕" : ""),
+        text: b.text,
+        type: b.type || "say",
+        slots: slots.length ? slots : b.slots,
+        sprite: b.sprite || named?.sprite,
+        side: b.side || named?.side,
+        focusSide: b.focusSide,
+      };
+    }
+    const last = (window.GalDialogue?.getHistory?.() || []).slice(-1)[0];
+    if (!last?.text) return null;
+    const named = slots.find((s) => s.name && s.name === last.speaker);
+    return {
+      speaker: last.speaker || "",
+      text: last.text,
+      type: last.type || "say",
+      slots,
+      sprite: named?.sprite,
+      side: named?.side,
+    };
+  }
+
+  async function waitChoicePick(beat) {
+    const token = cancelToken;
+    let option = null;
+    const above = beat.type === "flavorChoice" || beat._placement === "above";
+    const choiceWait = window.GalDialogue?.showChoices?.({
+      prompt: beat.prompt,
+      options: beat._resolvedOptions || beat.options,
+      slots: beat.slots,
+      placement: above ? "above" : "overlay",
+      holdLine: beat._holdLine || (above ? findHoldLine(beat) : null),
+    });
+    if (choiceWait && typeof choiceWait.then === "function") {
+      option = await new Promise((resolve) => {
+        let settled = false;
+        const done = (v) => {
+          if (settled) return;
+          settled = true;
+          clearInterval(poll);
+          resolve(v);
+        };
+        choiceWait.then((v) => done(v));
+        const poll = setInterval(() => {
+          if (pendingBack || token.cancelled) {
+            window.GalDialogue?.hideChoices?.();
+            done(null);
+          }
+        }, 80);
+      });
+    }
+    return option;
+  }
+
+  /**
+   * 原神式合流岔路：选项与旁支对白都只用 AI；失败不播本地稿。
+   */
+  async function handleFlavorChoice(beat) {
+    const token = cancelToken;
+    restoreHorrorAtBeat(beatIndex);
+
+    const holdLine = findHoldLine(beat);
+    const canAi = !!window.GalAI?.canFlavorAi?.();
+    const cached = flavorOptCache.get(flavorCacheKey(beat));
+    let gen;
+
+    if (cached?.result?.source === "ai") {
+      gen = cached.result;
+    } else {
+      window.GalDialogue?.holdDialogueLine?.(holdLine, { waiting: true });
+      try {
+        gen = await resolveFlavorOptions(beat, { allowWait: true });
+        if (canAi && gen?.source !== "ai") {
+          gen = await resolveFlavorOptions(beat, { allowWait: true, forceRetry: true });
+        }
+      } finally {
+        window.GalDialogue?.hideGenerating?.();
+      }
+    }
+    if (token.cancelled) {
+      pendingBack = false;
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+    if (pendingBack) {
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+
+    const canonOpt = canonFlavorOpt(beat);
+    const canonText = String(canonOpt.label || "").trim();
+    const qaOnly = beat.mode === "qa";
+    const farewellOnly = beat.mode === "farewell";
+    const oneReply = qaOnly || farewellOnly;
+    const roundOnly = beat.mode === "round";
+    const noCanon = oneReply || roundOnly || beat.mode === "chat" || beat.noCanon;
+    const wantN = Math.min(3, Math.max(1, Number(beat.optionCount) || 3));
+    const sides = (gen?.source === "ai" ? gen.options || [] : [])
+      .filter(
+        (o) => o && String(o.label || "").trim() && String(o.label).trim() !== canonText
+      )
+      .slice(0, wantN);
+    const options = noCanon ? sides : [canonOpt, ...sides];
+    if (!sides.length) {
+      const why = gen?.error || window.GalAI?.getLastError?.() || "AI 未生成旁支";
+      window.MenuUI?.toast?.(`旁支选项生成失败：${String(why).slice(0, 40)}`, 3600);
+      if (noCanon) return;
+    }
+
+    if (noCanon && !options.length) return;
+
+    const option = await waitChoicePick({
+      ...beat,
+      _resolvedOptions: options,
+      _holdLine: holdLine,
+      _placement: "above",
+    });
+
+    if (pendingBack) {
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+    if (!option || token.cancelled) {
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+    const allSlots = flavorAllSlots(beat);
+    const ningSlot = allSlots.find((s) => s.name === "宁念");
+    const spoken = decorateFlavorBeats(
+      [
+        {
+          type: "say",
+          speaker: "宁念",
+          text: String(option.label || "").trim(),
+          sprite: ningSlot?.sprite,
+          side: ningSlot?.side || "left",
+          slots: beat.slots,
+        },
+      ],
+      beat.slots
+    )[0];
+    if (!spoken?.text) {
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+
+    if (option.canon) {
+      const r = await playGeneratedQueue([spoken], token, {
+        slots: beat.slots,
+        remember: (lines) => rememberFlavorPlayback(beatIndex, lines, beat.slots),
+      });
+      if (r === "back" || pendingBack || token.cancelled) {
+        pendingBack = false;
+        restoreHorrorAtBeat(beatIndex);
+        return "choice-retry";
+      }
+      return;
+    }
+
+    const resumeHint =
+      beat.resumeHint ||
+      "之后立刻接回正史内心独白/下一句固定剧情，不要另起结局。";
+    const presentChars =
+      allSlots.map((s) => s.name).filter(Boolean).join("、") || "宁念、思思";
+
+    let openErr = "";
+    const openPromise = Promise.resolve(
+      window.GalAI?.generateFlavorSegment?.({
+        phase: "open",
+        mode: beat.mode || "",
+        spokenAlready: true,
+        prompt: beat.prompt,
+        optionLabel: option.label,
+        optionIntent: option.intent || option.label,
+        canonIntent: beat.canon?.intent || "",
+        resumeHint,
+        presentChars,
+        roundSpeakers: beat.roundSpeakers,
+        npcHint: beat.npcHint,
+        plotHint: beat.plotHint,
+        optionTopic: beat.optionTopic,
+        forbid: beat.forbid,
+        context: flavorStoryContext(beatIndex),
+      })
+    )
+      .then((v) => {
+        if (v?.source !== "ai" || !v.beats?.length) {
+          openErr = v?.error || window.GalAI?.getLastError?.() || "旁支对白未生成";
+          return [];
+        }
+        if (roundOnly) {
+          const replies = arrangeRoundReplies(
+            v.beats,
+            beat.roundSpeakers || [],
+            allSlots
+          );
+          if (!replies.length) {
+            openErr = "家人轮流回应未生成";
+            return [];
+          }
+          return replies;
+        }
+        const beats = decorateFlavorBeats(v.beats, allSlots);
+        if (!oneReply) return beats;
+        const npc = beats.find((b) => b.type === "say" && b.speaker && b.speaker !== "宁念");
+        if (!npc) return [];
+        const who = allSlots.find((s) => s.name === npc.speaker);
+        const ning = allSlots.find((s) => s.name === "宁念");
+        const talkSlots = [ning, who].filter(Boolean);
+        return decorateFlavorBeats([{ ...npc, slots: talkSlots.length ? talkSlots : beat.slots }], allSlots);
+      })
+      .catch(() => {
+        openErr = window.GalAI?.getLastError?.() || "旁支对白未生成";
+        return [];
+      });
+
+    const closePromise = oneReply || roundOnly
+      ? null
+      : openPromise.then((openBeats) => {
+      if (!openBeats.length) return [];
+      return Promise.resolve(
+        window.GalAI?.generateFlavorSegment?.({
+          phase: "close",
+          spokenAlready: true,
+          prompt: beat.prompt,
+          optionLabel: option.label,
+          optionIntent: option.intent || option.label,
+          canonIntent: beat.canon?.intent || "",
+          resumeHint,
+          presentChars,
+          npcHint: beat.npcHint,
+          plotHint: beat.plotHint,
+          optionTopic: beat.optionTopic,
+          forbid: beat.forbid,
+          previousBeats: [spoken, ...openBeats],
+          context: flavorStoryContext(beatIndex),
+        })
+      )
+        .then((v) => decorateFlavorBeats(v?.source === "ai" ? v.beats || [] : [], allSlots))
+        .catch(() => []);
+    });
+
+    const r = await playGeneratedQueue([spoken], token, {
+      moreBeats: openPromise,
+      tailBeats: closePromise,
+      slots: beat.slots,
+      remember: (lines) => rememberFlavorPlayback(beatIndex, lines, beat.slots),
+    });
+    if (r === "back" || pendingBack || token.cancelled) {
+      pendingBack = false;
+      restoreHorrorAtBeat(beatIndex);
+      return "choice-retry";
+    }
+    if (openErr) {
+      window.MenuUI?.toast?.(
+        `旁支对白生成失败，已接回正史：${String(openErr).slice(0, 36)}`,
+        3600
+      );
+    }
   }
 
   function recentContext(limit = 4) {
@@ -344,6 +878,7 @@
   }
 
   async function runDialogueBeat(beat, { recordHistory = true } = {}) {
+    const next = currentStory?.beats?.[beatIndex + 1];
     return window.GalDialogue?.showBeat?.(
       {
         text: beat.text,
@@ -355,7 +890,7 @@
         clearSprites: beat.clearSprites,
         focusSide: beat.focusSide,
       },
-      { recordHistory }
+      { recordHistory, keepVisible: next?.type === "flavorChoice" }
     );
   }
 
@@ -364,18 +899,104 @@
     window.HorrorMeter?.set?.(computeHorrorUpTo(i), { animate: false });
   }
 
-  async function playGeneratedBeats(beats, token) {
-    for (const b of beats || []) {
+  /**
+   * 旁支/失败线当成同一段对话播：段内可逐句回退；退过首句则返回 "back"（回到选项）。
+   * moreBeats：播完当前稿后接上的展开；tailBeats：展开之后的收束。
+   */
+  async function playGeneratedQueue(
+    beats,
+    token,
+    { moreBeats, tailBeats, slots, startAt = 0, replay = false, remember } = {}
+  ) {
+    const lines = (beats || []).filter((b) => b && b.text);
+    if (!replay) {
+      (beats || []).forEach((b) => {
+        if (b?.type === "horror") window.HorrorMeter?.applyBeat?.(b);
+      });
+    }
+
+    let fromIndex = lines.length
+      ? Math.min(Math.max(0, startAt), lines.length - 1)
+      : 0;
+    let isReplay = !!replay || startAt > 0;
+    let extraMerged = moreBeats == null;
+    let tailMerged = tailBeats == null;
+
+    const makeWait = (src) => {
+      const box = { list: null };
+      if (src == null) return { box, wait: null };
+      const wait = Promise.resolve(src).then(
+        (v) => {
+          box.list = Array.isArray(v) ? v : [];
+          return box.list;
+        },
+        () => {
+          box.list = [];
+          return box.list;
+        }
+      );
+      return { box, wait };
+    };
+    const extra = makeWait(moreBeats);
+    const tail = makeWait(tailBeats);
+
+    const finishDone = () => {
+      remember?.(lines.slice());
+      return "done";
+    };
+
+    const mergePending = async (state) => {
+      if (state.merged) return;
+      state.merged = true;
+      if (!state.wait) return;
+      let extraLines = state.box.list;
+      if (extraLines == null) {
+        window.GalDialogue?.showGenerating?.({ slots });
+        try {
+          extraLines = await state.wait;
+        } finally {
+          window.GalDialogue?.hideGenerating?.();
+        }
+      }
+      const extraClean =
+        window.GalAI?.dropRepeatFlavorBeats?.(extraLines, lines) || extraLines;
+      for (const b of extraClean || []) {
+        if (!replay && b?.type === "horror") window.HorrorMeter?.applyBeat?.(b);
+        if (b?.text) lines.push(b);
+      }
+    };
+
+    const extraState = { merged: extraMerged, wait: extra.wait, box: extra.box };
+    const tailState = { merged: tailMerged, wait: tail.wait, box: tail.box };
+
+    while (true) {
       if (token?.cancelled || pendingBack) return "back";
-      if (b.type === "horror") {
-        window.HorrorMeter?.applyBeat?.(b);
-        await wait(160);
+      if (fromIndex >= lines.length) {
+        await mergePending(extraState);
+        if (fromIndex >= lines.length) await mergePending(tailState);
+        if (fromIndex >= lines.length) return finishDone();
+      }
+
+      const slice = lines.slice(fromIndex);
+      const result = await window.GalDialogue.showBeat(
+        { lines: slice, slots: slice[0].slots || slots },
+        { recordHistory: !isReplay }
+      );
+      isReplay = false;
+
+      if (token?.cancelled) return "back";
+      if (result === "back" || result === "aborted" || pendingBack) {
+        window.GalDialogue?.popHistory?.(1);
+        if (fromIndex <= 0) return "back";
+        fromIndex -= 1;
+        isReplay = true;
         continue;
       }
-      if (b.text) {
-        const result = await runDialogueBeat(b);
-        if (result === "back" || pendingBack) return "back";
-      }
+
+      fromIndex = lines.length;
+      await mergePending(extraState);
+      if (fromIndex >= lines.length) await mergePending(tailState);
+      if (fromIndex >= lines.length) return finishDone();
     }
   }
 
@@ -431,7 +1052,8 @@
         optionId: option.id,
         optionLabel: option.label,
         ending,
-        context: recentContext(),
+        plotHint: beat.plotHint,
+        context: flavorStoryContext(beatIndex) || recentContext(8),
       });
     } finally {
       window.GalDialogue?.hideGenerating?.();
@@ -445,7 +1067,7 @@
       gen?.beats?.length > 0
         ? gen.beats
         : window.STORY_BRANCH_FALLBACKS?.[option.id] || [];
-    const genResult = await playGeneratedBeats(beats, token);
+    const genResult = await playGeneratedQueue(beats, token, { slots: beat.slots });
     if (token.cancelled || genResult === "back" || pendingBack) {
       pendingBack = false;
       restoreHorrorAtBeat(beatIndex);
@@ -490,7 +1112,11 @@
     { fromIndex = 0, replay = false, resetHorror = true, unlockOnEnd = true } = {}
   ) {
     if (!story?.beats?.length) return;
+    const gen = ++playGen;
     cancelToken.cancelled = true;
+    window.GalDialogue?.abort?.(true);
+    window.GalDialogue?.hideChoices?.();
+    window.GalDialogue?.hideGenerating?.();
     cancelToken = { cancelled: false };
     const token = cancelToken;
     pendingBack = false;
@@ -499,6 +1125,12 @@
     playing = true;
     currentStory = story;
     beatIndex = Math.max(0, fromIndex);
+    // 新开局清空旧缓存，重新后台预生成（保证选项不永远同一套）
+    if (fromIndex === 0 && !replay && resetHorror) {
+      clearFlavorOptCache();
+      lastFlavorPlayback = null;
+    }
+    prefetchFlavorOptions(story, fromIndex);
     if (fromIndex === 0 && !replay && resetHorror) {
       window.HorrorMeter?.set?.(0, { animate: false });
       farthestBeatIndex = 0;
@@ -541,6 +1173,7 @@
           // 在岔路上点「回退」：退到上一对话框（restoreWorldUpTo 会还原惊悚）
           if (pendingBack) {
             pendingBack = false;
+            clearFlavorPlaybackAt(beatIndex);
             const ok = await handleBackToPrevDialogue(beatIndex, {
               popHistory: false,
             });
@@ -562,6 +1195,7 @@
         }
         farthestBeatIndex = Math.max(farthestBeatIndex, beatIndex);
         beatIndex += 1;
+        prefetchFlavorOptions(story, beatIndex);
         continue;
       }
 
@@ -573,6 +1207,31 @@
 
       if (result === "back" || pendingBack) {
         pendingBack = false;
+        const choiceIdx = findOwningChoiceIndex(beatIndex);
+        if (choiceIdx != null) {
+          window.GalDialogue?.popHistory?.(1);
+          await restoreWorldUpTo(choiceIdx);
+          const stored = lastFlavorPlayback;
+          if (stored?.beatIndex === choiceIdx && stored.lines.length) {
+            const replayed = await playGeneratedQueue(stored.lines, token, {
+              slots: stored.slots,
+              startAt: stored.lines.length - 1,
+              replay: true,
+            });
+            if (token.cancelled) break;
+            if (replayed === "back" || pendingBack) {
+              pendingBack = false;
+              beatIndex = choiceIdx;
+              restoreHorrorAtBeat(choiceIdx);
+              continue;
+            }
+            suppressHistoryOnce = true;
+            continue;
+          }
+          beatIndex = choiceIdx;
+          restoreHorrorAtBeat(choiceIdx);
+          continue;
+        }
         const ok = await handleBackToPrevDialogue(beatIndex, { popHistory: true });
         if (!ok) {
           suppressHistoryOnce = true;
@@ -586,6 +1245,7 @@
       farthestBeatIndex = Math.max(farthestBeatIndex, beatIndex);
     }
 
+    if (gen !== playGen) return;
     playing = false;
     if (!token.cancelled) {
       window.GalDialogue?.setSkipMode?.(false);
@@ -602,7 +1262,9 @@
     cancelToken.cancelled = true;
     pendingBack = false;
     window.GalDialogue?.setSkipMode?.(false);
+    window.GalDialogue?.abort?.(true);
     window.GalDialogue?.hideChoices?.();
+    window.GalDialogue?.hideGenerating?.();
     hideFailPanel();
     playing = false;
   }
@@ -629,7 +1291,7 @@
             ambientNpcs: pauseState.ambientNpcs || [],
           }
         : null,
-      exploration: pauseState.active || true,
+      exploration: !!pauseState.active,
       savedAt: Date.now(),
     };
   }
@@ -637,6 +1299,7 @@
   async function loadSaveData(data) {
     if (!data) return false;
     stopStory();
+    lastFlavorPlayback = null;
     window.GalDialogue?.clearHistory?.();
     clearPause();
 
@@ -702,11 +1365,27 @@
       return true;
     }
 
+    lastDialogueIndex = Number.isFinite(data.lastDialogueIndex)
+      ? data.lastDialogueIndex
+      : null;
+
     if (story?.beats?.length) {
       const offset = resolved.indexOffset || 0;
-      const idx = Number.isFinite(data.beatIndex) ? data.beatIndex : 0;
+      let idx = Number.isFinite(data.beatIndex) ? data.beatIndex : 0;
+      idx = Math.max(0, idx + offset);
+      const beat = story.beats[idx];
+      const canShow =
+        isDialogueBeat(beat) ||
+        beat?.type === "choice" ||
+        beat?.type === "flavorChoice";
+      const lastDlg =
+        lastDialogueIndex != null ? lastDialogueIndex + offset : null;
+      // 保存在换景/等待等 meta 上时，读档先回到上一句对白，避免只剩空场景
+      if (!canShow && lastDlg != null && lastDlg >= 0 && lastDlg < story.beats.length) {
+        idx = lastDlg;
+      }
       await playStory(story, {
-        fromIndex: Math.max(0, idx + offset),
+        fromIndex: idx,
         resetHorror: false,
       });
       return true;
@@ -728,6 +1407,18 @@
     window.GalDialogue?.setSkipMode?.(false);
     window.GalDialogue?.setAutoMode?.(false);
     window.MenuUI?.syncToggles?.();
+
+    const choiceOpen = (() => {
+      if (window.GalDialogue?.isChoicesOpen?.()) return true;
+      const el = document.getElementById("storyChoicePanel");
+      return el && !el.hidden;
+    })();
+
+    if (playing && choiceOpen) {
+      pendingBack = true;
+      window.GalDialogue?.hideChoices?.();
+      return true;
+    }
 
     if (window.GalDialogue?.hasSession?.()) {
       return window.GalDialogue.back();
@@ -773,6 +1464,7 @@
       return false;
     }
     stopStory();
+    lastFlavorPlayback = null;
     window.GalDialogue?.hideChoices?.();
     hideFailPanel();
     clearPause();
@@ -790,6 +1482,7 @@
     stopStory,
     buildMainStory,
     resumeFromPause,
+    prefetchFlavorOptions,
     isPlaying: () => playing,
     isPaused: () => pauseState.active,
     getPauseState: () => ({ ...pauseState }),
@@ -814,4 +1507,6 @@
       return next;
     },
   };
+
+  // 合流选项只在 playStory 开局预拉一次，避免与此处重复请求互相覆盖
 })();

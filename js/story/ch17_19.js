@@ -7,7 +7,7 @@
 window.STORY_CH17_19 = {
   id: "ch17_19",
   chars: {
-    ningnian: "assets/chars/ningnian_front.png",
+    ningnian: "assets/chars/ningnian_coat_dress.png",
     doghead: "assets/chars/doghead10_front.png",
     suxiaomo: "assets/chars/suxiaomo_front.png",
     fangyuan: "assets/chars/fangyuan_front.png",
@@ -33,6 +33,29 @@ window.STORY_CH17_19 = {
       sprite: "assets/chars/sisi_hug.png",
       side: "left",
       text: "妈妈，我好想你。",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_hug.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
+      ],
+    },
+    {
+      type: "flavorChoice",
+      id: "flavor_sisi_miss_you",
+      mode: "chat",
+      optionCount: 3,
+      optionTopic: "回应思思想妈妈：宁念就是她妈妈，说想她、抱抱、回来了；禁止问妈妈在哪，禁止改去问吃饭",
+      progress: "§16 岔口 · 好想你",
+      prompt: "思思扑上来喊想妈妈。宁念会说——",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_hug.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
+      ],
+      npcHint:
+        "思思：婴儿腔、黏人、认宁念为妈妈，像小猫一样扑上来蹭脸。宁念就是她口中的妈妈，当亲生女儿哄，高度近视，刚从楼下拜访回来。",
+      plotHint:
+        "拜访邻居两天后回到 30 层客厅。思思扑进怀里喊「妈妈我好想你」。宁念就是她妈妈，只会顺着哄，绝对不会问「你妈妈在哪儿」。选项必须是回应想念（我也想你/回来了/抱一下），禁止打听她亲妈、禁止突然改去问饿不饿吃饭（正史下一句才是断头端饭）。本场只有思思和宁念；禁止断头开口，禁止抢正史萌化旁白和「其实我也想你」。禁止宁念看清血衣真相。肠大爷、黑老太、楼下邻居都不要出场。",
+      forbid: /你妈妈|她妈妈|妈妈在哪|妈妈呢|妈妈去哪|谁是你妈|亲妈|饿了|吃饭|煮面|肠大爷|黑老太|面膜|鸡爪|尸食|人身狗头|宁君安|异世之门|幸福之心/,
+      resumeHint: "我简直都要萌化了。",
     },
     {
       type: "narration",
@@ -45,6 +68,28 @@ window.STORY_CH17_19 = {
       sprite: "assets/chars/boss_front.png",
       side: "right",
       text: "其实我也想你。",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+    },
+    {
+      type: "flavorChoice",
+      id: "flavor_boss_miss_you",
+      mode: "chat",
+      optionCount: 3,
+      progress: "§16 岔口 · 我也想你",
+      prompt: "断头哀怨地说也想她。宁念会说——",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+      npcHint:
+        "断头：话少、别扭、护短，刚做好饭、拉着宁念的手不甘示弱。宁念当老公直球哄，高度近视，刚被思思扑过。",
+      plotHint:
+        "30 层客厅。思思刚喊完「妈妈我好想你」，断头端着饭哀怨接话「其实我也想你」。本场只有宁念和断头；禁止思思再开口，禁止抢正史旁白「救命！父女争锋，我享清福」。禁止宁念看清断头/无头真相。禁止写成没有恐怖错位的普通夫妻。肠大爷、黑老太、楼下邻居不要出场。",
+      forbid: /肠大爷|黑老太|面膜|鸡爪|尸食|人身狗头|宁君安|异世之门|幸福之心/,
+      resumeHint: "救命！父女争锋，我享清福。",
     },
     {
       type: "narration",
@@ -80,7 +125,7 @@ window.STORY_CH17_19 = {
       text: "……",
       slots: [
         { side: "left", sprite: "assets/chars/doghead10_front.png", name: "人身狗头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -97,7 +142,7 @@ window.STORY_CH17_19 = {
       text: "人类女孩，不要以为 30 层那四个家伙庇护着你，我就会畏惧你。\n至少在这件事情上，我绝不妥协。",
       slots: [
         { side: "left", sprite: "assets/chars/doghead10_front.png", name: "人身狗头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -108,7 +153,7 @@ window.STORY_CH17_19 = {
       text: "第 10 层，但凡有人入住，永远都无人生还。\n看在你的面子上，我可以给看得顺眼的人类一张拜访卡片。\n不要妄想更多。",
       slots: [
         { side: "left", sprite: "assets/chars/doghead10_front.png", name: "人身狗头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -131,12 +176,12 @@ window.STORY_CH17_19 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_coat_dress.png",
       side: "right",
       text: "这种杀戮什么时候会结束呢？",
       slots: [
         { side: "left", sprite: "assets/chars/doghead10_front.png", name: "人身狗头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -147,7 +192,7 @@ window.STORY_CH17_19 = {
       text: "人类什么时候停止对动物的虐杀？",
       slots: [
         { side: "left", sprite: "assets/chars/doghead10_front.png", name: "人身狗头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -163,7 +208,7 @@ window.STORY_CH17_19 = {
       text: "瞧，你们卑劣的人类，不仅杀异类，还杀同类，又开始自相残杀咯。",
       slots: [
         { side: "left", sprite: "assets/chars/doghead10_front.png", name: "人身狗头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     { type: "horror", set: 28 },
@@ -214,7 +259,7 @@ window.STORY_CH17_19 = {
       prompt: "红姐命令你交出全部拜访卡片。你打算——",
       slots: [
         { side: "left", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
       options: [
         {
@@ -233,6 +278,8 @@ window.STORY_CH17_19 = {
           ending: "hog_slaughter",
         },
       ],
+      plotHint:
+        "九层是陷阱：红姐俊哥要卡片是为了屠宰。正史用家人给的「爱的屠刀」反杀。交卡片或空手硬刚都会被宰。禁止写成还能通关或靠嘴炮过关。",
     },
     {
       type: "narration",
@@ -261,12 +308,12 @@ window.STORY_CH17_19 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "说来听听，你们想怎么弄死我？",
       slots: [
         { side: "left", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -289,12 +336,12 @@ window.STORY_CH17_19 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "楼下那些玩家，也这样求过你们的吧？你们放过他们了吗？",
       slots: [
         { side: "left", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -305,7 +352,7 @@ window.STORY_CH17_19 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "好啦，不气不气，我没有受伤。",
     },
@@ -317,7 +364,7 @@ window.STORY_CH17_19 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "如果诡异针对你们，就说你们是 30 层宁念的朋友，她叫你们上来拿卡片的。",
     },

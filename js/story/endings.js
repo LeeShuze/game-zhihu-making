@@ -118,7 +118,7 @@ window.STORY_BRANCH_FALLBACKS = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_coat_dress.png",
       side: "right",
       text: "卡片都给你们……别杀我们。",
     },

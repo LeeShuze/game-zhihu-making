@@ -252,6 +252,12 @@
     return label;
   }
 
+  function setExploreCharsHidden(on) {
+    hotspotLayer.querySelectorAll(".story-npc").forEach((el) => {
+      el.classList.toggle("is-talking-hidden", !!on);
+    });
+  }
+
   function openStoryConfirm(message, { chatNpc = null } = {}) {
     const panel = document.getElementById("storyConfirm");
     const text = document.getElementById("storyConfirmText");
@@ -267,17 +273,44 @@
       chatBtn.hidden = !showChat;
       chatBtn.setAttribute("aria-hidden", showChat ? "false" : "true");
     }
+
+    const greeting = String(chatNpc?.greeting || "").trim();
+    const sprite = chatNpc?.sprite || "";
+    const name = chatNpc?.name || "";
+    if (greeting && sprite) {
+      panel.classList.add("is-above-dialog");
+      setExploreCharsHidden(true);
+      window.GalDialogue?.holdDialogueLine?.({
+        speaker: name,
+        text: greeting,
+        type: "say",
+        sprite,
+        side: "right",
+        slots: [{ side: "right", sprite, name }],
+      });
+    } else {
+      panel.classList.remove("is-above-dialog");
+      setExploreCharsHidden(false);
+      window.GalDialogue?.releaseHeldDialogue?.();
+    }
     panel.hidden = false;
   }
 
-  function closeStoryConfirm() {
+  function closeStoryConfirm({ keepDialogue = false } = {}) {
     const panel = document.getElementById("storyConfirm");
-    if (panel) panel.hidden = true;
+    if (panel) {
+      panel.hidden = true;
+      panel.classList.remove("is-above-dialog");
+    }
     pendingConfirmChatNpc = null;
     const chatBtn = document.getElementById("storyConfirmChat");
     if (chatBtn) {
       chatBtn.hidden = true;
       chatBtn.setAttribute("aria-hidden", "true");
+    }
+    if (!keepDialogue) {
+      window.GalDialogue?.releaseHeldDialogue?.();
+      setExploreCharsHidden(false);
     }
   }
 
@@ -341,7 +374,9 @@
       btn.addEventListener("click", () => {
         if (!explorationEnabled) return;
         if (resumeHere) {
-          openStoryConfirm(resumeNpc.prompt || "是否继续剧情？");
+          openStoryConfirm(resumeNpc.prompt || "是否继续剧情？", {
+            chatNpc: resolveChatNpcFromResume(resumeNpc),
+          });
           return;
         }
         if (!choice.goTo) return;
@@ -413,7 +448,9 @@
       btn.addEventListener("click", () => {
         if (!explorationEnabled) return;
         if (resumeHere) {
-          openStoryConfirm(resumeNpc.prompt || "是否继续剧情？");
+          openStoryConfirm(resumeNpc.prompt || "是否继续剧情？", {
+            chatNpc: resolveChatNpcFromResume(resumeNpc),
+          });
           return;
         }
         if (!spot.goTo) return;
@@ -560,7 +597,7 @@
   });
   document.getElementById("storyConfirmChat")?.addEventListener("click", () => {
     const npc = pendingConfirmChatNpc;
-    closeStoryConfirm();
+    closeStoryConfirm({ keepDialogue: true });
     if (npc) window.AmbientChat?.open?.(npc);
   });
   document.getElementById("storyConfirmNo")?.addEventListener("click", () => {
@@ -584,6 +621,7 @@
     },
     isSceneUnlocked,
     relayout,
+    setExploreCharsHidden,
   };
 
   setExplorationEnabled(false);

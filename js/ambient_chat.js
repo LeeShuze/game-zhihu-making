@@ -108,6 +108,7 @@
     sending = false;
     window.GalDialogue?.setNpcChatBusy?.(false);
     window.GalDialogue?.closeNpcChatUI?.();
+    window.Game?.setExploreCharsHidden?.(false);
     window.Game?.setExplorationEnabled?.(true);
   }
 

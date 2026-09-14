@@ -43,6 +43,23 @@ window.STORY_CH07_12 = {
       ],
     },
     {
+      type: "flavorChoice",
+      id: "flavor_sisi_not_monster",
+      mode: "chat",
+      progress: "§7 岔口 · 不能说自己",
+      prompt: "宁念刚劝思思别骂自己。她还会说——",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+      ],
+      npcHint:
+        "思思：婴儿腔、认宁念为妈妈、刚自称小怪物/小狐狸精；被劝后会黏、会委屈，也会吓人一笑。宁念当亲生女儿护短纠正，高度近视。",
+      plotHint:
+        "第一夜主卧。思思刚说「我也是小怪物」「他们叫我小狐狸精和小婊砸」，张嘴是被拔光牙的血口，宁念看不清。宁念正把她当女儿扳正思维。禁止宁念看清无牙血嘴或血衣真相。禁止写成没有恐怖错位的普通睡前说教。禁止抢正史下一句：她絮叨着睡着，思思裙子红了又白。肠大爷、毛衣、毛线都未出场。",
+      forbid: /毛线|毛衣|肠子|肠大爷|鸡爪|尸食|黑老太|面膜|宁君安/,
+      resumeHint: "后来我絮絮叨叨着，不知道怎么就睡着了。",
+    },
+    {
       type: "narration",
       text: "后来我絮絮叨叨着，不知道怎么就睡着了。\n睡着后，思思紧贴着我，裙子红了又白，白了又红——",
       clearSprites: true,
@@ -86,8 +103,15 @@ window.STORY_CH07_12 = {
     },
     { type: "horror", add: 3 },
     {
-      type: "system",
-      text: "【红姐私聊】宁念，你还好吗？昨天我一直在和二层的诡异交锋，一直没来得及跟你说——前三天，你一定要抓紧时间攻略自己的「家人」。\n我看过当初明神的直播，这是我已知的信息，就当给你的补偿了。怪我没有提前说选房规则，导致你不得不住在 30 层。",
+      type: "say",
+      speaker: "红姐",
+      sprite: "assets/chars/hongjie_front.png",
+      side: "right",
+      text: "宁念，你还好吗？昨天我一直在和二层的诡异交锋，一直没来得及跟你说——前三天，你一定要抓紧时间攻略自己的「家人」。\n我看过当初明神的直播，这是我已知的信息，就当给你的补偿了。怪我没有提前说选房规则，导致你不得不住在 30 层。",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_phone.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
+      ],
     },
     {
       type: "narration",
@@ -95,8 +119,26 @@ window.STORY_CH07_12 = {
       clearSprites: true,
     },
     {
-      type: "system",
-      text: "【俊哥】干吗告诉这些新玩家，我看你就是太善良，帮助他们对我们又没什么好处。\n【红姐】相识一场不容易，别这样计较。",
+      type: "say",
+      speaker: "俊哥",
+      sprite: "assets/chars/junge_front.png",
+      side: "right",
+      text: "干吗告诉这些新玩家，我看你就是太善良，帮助他们对我们又没什么好处。",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_phone.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/junge_front.png", name: "俊哥" },
+      ],
+    },
+    {
+      type: "say",
+      speaker: "红姐",
+      sprite: "assets/chars/hongjie_front.png",
+      side: "right",
+      text: "相识一场不容易，别这样计较。",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_phone.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
+      ],
     },
     {
       type: "narration",
@@ -335,6 +377,26 @@ window.STORY_CH07_12 = {
       ],
     },
     {
+      type: "flavorChoice",
+      id: "flavor_yeye_patch",
+      mode: "chat",
+      optionCount: 1,
+      optionTopic: "继续动手补这件湿毛衣（缝、补、再补两针），不要改去晾、晒、洗、拧、停手",
+      sampleLabel: "我帮你补补吧",
+      progress: "§8 岔口 · 补毛衣",
+      prompt: "宁念正薅着湿毛线缝补。肠大爷心虚说「应、应该吧」。她还会说——",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_sew.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/yeye_front.png", name: "肠大爷" },
+      ],
+      npcHint:
+        "肠大爷：拖着肠子被宁念当毛衣缝；口吃、心虚、顺着儿媳误会，不会承认那是肠子。宁念高度近视，正坐着缝，嫌毛线湿也还是要补完。",
+      plotHint:
+        "餐厅。宁念已经说了「老爸，我帮您补补衣服吧」并动手缝他肚子上拖在地上的肠子，当成湿毛衣。他刚承认是洗菜弄湿的。选项和随后对白都必须是继续补/再补两针/湿也先缝上，不要整句重复正史那句，也不许改成晾干、洗净、拧一把、停手。禁止说破肠子/血。禁止抢正史「缝好后大家吃饭」。",
+      forbid: /晾|晒|拧|洗干净|丢掉|不补|别补/,
+      resumeHint: "缝好后，大家才和（尴）谐（尬）地坐在桌子前准备吃饭。",
+    },
+    {
       type: "narration",
       text: "缝好后，大家才和（尴）谐（尬）地坐在桌子前准备吃饭。\n见大家不动，我自来熟地夹了一筷子「鸡爪」。\n见我往嘴里送，四个诡异满脸邪恶地盯着我。",
     },
@@ -493,6 +555,27 @@ window.STORY_CH07_12 = {
       ],
     },
     {
+      type: "flavorChoice",
+      id: "flavor_sisi_jealous",
+      mode: "chat",
+      optionCount: 3,
+      progress: "§11 岔口 · 思思才香",
+      prompt: "思思钻进被窝吃醋。宁念会说——",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+      extraSlots: [
+        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+      ],
+      npcHint:
+        "思思：婴儿腔、认宁念为妈妈、对爸爸吃醋、会凶、白裙将红。断头：她亲爹，不太会哄，被瞪得疤要涨。宁念当亲生女儿哄，高度近视，正跟断头睡一起。",
+      plotHint:
+        "假孕第二天夜里。宁念为骗过肠大爷和黑老太，已经和断头睡到一起。思思从被窝钻出来吃醋，白裙将红、断头脖上的疤在变大，正史下一句是宁念跳起来喊住手并说一起睡。禁止宁念看清血衣/无牙/断头真相。禁止写成没有恐怖错位的普通母女争宠。禁止抢正史「住手你们不要再打了」「我跟你们两个一起睡」。肠大爷、毛衣、毛线、黑老太不在这间房。",
+      forbid: /毛线|毛衣|肠子|肠大爷|鸡爪|尸食|黑老太|面膜|宁君安/,
+      resumeHint: "思思白裙将红，男人脖上的疤在变大——一场恶战在所难免。",
+    },
+    {
       type: "narration",
       text: "思思白裙将红，男人脖上的疤在变大——一场恶战在所难免。\n我从床上跳起来大喊：",
       clearSprites: true,
@@ -518,8 +601,15 @@ window.STORY_CH07_12 = {
       clearSprites: true,
     },
     {
-      type: "system",
-      text: "【红姐私聊】宁念，明天开始就要拜访邻居了。听说只有拜访完这栋楼 30 层的全部诡异，才能解锁全部楼层，然后或许会出现最终的通关提示。\n你在最难的 30 层，一定要帮助大家成功拜访 30 楼的诡异啊。当然，除去那些已经死去的玩家，剩下的玩家也会帮你说话，帮你拜访他们的「家人」。\n可惜了，当时明神死在第六天，拜访断头大 Boss 时被杀，我们也不知道第七天会发生什么。",
+      type: "say",
+      speaker: "红姐",
+      sprite: "assets/chars/hongjie_front.png",
+      side: "right",
+      text: "宁念，明天开始就要拜访邻居了。听说只有拜访完这栋楼 30 层的全部诡异，才能解锁全部楼层，然后或许会出现最终的通关提示。\n你在最难的 30 层，一定要帮助大家成功拜访 30 楼的诡异啊。当然，除去那些已经死去的玩家，剩下的玩家也会帮你说话，帮你拜访他们的「家人」。\n可惜了，当时明神死在第六天，拜访断头大 Boss 时被杀，我们也不知道第七天会发生什么。",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_phone.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
+      ],
     },
     {
       type: "narration",
@@ -620,7 +710,7 @@ window.STORY_CH07_12 = {
       text: "妈妈，这是我被杀时穿的裙子，你穿着，能保护你。",
       slots: [
         { side: "left", sprite: "assets/chars/sisi_blood_front.png", name: "思思" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     { type: "system", text: "恭喜玩家，获得 SSSS 级道具「天使之裙」。" },
@@ -636,7 +726,7 @@ window.STORY_CH07_12 = {
       side: "right",
       text: "拿着，防身。",
       slots: [
-        { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "left", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/yeye_patched_front.png", name: "肠大爷" },
       ],
     },
@@ -649,8 +739,32 @@ window.STORY_CH07_12 = {
       text: "（扯下一只焦炭胳膊）必要时刻，可以助你一臂之力。",
       slots: [
         { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
+    },
+    {
+      type: "flavorChoice",
+      id: "flavor_family_thanks",
+      mode: "round",
+      optionCount: 3,
+      roundSpeakers: ["思思", "断头", "肠大爷", "黑老太"],
+      progress: "§12 岔口 · 谢家人",
+      prompt: "一家四口刚把防身的东西塞给宁念。她当面感谢大家——",
+      slots: [
+        { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
+      ],
+      extraSlots: [
+        { side: "left", sprite: "assets/chars/sisi_blood_front.png", name: "思思" },
+        { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
+        { side: "left", sprite: "assets/chars/yeye_patched_front.png", name: "肠大爷" },
+      ],
+      npcHint:
+        "思思：婴儿腔、黏妈妈、刚把血红裙子套在她身上，会邀功撒娇。断头：少话、护短、刚给了菜刀，被谢会别扭。肠大爷：心虚把肠子当毛线团送出，会顺着毛衣误会。黑老太：泼冷水、骨架干，刚扯下焦炭胳膊，口吻硬、不认煽情。",
+      plotHint:
+        "出门前客厅。四人刚送完礼物。选项必须是宁念当面感谢全家人（你们/大家/一家），三条都是谢所有人，禁止拆成「谢思思」「谢断头」「谢肠大爷」这种一人一句，禁止只夸一件礼物。随后四人轮流接话。宁念看不清尸衣/断头/肠子真相。禁止写成普通温情送礼。禁止抢正史系统播报枯木逢春、弹幕「人麻了」、送到楼梯口。",
+      forbid: /宁君安|异世之门|幸福之心|爱的屠刀|宰相肚肠|枯木逢春|天使之裙/,
+      resumeHint: "恭喜玩家，获得 SS 级道具「枯木逢春」。",
     },
     { type: "system", text: "恭喜玩家，获得 SS 级道具「枯木逢春」。" },
     { type: "danmaku", text: "人麻了。" },

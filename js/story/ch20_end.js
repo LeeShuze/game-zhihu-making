@@ -6,7 +6,7 @@
 window.STORY_CH20_END = {
   id: "ch20_end",
   chars: {
-    ningnian: "assets/chars/ningnian_front.png",
+    ningnian: "assets/chars/ningnian_red_dress.png",
     boss: "assets/chars/boss_front.png",
     sisi: "assets/chars/sisi_front.png",
     sisiBlood: "assets/chars/sisi_blood_front.png",
@@ -84,12 +84,12 @@ window.STORY_CH20_END = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "老妈可真厉……",
       slots: [
         { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -104,7 +104,7 @@ window.STORY_CH20_END = {
       side: "right",
       text: "我可以吗？",
       slots: [
-        { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "left", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
       ],
     },
@@ -124,7 +124,7 @@ window.STORY_CH20_END = {
       side: "right",
       text: "这、这样做，你就不用踮脚那么累了。",
       slots: [
-        { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "left", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_head.png", name: "断头" },
       ],
     },
@@ -195,12 +195,12 @@ window.STORY_CH20_END = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "哎呀，怎么办呢？没有钥匙，我回不去了，我可以永远留下来陪你们了。",
       slots: [
         { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -217,7 +217,7 @@ window.STORY_CH20_END = {
       text: "宁念，你猜到了钥匙是什么，所以才这么抗拒，对吗？\n可是，你不知道，如果你迷失在这里，你并不会变成我们诡异中的一员，你只会变成四周的一缕黑雾。",
       slots: [
         { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -228,7 +228,7 @@ window.STORY_CH20_END = {
       text: "而你们所谓的恐怖游戏世界，全都充斥着这样的黑雾。\n它们没有情感，没有灵识，没有思想，甚至不能算一个东西。",
       slots: [
         { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -239,8 +239,26 @@ window.STORY_CH20_END = {
       text: "宁念，那样，我将会永远失去你。\n如果这样，还不如，你先短暂地失去我一段时间。",
       slots: [
         { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
+    },
+    {
+      type: "flavorChoice",
+      id: "flavor_boss_farewell",
+      mode: "farewell",
+      optionCount: 3,
+      progress: "§24 岔口 · 不舍",
+      prompt: "断头说宁可让她短暂失去他。宁念舍不得——",
+      slots: [
+        { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
+      ],
+      npcHint:
+        "断头：平视她、眼中赤红，认真、温柔、决绝。宁念舍不得走、直球心软，刚说想留下来陪他们。",
+      plotHint:
+        "异世之门前。宁念刚说没有钥匙、可以永远留下。断头刚说：活人留下不会变成诡异，只会化成没有情感的黑雾；化雾的是宁念，断头不会化雾。宁可让她先短暂失去他。正史下一句是他掏出火红心脏喂进锁眼。本场不是误会喜剧。禁止已经掏心。禁止答应让她留下并真的化雾。禁止宁念对他说「你别变成黑雾」。禁止写成普通分手拌嘴。思思、肠大爷、黑老太、方远、苏小茉不要开口。",
+      forbid: /你别变成|你变成黑雾|别让你变成|断头变成|宁君安|幸福之心|爱的屠刀|宰相肚肠/,
+      resumeHint: "话音刚落，他抬起掌心猛地插进自己胸口，掏出一颗跳动的火红心脏。",
     },
     {
       type: "narration",
@@ -315,8 +333,26 @@ window.STORY_CH20_END = {
       text: "妈妈，思思也舍不得你，但是，思思更希望你鲜活地活着，即使那个地方没有思思，而不是变成一缕黑雾。",
       slots: [
         { side: "left", sprite: "assets/chars/sisi_blood_front.png", name: "思思" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
+    },
+    {
+      type: "flavorChoice",
+      id: "flavor_sisi_farewell",
+      mode: "farewell",
+      optionCount: 3,
+      progress: "§25 岔口 · 思思不舍",
+      prompt: "思思说希望妈妈鲜活地活着。宁念舍不得——",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_blood_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
+      ],
+      npcHint:
+        "思思：婴儿腔、认宁念为妈妈，刚咬死方远，血红裙子，舍不得妈妈但更要她活着。宁念当亲生女儿，直球心软。",
+      plotHint:
+        "异世之门前。思思已掏出心脏扔向第二把锁，边扔边说舍不得、要妈妈鲜活地活着而不是变成黑雾。化成黑雾的是宁念（活人留下会化雾），思思是诡异家人，不会变成黑雾。宁念的台词禁止说「你别变成黑雾」「别让思思变成黑雾」。正史下一句是肠大爷和黑老太同样献心开第三、四把锁。本场不是误会喜剧。禁止再写一遍掏心。禁止答应让妈妈留下并真的化雾。禁止肠大爷、黑老太、断头、方远开口。",
+      forbid: /你别变成|你变成黑雾|别让你变成|别让思思变成|思思变成黑雾|宁君安|幸福之心|爱的屠刀|宰相肚肠|肠大爷|黑老太|方远/,
+      resumeHint: "肠老头和黑老太也如法炮制，打开第三把和第四把锁。",
     },
     {
       type: "narration",
@@ -365,12 +401,12 @@ window.STORY_CH20_END = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "没了心脏，你们会不会死？",
       slots: [
         { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -381,7 +417,7 @@ window.STORY_CH20_END = {
       text: "不会的，我们只是会失去所有记忆，不知道被丢到哪个副本打工而已。\n但是，只要再次重逢，我一定会想起你。",
       slots: [
         { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -392,7 +428,7 @@ window.STORY_CH20_END = {
       text: "妈妈，思思也是！",
       slots: [
         { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_red_dress.png", name: "宁念" },
       ],
     },
     {
@@ -411,6 +447,7 @@ window.STORY_CH20_END = {
       text: "十二点的钟声敲响，四双大手齐齐把我推向铁门。\n我听见四道温柔眷恋的声音同时响起——",
       clearSprites: true,
     },
+    { type: "scene", scene: "family_photo" },
     {
       type: "say",
       speaker: "家人",
@@ -428,7 +465,7 @@ window.STORY_CH20_END = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_red_dress.png",
       side: "right",
       text: "我想好了！你的名字！\n宁！君！安！",
     },

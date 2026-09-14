@@ -9,7 +9,7 @@
 window.STORY_CH13_16 = {
   id: "ch13_16",
   chars: {
-    ningnian: "assets/chars/ningnian_front.png",
+    ningnian: "assets/chars/ningnian_coat_dress.png",
     twinSister: "assets/chars/twin_sister_front.png",
     twinBrother: "assets/chars/twin_brother_front.png",
     girl28: "assets/chars/girl28_front.png",
@@ -55,12 +55,12 @@ window.STORY_CH13_16 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_coat_dress.png",
       side: "right",
       text: "可以请我进去喝一杯茶吗？\n我想，或许可以跟你们聊聊你们的母亲和仇人的结局。",
       slots: [
         { side: "left", sprite: "assets/chars/twin_sister_front.png", name: "龙凤胎姐姐" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -109,12 +109,12 @@ window.STORY_CH13_16 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_coat_dress.png",
       side: "right",
       text: "从今天开始，好好「活」着吧，即使是在这里。\n只要彼此思念，总有一天，你们会和你们的妈妈重逢。",
       slots: [
         { side: "left", sprite: "assets/chars/twin_sister_front.png", name: "龙凤胎姐姐" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -163,7 +163,7 @@ window.STORY_CH13_16 = {
       text: "……请拿好。",
       slots: [
         { side: "left", sprite: "assets/chars/girl28_front.png", name: "28层女孩" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -187,23 +187,23 @@ window.STORY_CH13_16 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_coat_dress.png",
       side: "right",
       text: "你知道吗？被圈住的从来都不是你，而是他们。\n你去世后那些年，他们或长大、或结婚、或生子，但总归不幸福——有些人甚至进了精神病院，因为他们过于偏执。",
       slots: [
         { side: "left", sprite: "assets/chars/girl28_front.png", name: "28层女孩" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_coat_dress.png",
       side: "right",
       text: "这里没有任何圈子，只有生与死。\n所以在这里，你可以想穿什么就穿什么，想素颜就素颜，想浓妆就浓妆。\n等他们死后万一来了这里，你也可以疯狂折磨他们。\n当然，我认为他们即使死了，也不配再拥有一次复活机会。",
       slots: [
         { side: "left", sprite: "assets/chars/girl28_front.png", name: "28层女孩" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -219,7 +219,7 @@ window.STORY_CH13_16 = {
       text: "好的，姐姐，我做自己。\n若有一日他们当真来了，死在自己崇敬的神之武器手中，将是他们的荣幸。",
       slots: [
         { side: "left", sprite: "assets/chars/girl28_front.png", name: "28层女孩" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -287,7 +287,7 @@ window.STORY_CH13_16 = {
       text: "阿姨，我已经把妈妈安慰好啦，嘻嘻。\n如果看到那些人出现，我会把他们都杀光光哦。",
       slots: [
         { side: "left", sprite: "assets/chars/boy27_front.png", name: "小男孩" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {
@@ -320,12 +320,12 @@ window.STORY_CH13_16 = {
     {
       type: "say",
       speaker: "宁念",
-      sprite: "assets/chars/ningnian_front.png",
+      sprite: "assets/chars/ningnian_coat_dress.png",
       side: "right",
       text: "你也是超人。",
       slots: [
         { side: "left", sprite: "assets/chars/boy27_front.png", name: "小男孩" },
-        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/ningnian_coat_dress.png", name: "宁念" },
       ],
     },
     {

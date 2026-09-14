@@ -105,6 +105,26 @@ window.STORY_CH01_06 = {
         { side: "right", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
       ],
     },
+    {
+      type: "flavorChoice",
+      id: "flavor_hongjie_horror_qa",
+      mode: "qa",
+      progress: "§1 追问 · 惊悚值",
+      prompt: "宁念还想再问一句——",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_daily_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
+      ],
+      extraSlots: [
+        { side: "right", sprite: "assets/chars/junge_front.png", name: "俊哥" },
+      ],
+      npcHint:
+        "红姐：老玩家，嘴毒、讲规则不耐烦。俊哥：护着红姐，口气冲，会补积分和复活。宁念：刚死进来的新玩家，直球好奇、有点愣，还没进副本。",
+      plotHint:
+        "进楼前规则说明。无限流；被拉进来的都是死人；攒9999分复活；通关积分跟惊悚值有关；99惊悚值只剩1分；100惊悚值直接死。禁止剧透幸福之家室内家人、血衣、肠子、红姐真实图谋、异世之门、第七天结局。",
+      resumeHint:
+        "所谓惊悚值，就是害怕程度。老玩家一般能压到 60 以内，新玩家就比较惨了。",
+    },
     { type: "horror", add: 6 },
     {
       type: "narration",
@@ -228,6 +248,8 @@ window.STORY_CH01_06 = {
           ending: "sisi_kill",
         },
       ],
+      plotHint:
+        "红裙小孩是血衣萝莉，掐脖子是袭击；湿裙是玩家的血不是水。正史是搂进怀里当湿衣服。推开或当怪物打都会被杀。",
     },
     {
       type: "narration",
@@ -407,6 +429,8 @@ window.STORY_CH01_06 = {
           ending: "boss_wrath",
         },
       ],
+      plotHint:
+        "无头断头刚把思思打飞。正史是护娃并薅腹肌认亲。求饶说不是这家人、或骂他怪物变态会惹怒被杀。",
     },
     {
       type: "narration",
@@ -514,6 +538,24 @@ window.STORY_CH01_06 = {
         { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
         { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
       ],
+    },
+    {
+      type: "flavorChoice",
+      id: "flavor_sisi_hungry",
+      mode: "chat",
+      progress: "§5 岔口 · 饿饿饭饭",
+      prompt: "思思喊饿。宁念会说——",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+      ],
+      npcHint:
+        "思思：粘人、婴儿腔、认宁念为妈妈；刚把断头踹上天花板，眼神湿润要吃饭。宁念当亲生女儿哄，高度近视不拆穿。",
+      plotHint:
+        "思思是血衣萝莉，刚拼好骨头、把断头踹上天花板，用婴儿腔喊饿要吃饭。宁念眼瞎当女儿撒娇，正史接下来是她去翻冰箱做饭。本场只有思思和宁念；肠大爷、毛衣、毛线都还没出场。禁止提毛线/毛衣/肠子/尸食/鸡爪。禁止写成没有恐怖错位的普通母女，禁止宁念看清鬼相或提血衣。断头抠在天花板上，不要让他开口。禁止抢正史下一句翻冰箱做饭的旁白原文。",
+      forbid: /毛线|毛衣|肠子|肠大爷|鸡爪|尸食|黑老太|面膜/,
+      resumeHint:
+        "这谁顶得住啊！我立刻从冰箱里翻出食材，眯着眼睛去做饭。",
     },
     {
       type: "narration",
@@ -657,6 +699,23 @@ window.STORY_CH01_06 = {
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
       ],
+    },
+    {
+      type: "flavorChoice",
+      id: "flavor_boss_name",
+      mode: "chat",
+      progress: "§5 岔口 · 取名",
+      prompt: "断头说没有名字，让你取一个。宁念会说——",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+      npcHint:
+        "断头：高冷、话少、情绪低沉，刚把头接回身体；不能说破通关情报。被请取名时别扭、含糊。宁念当老公，直球、高度近视。",
+      plotHint:
+        "断头刚把头飞去接上走出浴室的身体，变成一米八六的男人。他说没有名字，请宁念取一个，随即会心情低落去客房。宁念把他当老公，看不清（刚洗完「黑皮西瓜」）。禁止她看清无头真相。禁止现在取到后文真名宁君安。禁止抢正史下一句：他快速离开去客房睡觉。肠大爷、毛衣、毛线都未出场。",
+      forbid: /毛线|毛衣|肠子|肠大爷|鸡爪|尸食|黑老太|面膜|宁君安/,
+      resumeHint: "说完，男人快速离开，情绪低沉地去客房睡觉。",
     },
     {
       type: "narration",

@@ -147,6 +147,7 @@ window.STORY_UNLOCK_PRESETS = {
     "floor01_outside",
     "elevator",
     "three_doors",
+    "family_photo",
     "floor09_outside",
     "floor10_outside",
     "floor27_outside",
@@ -235,6 +236,12 @@ window.SCENE_GRAPH = {
         locked: "assets/scenes/three_doors.png",
         open: "assets/scenes/three_doors_open.png",
       },
+      hotspots: [],
+    },
+    /** 剧情专用：结局合影 */
+    family_photo: {
+      id: "family_photo",
+      image: "assets/scenes/family_photo.png",
       hotspots: [],
     },
     elevator: {
@@ -643,9 +650,10 @@ window.SCENE_GRAPH = {
       hotspots: [
         {
           id: "toCorridor",
-          area: { x: 38, y: 86, w: 24, h: 12 },
+          // 右侧敞开房门
+          area: { x: 82, y: 0, w: 17, h: 72 },
           bubble: "走廊",
-          bubblePos: { x: 50, y: 40 },
+          bubblePos: { x: 28, y: 42 },
           goTo: "corridor",
         },
       ],
@@ -656,9 +664,10 @@ window.SCENE_GRAPH = {
       hotspots: [
         {
           id: "toCorridor",
-          area: { x: 38, y: 86, w: 24, h: 12 },
+          // 右侧敞开房门（避开立柜前站位）
+          area: { x: 85, y: 1, w: 14, h: 86 },
           bubble: "走廊",
-          bubblePos: { x: 50, y: 40 },
+          bubblePos: { x: 28, y: 40 },
           goTo: "corridor",
         },
       ],

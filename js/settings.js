@@ -100,10 +100,18 @@
     if (model) model.value = cfg.model || "qwen-plus";
     if (key) key.value = cfg.apiKey || "";
     if (hint) {
+      const flavor = window.GalAI?.getFlavorDebug?.();
       const err = window.GalAI?.getLastError?.();
-      hint.textContent = err
-        ? `上次错误：${err}`
-        : "国内推荐：阿里云百炼地址 + 模型 qwen-plus；可只填到 /v1，会自动补 /chat/completions";
+      if (flavor?.error || (flavor && flavor.source === "local")) {
+        hint.textContent = `合流上次：${flavor.source || "?"} / ${flavor.stage || ""} / ${flavor.error || "无报错（可能是解析失败）"}`;
+      } else if (flavor?.source === "ai") {
+        hint.textContent = `合流上次：AI 成功（${flavor.stage || ""}） ${flavor.sample || ""}`;
+      } else if (err) {
+        hint.textContent = `上次错误：${err}`;
+      } else {
+        hint.textContent =
+          "国内推荐：阿里云百炼地址 + 模型 qwen-plus；可只填到 /v1，会自动补 /chat/completions";
+      }
     }
   }
 
