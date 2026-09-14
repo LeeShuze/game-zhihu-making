@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>幸福之家</title>
+    <link rel="stylesheet" href="css/style.css?v=elevator2" />
+    <link rel="stylesheet" href="css/dialogue.css" />
+  </head>
+  <body data-aspect="16-9" style="--aspect-w: 16; --aspect-h: 9">
+    <div class="stage" id="stage">
+      <div class="scene-root">
+        <img id="sceneImage" class="scene-image" alt="" draggable="false" />
+        <div id="hotspotLayer" class="hotspot-layer" aria-label="可交互区域"></div>
+      </div>
+
+      <div id="sceneFade" class="scene-fade" aria-hidden="true"></div>
+
+      <div class="horror-meter" id="horrorMeter" aria-live="polite" title="惊悚值">
+        <div class="horror-icon" aria-hidden="true">
+          <svg class="horror-icon-svg" viewBox="0 0 120 120" role="img">
+            <!-- 血溅底 -->
+            <g class="horror-splatter">
+              <path
+                d="M58 18c12-8 28-2 34 12 8-2 18 8 16 18 10 4 12 18 4 26 8 10-2 24-14 24 2 12-10 22-22 18-6 10-22 12-30 2-12 8-28 2-32-12-12 2-20-10-16-20-10-6-8-22 4-26-4-12 8-24 22-22 4-10 18-16 34-20z"
+              />
+              <circle cx="28" cy="36" r="5" />
+              <circle cx="96" cy="42" r="4" />
+              <circle cx="88" cy="86" r="3.5" />
+              <circle cx="34" cy="90" r="3" />
+              <circle cx="72" cy="16" r="2.5" />
+            </g>
+            <!-- 侧视大脑 -->
+            <g class="horror-brain-art">
+              <path
+                class="horror-brain-body"
+                d="M38 70c-2-18 8-34 26-38 14-3 28 4 34 16 4 8 4 18-1 26-3 6-9 11-16 13-2 6-8 10-15 10-10 0-18-6-21-14-4 1-8-2-7-13z"
+              />
+              <path
+                class="horror-brain-cerebellum"
+                d="M70 84c6 1 12-2 14-8 4 2 9 1 11-3 1 8-4 16-12 18-6 2-12 0-13-7z"
+              />
+              <path
+                class="horror-brain-folds"
+                d="M48 42c8 2 14 8 16 16M62 36c6 6 8 14 6 22M76 40c4 8 2 18-4 24M52 58c10 2 18 8 20 16M44 54c6 8 8 16 4 22"
+              />
+              <path
+                class="horror-brain-outline"
+                d="M38 70c-2-18 8-34 26-38 14-3 28 4 34 16 4 8 4 18-1 26-3 6-9 11-16 13-2 6-8 10-15 10-10 0-18-6-21-14-4 1-8-2-7-13z"
+              />
+            </g>
+          </svg>
+        </div>
+        <div class="horror-meta">
+          <span class="horror-label">惊悚值</span>
+          <span class="horror-value" id="horrorValue">0</span>
+        </div>
+      </div>
+
+      <div class="history-panel" id="historyPanel" hidden>
+        <div class="history-panel-head">
+          <h2>历史</h2>
+          <button type="button" class="history-close" id="historyClose" aria-label="关闭历史">×</button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+
+      <nav class="vn-menu" id="vnMenu" aria-label="游戏菜单">
+        <button type="button" class="vn-menu-btn" data-action="back">回退</button>
+        <button type="button" class="vn-menu-btn" data-action="history">历史</button>
+        <button type="button" class="vn-menu-btn" data-action="skip">跳过</button>
+        <button type="button" class="vn-menu-btn" data-action="auto" aria-pressed="false">自动</button>
+        <button type="button" class="vn-menu-btn" data-action="save">保存</button>
+        <button type="button" class="vn-menu-btn" data-action="settings" id="settingsBtn" aria-expanded="false" aria-controls="settingsPanel">设置</button>
+      </nav>
+
+      <div class="settings-overlay" id="settingsPanel" hidden>
+        <div class="settings-shell" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+          <aside class="settings-nav" aria-label="设置分类">
+            <p class="settings-nav-title" id="settingsTitle">设置</p>
+            <button type="button" class="settings-nav-btn is-active" data-settings-tab="save" aria-selected="true">存档</button>
+            <button type="button" class="settings-nav-btn" data-settings-tab="sound" aria-selected="false">声音</button>
+            <button type="button" class="settings-nav-btn" data-settings-tab="display" aria-selected="false">画面</button>
+            <button type="button" class="settings-nav-btn settings-nav-danger" data-settings-tab="title" aria-selected="false">返回主菜单</button>
+          </aside>
+
+          <div class="settings-main">
+            <button type="button" class="settings-close" id="settingsClose" aria-label="关闭设置">×</button>
+
+            <section class="settings-pane" data-settings-pane="save">
+              <header class="settings-pane-head">
+                <h2>存档</h2>
+                <p>选择槽位保存或读取进度</p>
+              </header>
+              <div class="save-slot-list" id="saveSlotList"></div>
+            </section>
+
+            <section class="settings-pane" data-settings-pane="sound" hidden>
+              <header class="settings-pane-head">
+                <h2>声音</h2>
+                <p>音量设置会自动保存（音频资源接入后即时生效）</p>
+              </header>
+              <div class="sound-list">
+                <label class="sound-row">
+                  <span class="sound-label">主音量</span>
+                  <input type="range" min="0" max="100" value="80" data-vol="master" />
+                  <span class="sound-val" data-vol-val="master">80%</span>
+                </label>
+                <label class="sound-row">
+                  <span class="sound-label">背景音乐</span>
+                  <input type="range" min="0" max="100" value="70" data-vol="bgm" />
+                  <span class="sound-val" data-vol-val="bgm">70%</span>
+                </label>
+                <label class="sound-row">
+                  <span class="sound-label">音效</span>
+                  <input type="range" min="0" max="100" value="80" data-vol="se" />
+                  <span class="sound-val" data-vol-val="se">80%</span>
+                </label>
+                <label class="sound-row">
+                  <span class="sound-label">语音</span>
+                  <input type="range" min="0" max="100" value="80" data-vol="voice" />
+                  <span class="sound-val" data-vol-val="voice">80%</span>
+                </label>
+                <label class="sound-mute">
+                  <input type="checkbox" id="audioMute" />
+                  <span>静音</span>
+                </label>
+              </div>
+            </section>
+
+            <section class="settings-pane" data-settings-pane="display" hidden>
+              <header class="settings-pane-head">
+                <h2>画面</h2>
+                <p>调整舞台显示比例</p>
+              </header>
+              <div class="ratio-list" role="radiogroup" aria-label="画面比例">
+                <button class="ratio-option" type="button" role="radio" data-aspect="16-9" data-w="16" data-h="9" aria-checked="true">
+                  <span class="label">16:9</span>
+                  <span class="hint">默认</span>
+                </button>
+                <button class="ratio-option" type="button" role="radio" data-aspect="4-3" data-w="4" data-h="3" aria-checked="false">
+                  <span class="label">4:3</span>
+                  <span class="hint">经典</span>
+                </button>
+                <button class="ratio-option" type="button" role="radio" data-aspect="16-10" data-w="16" data-h="10" aria-checked="false">
+                  <span class="label">16:10</span>
+                  <span class="hint">显示器</span>
+                </button>
+                <button class="ratio-option" type="button" role="radio" data-aspect="21-9" data-w="21" data-h="9" aria-checked="false">
+                  <span class="label">21:9</span>
+                  <span class="hint">超宽</span>
+                </button>
+                <button class="ratio-option" type="button" role="radio" data-aspect="fit" data-w="16" data-h="9" aria-checked="false">
+                  <span class="label">适应窗口</span>
+                  <span class="hint">铺满</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="settings-pane" data-settings-pane="title" hidden>
+              <header class="settings-pane-head">
+                <h2>返回主菜单</h2>
+                <p>未保存的进度将会丢失</p>
+              </header>
+              <div class="title-confirm">
+                <p>确定要返回主菜单吗？</p>
+                <div class="title-confirm-actions">
+                  <button type="button" class="settings-action-btn is-danger" id="confirmMainMenu">确定返回</button>
+                  <button type="button" class="settings-action-btn" id="cancelMainMenu">取消</button>
+                </div>
+                <p class="title-confirm-hint">同事主菜单接入后，将跳转到主菜单界面。</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-confirm" id="storyConfirm" hidden>
+        <div class="story-confirm-card" role="dialog" aria-modal="true" aria-labelledby="storyConfirmText">
+          <p id="storyConfirmText">是否继续剧情？</p>
+          <div class="story-confirm-actions">
+            <button type="button" class="story-confirm-btn is-primary" id="storyConfirmYes">继续</button>
+            <button type="button" class="story-confirm-btn" id="storyConfirmNo">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/scenes.js?v=elevator2"></script>
+    <script src="js/dialogue.js"></script>
+    <script src="js/story/ch01_06.js"></script>
+    <script src="js/story/ch07_12.js"></script>
+    <script src="js/story/ch13_16.js"></script>
+    <script src="js/story/ch17_19.js"></script>
+    <script src="js/story/ch20_end.js"></script>
+    <script src="js/story.js"></script>
+    <script src="js/horror.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/game.js?v=elevator2"></script>
+  </body>
+</html>
