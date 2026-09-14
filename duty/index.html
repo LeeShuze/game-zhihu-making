@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%231771ed'/%3E%3Cpath d='M10 9h9v24h-9zm12 0h8v24h-8z' fill='white'/%3E%3C/svg%3E">
+    <meta charset="UTF-8" />
+    
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="《幸福之家》——一楼值班室的第一人称 3D 沉浸式序章。"
+    />
+    <title>幸福之家 · 值班室</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      type="module"
+      crossorigin
+      src="./big-pengu-runtime/assets/index-Hxh_mXsm.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      crossorigin
+      href="./big-pengu-runtime/assets/index-BM4_5JrD.css"
+    />
+    <style id="big-pengu-audio-settings-style">
+      button[data-big-pengu-settings-trigger] { border-color: rgba(181, 158, 105, .55) !important; background: rgba(27, 26, 22, .78) !important; color: #c9b174 !important; }
+      button[data-big-pengu-settings-trigger]:hover, button[data-big-pengu-settings-trigger]:focus-visible { border-color: #d0b575 !important; background: #c4aa6e !important; color: #171611 !important; outline: none; }
+      button[data-big-pengu-settings-trigger] > div { border-color: #9c895e !important; }
+      #big-pengu-audio-settings[hidden] { display: none; }
+      #big-pengu-audio-settings { position: fixed; inset: 0; z-index: 20000; display: grid; place-items: center; padding: 24px; color: #e6ddc9; font-family: Inter, "PingFang SC", sans-serif; }
+      .bpas-backdrop { position: absolute; inset: 0; border: 0; background: rgba(8, 8, 7, .78); backdrop-filter: blur(5px); cursor: default; }
+      .bpas-panel { position: relative; width: min(390px, calc(100vw - 32px)); padding: 26px; border: 1px solid #766b52; border-radius: 2px; background: #201f1b; box-shadow: 0 24px 70px rgba(0, 0, 0, .62); }
+      .bpas-panel::before, .bpas-panel::after { content: ""; position: absolute; width: 18px; height: 18px; pointer-events: none; }
+      .bpas-panel::before { top: -1px; left: -1px; border-top: 2px solid #c8ad70; border-left: 2px solid #c8ad70; }
+      .bpas-panel::after { right: -1px; bottom: -1px; border-right: 2px solid #c8ad70; border-bottom: 2px solid #c8ad70; }
+      .bpas-kicker { margin: 0 0 8px; color: #a9966c; font: 600 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .18em; text-transform: uppercase; }
+      .bpas-title { margin: 0; color: #eee6d5; font: 500 25px/1.2 Georgia, "Songti SC", serif; letter-spacing: .04em; }
+      .bpas-copy { margin: 10px 0 24px; color: #a9a18f; font-size: 13px; line-height: 1.65; }
+      .bpas-control { padding: 17px 0 14px; border-top: 1px solid rgba(200, 173, 112, .25); border-bottom: 1px solid rgba(200, 173, 112, .25); }
+      .bpas-label-row, .bpas-scale { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+      .bpas-label { color: #d9cfba; font: 600 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; }
+      .bpas-value { color: #d2b979; font: 600 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .bpas-range { width: 100%; margin: 16px 0 9px; accent-color: #c5ab6e; cursor: pointer; }
+      .bpas-range:focus-visible { outline: 1px solid #d2bc83; outline-offset: 5px; }
+      .bpas-scale { color: #77705f; font: 9px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
+      .bpas-confirm { width: 100%; min-height: 42px; margin-top: 22px; border: 1px solid #8a7954; border-radius: 1px; background: #2a2822; color: #dccb9f; font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .18em; cursor: pointer; transition: border-color .16s ease, background-color .16s ease, color .16s ease; }
+      .bpas-confirm:hover, .bpas-confirm:focus-visible { border-color: #d0b575; background: #363127; color: #fff5da; outline: none; }
+      @media (max-width: 560px) { #big-pengu-audio-settings { padding: 16px; } .bpas-panel { padding: 22px; } }
+      @media (prefers-reduced-motion: reduce) { .bpas-confirm { transition: none; } }
+    </style>
+    <style id="scene-layout-editor-style">
+      #scene-layout-editor { position: fixed; inset: 0; z-index: 12000; pointer-events: none; color: #eee4d7; font-family: Inter, sans-serif; }
+      #scene-layout-editor button, #scene-layout-editor input, #scene-layout-editor select { font: inherit; }
+      .sle-launch, .sle-panel, .sle-dock { pointer-events: auto; border: 1px solid rgba(220, 178, 136, .3); background: rgba(24, 19, 18, .94); box-shadow: 0 18px 60px rgba(0, 0, 0, .55); backdrop-filter: blur(16px); }
+      .sle-launch { position: absolute; top: 18px; right: 18px; padding: 10px 13px; color: #e6c79d; cursor: pointer; }
+      .sle-panel { position: absolute; top: 18px; right: 18px; width: min(340px, calc(100vw - 36px)); max-height: calc(100vh - 36px); overflow: auto; padding: 15px; }
+      .sle-panel header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+      .sle-panel h2, .sle-panel p { margin: 0; }
+      .sle-panel h2 { margin-top: 3px; font: 500 19px Georgia, serif; }
+      .sle-kicker { color: #c08b58; font-size: 8px; letter-spacing: .18em; }
+      .sle-header-actions { display: flex; gap: 5px; }
+      .sle-panel button, .sle-dock button, .sle-launch { border-radius: 2px; border: 1px solid rgba(230, 207, 182, .2); background: #28211f; color: #eadfce; }
+      .sle-panel button, .sle-dock button { min-height: 30px; padding: 5px 9px; cursor: pointer; }
+      .sle-panel button:hover, .sle-dock button:hover, .sle-launch:hover { border-color: rgba(225, 168, 102, .7); background: #4a342c; }
+      .sle-panel label { display: grid; gap: 6px; margin-top: 12px; color: rgba(238,228,215,.62); font-size: 9px; letter-spacing: .06em; }
+      .sle-panel select, .sle-panel input { width: 100%; height: 34px; padding: 0 8px; border: 1px solid rgba(230,207,182,.18); border-radius: 2px; outline: none; color: #f0e5d7; background: #151211; }
+      .sle-modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 12px; }
+      .sle-modes button.is-active, .sle-dock button.is-active { color: #241a13; border-color: #dda45f; background: #dda45f; }
+      .sle-help { margin-top: 12px; padding: 10px; border-left: 2px solid #b87f4a; color: rgba(238,228,215,.67); background: rgba(0,0,0,.2); font-size: 9px; line-height: 1.55; }
+      .sle-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .sle-actions { display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 5px; margin-top: 13px; }
+      .sle-actions .is-primary { color: #182114; border-color: #a7c88e; background: #a7c88e; }
+      .sle-status { margin-top: 11px !important; min-height: 28px; padding-top: 9px; border-top: 1px solid rgba(255,255,255,.09); color: #cfb18b; font-size: 8px; line-height: 1.5; }
+      .sle-dock { position: absolute; top: 16px; left: 50%; display: flex; align-items: center; gap: 5px; padding: 6px; transform: translateX(-50%); }
+      .sle-dock strong { max-width: 130px; padding: 0 7px; overflow: hidden; font-size: 9px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+      .sle-dock button { min-height: 28px; padding: 4px 8px; font-size: 9px; }
+      @media (max-width: 680px) { .sle-panel { top: 8px; right: 8px; width: calc(100vw - 16px); max-height: calc(100vh - 16px); } .sle-dock { top: 8px; width: calc(100vw - 16px); justify-content: center; } }
+    </style>
+    <style id="happiness-departure-style">
+      #happiness-go-30f { position:fixed; right:28px; top:50%; z-index:80; transform:translateY(-50%); padding:17px 26px; border:1px solid #c5ad77; background:rgba(31,29,23,.96); color:#e6ddc9; font:20px "Songti SC",serif; letter-spacing:2px; cursor:pointer; box-shadow:0 8px 30px #0005; transition:background .2s,color .2s,box-shadow .2s; animation:happiness-departure-reveal .45s ease-out; }
+      #happiness-go-30f[hidden] { display:none; }
+      #happiness-go-30f:hover { background:#c5ad77; color:#211d14; box-shadow:0 8px 32px #c5ad7733; }
+      #happiness-go-30f:focus-visible { outline:2px solid #e6ddc9; outline-offset:5px; }
+      #happiness-go-30f:active { transform:translateY(-50%) scale(.97); }
+      @keyframes happiness-departure-reveal { from { opacity:0; margin-right:-12px; } to { opacity:1; margin-right:0; } }
+      @media (prefers-reduced-motion:reduce) { #happiness-go-30f { animation:none; transition:none; } }
+    </style>
+    <script type="module" crossorigin src="./assets/index-Bb-fNYbi.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script id="site-audio-script">
+      (function () {
+        var BGM_VOLUME = 0.30;
+        var CLICK_VOLUME = 0.1;
+        var LAMP_SWITCH_VOLUME = 0.196;
+        var bgm = new Audio("./big-pengu-runtime/audio/the-dread.mp3");
+        var click = new Audio("./big-pengu-runtime/audio/click.mp3");
+        var lampSwitch = new Audio("./big-pengu-runtime/audio/lamp-switch.wav");
+        var bgmStarted = false;
+        var bgmStarting = false;
+        var bgmFadeFrame = 0;
+        var bgmAttempt = 0;
+        var audioPrompt = null;
+
+        bgm.loop = true;
+        bgm.preload = "auto";
+        bgm.volume = Math.min(BGM_VOLUME, 0.01);
+        click.preload = "auto";
+        click.volume = CLICK_VOLUME;
+        lampSwitch.preload = "auto";
+        lampSwitch.volume = LAMP_SWITCH_VOLUME;
+
+        function fadeBgmTo(target, duration) {
+          cancelAnimationFrame(bgmFadeFrame);
+          var initial = bgm.volume;
+          var startedAt = performance.now();
+          function step(now) {
+            var progress = Math.min(1, (now - startedAt) / duration);
+            bgm.volume = initial + (target - initial) * progress;
+            if (progress < 1) bgmFadeFrame = requestAnimationFrame(step);
+          }
+          bgmFadeFrame = requestAnimationFrame(step);
+        }
+
+        function showAudioPrompt(message) {
+          if (!audioPrompt) {
+            audioPrompt = document.createElement("button");
+            audioPrompt.type = "button";
+            audioPrompt.id = "big-pengu-enable-audio";
+            audioPrompt.style.cssText = "position:fixed;left:24px;bottom:24px;z-index:1100;padding:10px 16px;border:1px solid #8a795b;background:#29251eef;color:#e8ddc7;font:14px serif;cursor:pointer";
+            audioPrompt.addEventListener("click", function () { startBgm(true); });
+            document.body.appendChild(audioPrompt);
+          }
+          audioPrompt.textContent = message;
+          audioPrompt.hidden = false;
+        }
+
+        function startBgm(fromGesture) {
+          if (document.hidden) return;
+          if (bgmStarted && !bgm.paused) return;
+          // A pending network request must not swallow a later user activation.
+          if (bgmStarting && fromGesture !== true) return;
+          bgmStarting = true;
+          var attempt = ++bgmAttempt;
+          cancelAnimationFrame(bgmFadeFrame);
+          bgm.volume = Math.min(BGM_VOLUME, 0.01);
+          function failed(error) {
+            if (attempt !== bgmAttempt) return;
+            bgmStarting = false;
+            if (document.hidden) return;
+            showAudioPrompt(error && error.name === "NotAllowedError"
+              ? "点击开启声音" : "背景音乐未播放 · 点击重试");
+            console.warn("背景音乐播放未成功", error);
+          }
+          function started() {
+            if (attempt !== bgmAttempt) return;
+            bgmStarting = false;
+            if (document.hidden) { bgm.pause(); return; }
+            bgmStarted = true;
+            if (audioPrompt) audioPrompt.hidden = true;
+            fadeBgmTo(BGM_VOLUME, 1000);
+          }
+          try {
+            var playback = bgm.play();
+            if (playback && playback.then) playback.then(started).catch(failed);
+            else started();
+          } catch (error) { failed(error); }
+        }
+
+        function setBgmVolume(value) {
+          var nextVolume = Number(value);
+          if (!Number.isFinite(nextVolume)) return;
+          BGM_VOLUME = Math.max(0, Math.min(1, nextVolume));
+          if (bgmStarted) {
+            cancelAnimationFrame(bgmFadeFrame);
+            bgm.volume = BGM_VOLUME;
+          }
+        }
+
+        function getBgmVolume() {
+          return BGM_VOLUME;
+        }
+
+        function playClick() {
+          click.pause();
+          try { click.currentTime = 0; } catch (error) {}
+          click.volume = CLICK_VOLUME;
+          var playback = click.play();
+          if (playback && playback.catch) playback.catch(function () {});
+        }
+
+        function playLampSwitch() {
+          lampSwitch.pause();
+          try { lampSwitch.currentTime = 0; } catch (error) {}
+          lampSwitch.volume = LAMP_SWITCH_VOLUME;
+          var playback = lampSwitch.play();
+          if (playback && playback.catch) playback.catch(function () {});
+        }
+
+        window.bigPenguStartBgm = startBgm;
+        window.bigPenguSetBgmVolume = setBgmVolume;
+        window.bigPenguGetBgmVolume = getBgmVolume;
+        window.bigPenguPlayClick = playClick;
+        window.bigPenguPlayLampSwitch = playLampSwitch;
+
+        var settingsRoot = null;
+        var settingsRange = null;
+        var settingsValue = null;
+        var settingsPreviousFocus = null;
+
+        function buildAudioSettings() {
+          if (settingsRoot) return;
+          settingsRoot = document.createElement("div");
+          settingsRoot.id = "big-pengu-audio-settings";
+          settingsRoot.hidden = true;
+          settingsRoot.setAttribute("role", "dialog");
+          settingsRoot.setAttribute("aria-modal", "true");
+          settingsRoot.setAttribute("aria-labelledby", "big-pengu-audio-settings-title");
+          settingsRoot.innerHTML =
+            '<button class="bpas-backdrop" type="button" aria-label="关闭声音设置"></button>' +
+            '<section class="bpas-panel">' +
+              '<p class="bpas-kicker">AUDIO CONTROL / 声场控制</p>' +
+              '<h2 class="bpas-title" id="big-pengu-audio-settings-title">背景音乐</h2>' +
+              '<p class="bpas-copy">调整值班室的背景音乐音量。点击确认或按 ESC 返回桌前。</p>' +
+              '<div class="bpas-control">' +
+                '<div class="bpas-label-row"><label class="bpas-label" for="big-pengu-bgm-volume">BGM 音量</label><output class="bpas-value" for="big-pengu-bgm-volume">30%</output></div>' +
+                '<input class="bpas-range" id="big-pengu-bgm-volume" type="range" min="0" max="100" step="1" value="30" aria-label="背景音乐音量" />' +
+                '<div class="bpas-scale" aria-hidden="true"><span>静音</span><span>最大</span></div>' +
+              '</div>' +
+              '<button class="bpas-confirm" type="button">确认并返回</button>' +
+            '</section>';
+          document.body.appendChild(settingsRoot);
+          settingsRange = settingsRoot.querySelector(".bpas-range");
+          settingsValue = settingsRoot.querySelector(".bpas-value");
+          settingsRange.addEventListener("input", function () {
+            var percent = Number(settingsRange.value);
+            settingsValue.textContent = percent + "%";
+            setBgmVolume(percent / 100);
+          });
+          settingsRoot.querySelector(".bpas-backdrop").addEventListener("click", closeAudioSettings);
+          settingsRoot.querySelector(".bpas-confirm").addEventListener("click", closeAudioSettings);
+          settingsRoot.addEventListener("pointerdown", function (event) { event.stopPropagation(); });
+          settingsRoot.addEventListener("wheel", function (event) { event.stopPropagation(); }, { passive: true });
+        }
+
+        function openAudioSettings() {
+          buildAudioSettings();
+          settingsPreviousFocus = document.activeElement;
+          var percent = Math.round(BGM_VOLUME * 100);
+          settingsRange.value = String(percent);
+          settingsValue.textContent = percent + "%";
+          settingsRoot.hidden = false;
+          settingsRange.focus();
+        }
+
+        function closeAudioSettings() {
+          if (!settingsRoot || settingsRoot.hidden) return;
+          settingsRoot.hidden = true;
+          if (settingsPreviousFocus && typeof settingsPreviousFocus.focus === "function") settingsPreviousFocus.focus();
+        }
+
+        document.addEventListener("click", function (event) {
+          var target = event.target instanceof Element ? event.target.closest('button[title="声音设置"], button[data-big-pengu-settings-trigger]') : null;
+          if (!target) return;
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          target.setAttribute("title", "声音设置");
+          target.setAttribute("data-big-pengu-settings-trigger", "true");
+          openAudioSettings();
+        }, true);
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && settingsRoot && !settingsRoot.hidden) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            closeAudioSettings();
+          }
+        }, true);
+
+        var settingsTriggerObserver = new MutationObserver(function () {
+          var trigger = document.querySelector('button[title="声音设置"]');
+          if (!trigger) return;
+          trigger.setAttribute("title", "声音设置");
+          trigger.setAttribute("aria-label", "打开声音设置");
+          trigger.setAttribute("data-big-pengu-settings-trigger", "true");
+        });
+        settingsTriggerObserver.observe(document.documentElement, { childList: true, subtree: true });
+
+        function resumeFromGesture(event) {
+          if (event.isTrusted) startBgm(true);
+        }
+        // Capture before scene/overlay handlers can stop propagation.
+        window.addEventListener("pointerdown", resumeFromGesture, true);
+        window.addEventListener("click", resumeFromGesture, true);
+        window.addEventListener("touchend", resumeFromGesture, { capture: true, passive: true });
+        window.addEventListener("keydown", resumeFromGesture, true);
+        document.addEventListener("visibilitychange", function () {
+          if (document.hidden) {
+            ++bgmAttempt;
+            bgmStarting = false;
+            cancelAnimationFrame(bgmFadeFrame);
+            bgm.pause();
+          } else {
+            startBgm();
+          }
+        });
+        window.addEventListener("happiness:dispose-duty", function () {
+          ++bgmAttempt;cancelAnimationFrame(bgmFadeFrame);bgm.pause();click.pause();lampSwitch.pause();
+        }, { once:true });
+        // Start as soon as this page script runs, independently of the scene intro.
+        startBgm();
+      })();
+    </script>
+    <button id="happiness-go-30f" type="button" hidden>前往30F <span aria-hidden="true">→</span></button>
+    <script id="happiness-departure-script">
+      (function () {
+        var button = document.getElementById("happiness-go-30f");
+        var inspecting = false;
+        function updateDepartureButton() {
+          var inventory = window.__happinessInventory || {};
+          // Check both current flags, never the order of collection events.
+          button.hidden = !(inventory.roomKey30F && inventory.flashlight) || inspecting;
+        }
+        window.addEventListener("happiness:item-collected", updateDepartureButton);
+        window.addEventListener("happiness:key-inspection", function (event) {
+          inspecting = !!event.detail.open;
+          updateDepartureButton();
+        });
+        ["pointerdown", "pointerup", "dblclick"].forEach(function (name) {
+          button.addEventListener(name, function (event) { event.stopPropagation(); });
+        });
+        button.addEventListener("click", function (event) {
+          event.stopPropagation();
+          var inventory = window.__happinessInventory || {};
+          if (!inventory.roomKey30F || !inventory.flashlight) return;
+          window.dispatchEvent(new CustomEvent("happiness:depart-duty", { detail: { roomKey30F:true, flashlight:true } }));
+          if (window.bigPenguPlayClick) window.bigPenguPlayClick();
+        });
+        updateDepartureButton();
+      })();
+    </script>
+    <script id="scene-layout-editor-script">
+      (function () {
+        var enabled = false;
+        var ids = ["computer", "lamp", "lighter", "phone", "roomKey", "radio", "flashlight", "clipboard", "documentFolder", "coffee", "handcuffs", "ashtray", "taskPaper", "investigationBoard"];
+        var labels = { computer: "电脑", lamp: "台灯", lighter: "打火机", phone: "座机电话", roomKey: "钥匙", radio: "收音机", flashlight: "手电筒", clipboard: "档案板", documentFolder: "黑色文件夹", coffee: "咖啡杯", handcuffs: "手铐", ashtray: "烟灰缸", taskPaper: "单独纸张", investigationBoard: "线索板" };
+        var api = null;
+        var root = null;
+        var defaults = null;
+        var collapsed = false;
+
+        function clone(value) { return JSON.parse(JSON.stringify(value)); }
+        function round(value) { return Number(value.toFixed(5)); }
+        function options() { return ids.map(function (id) { return '<option value="' + id + '">' + labels[id] + '</option>'; }).join(""); }
+        function build() {
+          if (root) return;
+          root = document.createElement("div");
+          root.id = "scene-layout-editor";
+          root.innerHTML =
+            '<button class="sle-launch" type="button">DEV · 打开摆放编辑器</button>' +
+            '<aside class="sle-panel" hidden><header><div><p class="sle-kicker">DEVELOPER MODE</p><h2>场景摆放台</h2></div><div class="sle-header-actions"><button data-action="collapse" type="button">收起</button><button data-action="exit" type="button">退出</button></div></header>' +
+            '<label>选择物件<select class="sle-select">' + options() + '</select></label>' +
+            '<div class="sle-modes"><button data-mode="translate" type="button">G / 1 · 移动</button><button data-mode="rotate" type="button">R / 2 · 旋转</button><button data-mode="scale" type="button">S / 3 · 缩放</button></div>' +
+            '<div class="sle-help">点击模型可直接选中并拖动；也可以选择物件后在画布任意位置拖动。移动只改变左右和前后，旋转只绕垂直轴，缩放保持等比。<br><strong>上下高度 Y 已锁定。</strong></div>' +
+            '<div class="sle-fields"><label>左右 X<input data-field="positionX" type="number" step="0.01"></label><label>前后 Z<input data-field="positionZ" type="number" step="0.01"></label><label>旋转 Y（度）<input data-field="rotationY" type="number" step="1"></label><label>等比缩放<input data-field="scale" type="number" step="0.01" min="0.0001"></label></div>' +
+            '<div class="sle-actions"><button class="is-primary" data-action="save" type="button">保存并应用</button><button data-action="reset-one" type="button">还原当前</button><button data-action="reset-all" type="button">全部还原</button></div><p class="sle-status">尚未调整</p></aside>' +
+            '<div class="sle-dock" hidden><strong></strong><button data-mode="translate" type="button">G 移动</button><button data-mode="rotate" type="button">R 旋转</button><button data-mode="scale" type="button">S 缩放</button><button data-action="expand" type="button">展开</button><button data-action="exit" type="button">退出</button></div>';
+          document.body.appendChild(root);
+          root.querySelector(".sle-launch").addEventListener("click", function () { api.setActive(true); collapsed = false; render(); });
+          root.querySelectorAll("[data-action='collapse']").forEach(function (button) { button.addEventListener("click", function () { collapsed = true; render(); }); });
+          root.querySelectorAll("[data-action='expand']").forEach(function (button) { button.addEventListener("click", function () { collapsed = false; render(); }); });
+          root.querySelectorAll("[data-action='exit']").forEach(function (button) { button.addEventListener("click", function () { api.setActive(false); collapsed = false; render(); }); });
+          root.querySelectorAll("[data-mode]").forEach(function (button) { button.addEventListener("click", function () { api.setMode(button.getAttribute("data-mode")); sync(); }); });
+          root.querySelector(".sle-select").addEventListener("change", function (event) { api.setSelected(event.target.value); sync(); });
+          root.querySelectorAll("[data-field]").forEach(function (input) {
+            input.addEventListener("change", function () {
+              var field = input.getAttribute("data-field");
+              var value = Number(input.value);
+              if (!Number.isFinite(value)) return;
+              if (field === "rotationY") value = value * Math.PI / 180;
+              if (field === "scale") value = Math.max(0.0001, value);
+              var patch = {}; patch[field] = value; api.update(api.getSelected(), patch); mark("已调整，尚未保存");
+            });
+          });
+          root.querySelector("[data-action='reset-one']").addEventListener("click", function () { var id = api.getSelected(); if (defaults[id]) api.update(id, clone(defaults[id])); mark("已还原当前物件，尚未保存"); });
+          root.querySelector("[data-action='reset-all']").addEventListener("click", function () { ids.forEach(function (id) { if (defaults[id]) api.update(id, clone(defaults[id])); }); mark("已还原全部物件，尚未保存"); });
+          root.querySelector("[data-action='save']").addEventListener("click", save);
+          bindCanvas();
+        }
+
+        function bindCanvas() {
+          var canvas = document.querySelector("canvas");
+          if (!canvas) { requestAnimationFrame(bindCanvas); return; }
+          if (canvas.dataset.layoutEditorBound) return;
+          canvas.dataset.layoutEditorBound = "true";
+          canvas.addEventListener("pointerdown", function (event) {
+            if (!api || !api.isActive() || event.button !== 0) return;
+            var x = event.clientX, y = event.clientY;
+            setTimeout(function () { if (api && api.isActive()) api.startDrag(api.getSelected(), x, y); }, 0);
+          }, true);
+          canvas.addEventListener("click", function (event) {
+            if (!api || !api.isActive()) return;
+            event.preventDefault(); event.stopImmediatePropagation();
+          }, true);
+        }
+
+        function mark(message) { if (!root) return; root.querySelector(".sle-status").textContent = message; sync(); }
+        function sync() {
+          if (!api || !root) return;
+          var id = api.getSelected();
+          var value = api.getConfig()[id];
+          root.querySelector(".sle-select").value = id;
+          root.querySelector(".sle-dock strong").textContent = labels[id] || id;
+          root.querySelectorAll("[data-mode]").forEach(function (button) { button.classList.toggle("is-active", button.getAttribute("data-mode") === api.getMode()); });
+          if (value) {
+            root.querySelector("[data-field='positionX']").value = round(value.positionX);
+            root.querySelector("[data-field='positionZ']").value = round(value.positionZ);
+            root.querySelector("[data-field='rotationY']").value = round(value.rotationY * 180 / Math.PI);
+            root.querySelector("[data-field='scale']").value = round(value.scale);
+          }
+          render();
+        }
+
+        function render() {
+          if (!api || !root) return;
+          var active = api.isActive();
+          root.querySelector(".sle-launch").hidden = active;
+          root.querySelector(".sle-panel").hidden = !active || collapsed;
+          root.querySelector(".sle-dock").hidden = !active || !collapsed;
+          var canvas = document.querySelector("canvas");
+          if (canvas) canvas.style.cursor = active ? "grab" : "auto";
+        }
+
+        async function save() {
+          var button = root.querySelector("[data-action='save']");
+          button.disabled = true; mark("正在写回生产场景…");
+          try {
+            var config = api.getConfig();
+            var layout = {};
+            ids.forEach(function (id) { var value = config[id]; if (value) layout[id] = { positionX: value.positionX, positionZ: value.positionZ, rotationY: value.rotationY, scale: value.scale }; });
+            var response = await fetch("/__big-pengu-layout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ layout: layout }) });
+            var detail = await response.json().catch(function () { return null; });
+            if (!response.ok) throw new Error(detail && detail.message ? detail.message : "HTTP " + response.status);
+            defaults = clone(api.getConfig()); mark("已写回项目，刷新和正式构建都会使用当前摆放");
+          } catch (error) { mark("保存失败：请确认页面由 pnpm dev 启动"); }
+          finally { button.disabled = false; }
+        }
+
+        function connect() {
+          api = window.__BIG_PENGU_LAYOUT_EDITOR__;
+          if (!api) return;
+          api.setActive(false);
+          if (!enabled) return;
+          build();
+          if (!defaults) defaults = clone(api.getConfig());
+          sync();
+        }
+
+        window.addEventListener("big-pengu-layout-ready", connect);
+        window.addEventListener("big-pengu-layout-change", sync);
+        window.addEventListener("keydown", function (event) {
+          if (!api || !api.isActive() || /INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) return;
+          var key = event.key.toLowerCase();
+          if (key === "g" || key === "1") api.setMode("translate");
+          if (key === "r" || key === "2") api.setMode("rotate");
+          if (key === "s" || key === "3") api.setMode("scale");
+          if (key === "escape") collapsed = true;
+          sync();
+        });
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", connect); else connect();
+      })();
+    </script>
+  </body>
+</html>

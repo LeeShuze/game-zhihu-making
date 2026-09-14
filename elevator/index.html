@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%231771ed'/%3E%3Cpath d='M10 9h9v24h-9zm12 0h8v24h-8z' fill='white'/%3E%3C/svg%3E"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#111310"><title>幸福之家 · 停车层</title>  <script type="module" crossorigin src="./assets/index-D79AMlZO.js"></script>
+  <script type="module" src="./avg-return.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-QT9XAbXL.css">
+</head>
+<body>
+  <main id="app">
+    <canvas id="scene" aria-label="幸福之家地下停车场三维场景"></canvas>
+    <header><span class="brand">幸福之家 <i>HAPPINESS HOME</i></span><span class="location">地下停车层 <b>P</b></span></header>
+    <section id="loading" aria-live="polite"><span class="loading-label">正在从值班室前往电梯间</span><span id="load-detail" hidden></span><button id="retry" hidden>重新加载</button></section>
+    <section id="welcome" hidden><div class="welcome-card"><small>幸福之家 · 地下停车层</small><h1 id="welcome-title">电梯在前方</h1><p>钥匙与手电已经收进囊中。<br>穿过停车场，走进那部开着门的电梯。</p><button id="start">进入停车场</button><p class="controls">W A S D 行走 · 鼠标观察<br>E 拿起／收起手电 · M 静音 · Esc 暂停</p></div></section>
+    <div id="game-hud" hidden><span id="objective">找到前方的电梯</span><span class="crosshair">·</span><button id="exit-story" class="story-exit" hidden>走出电梯 · Enter</button>
+      <div class="inventory" aria-label="随身道具">
+        <button id="torch-item" class="inventory-toggle" aria-pressed="false" aria-keyshortcuts="E"><span class="key-hint">[E]</span> <span id="torch-item-name">开启手电</span></button>
+        <span class="inventory-separator" aria-hidden="true">·</span><span class="key-status">钥匙已在囊中</span>
+      </div>
+    <div id="joystick"><span></span></div></div>
+    <section id="story-entry" hidden aria-live="polite"><small>30 F</small><h1>近视眼勇闯恐怖故事</h1><p>你走出了电梯。</p><span>序章结束</span></section>
+    <footer>
+      <div class="caption"><span id="view-number">01 / 03</span><h1 id="view-name">电梯在前方</h1><p>拖动画面观察 · 点击下方切换视角</p></div>
+      <nav aria-label="检查视角"><button data-view="approach" aria-pressed="true">停车场</button><button data-view="door" aria-pressed="false">电梯门口</button><button data-view="inside" aria-pressed="false">轿厢内部</button></nav>
+      <button id="settings-toggle" aria-expanded="false" aria-controls="settings">画面设置</button>
+    </footer>
+    <aside id="settings" hidden>
+      <div class="panel-title">画面设置 <span>阶段四 · 氛围与声音</span></div>
+      <label>曝光 <output id="exposure-value">1.00</output><input id="exposure" type="range" min="0.5" max="1.8" step="0.05" value="1"></label>
+      <label>画质<select id="quality"><option value="high">精细</option><option value="balanced">流畅</option></select></label>
+      <label class="check"><input type="checkbox" id="ao" checked> 接触阴影</label>
+      <label class="check"><input type="checkbox" id="bloom" checked> 灯光辉光</label>
+      <label>音量 <output id="volume-value">55%</output><input id="volume" type="range" min="0" max="1" step="0.05" value="0.55"></label>
+      <button id="reset-view">重置当前视角</button>
+      <div id="stats">场景加载中</div>
+      <p class="note">进入轿厢深处后，电梯将自动前往30层。</p>
+    </aside>
+  </main>
+</body></html>

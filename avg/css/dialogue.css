@@ -1,0 +1,463 @@
+/* Visual novel dialogue overlay */
+.vn-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.vn-layer.is-active {
+  pointer-events: auto;
+}
+
+.vn-click-catcher {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* 人物 + 对话框同一层；对话框尺寸固定，人物在框后左右站位 */
+.vn-dock {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.vn-stage-chars {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 48px;
+  height: 58%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.vn-character {
+  position: absolute;
+  bottom: 0;
+  width: min(30%, 340px);
+  height: 100%;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.35s ease,
+    transform 0.55s cubic-bezier(0.22, 0.8, 0.28, 1);
+}
+
+.vn-character.side-right {
+  right: 2%;
+  transform: translateX(28%);
+}
+
+.vn-character.side-left {
+  left: 2%;
+  transform: translateX(-28%);
+}
+
+.vn-character.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.vn-character.is-dim {
+  opacity: 0.42;
+  filter: brightness(0.75);
+}
+
+/* 上半身从对话框底边向上；下半身被对话框挡住，不与文字重叠 */
+.vn-character img {
+  position: absolute;
+  left: 50%;
+  bottom: -48%;
+  width: auto;
+  height: 155%;
+  max-width: none;
+  transform: translateX(-50%);
+  object-fit: contain;
+  object-position: center top;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+}
+
+/* 宁念 / 思思全身立绘：露出约 3/4 身（头～大腿；脚部向下裁切） */
+.vn-character.is-body-34 {
+  width: min(36%, 400px);
+}
+
+.vn-character.is-body-34 img {
+  /* 相对容器向下偏移，裁掉脚部，保留头顶 */
+  top: auto;
+  bottom: -33%;
+  height: 133%;
+  object-position: center top;
+}
+
+.vn-dialog {
+  position: absolute;
+  left: 3.5%;
+  right: 3.5%;
+  bottom: 48px;
+  z-index: 2;
+  min-height: 22%;
+  height: auto;
+  padding: 18px 28px 26px;
+  border-radius: 10px;
+  background: rgba(70, 72, 78, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  color: #f5f5f5;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.28s ease, transform 0.28s ease, background 0.2s ease;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.vn-dialog.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.vn-dialog.is-system {
+  background: rgba(28, 32, 42, 0.82);
+  border-color: rgba(140, 180, 255, 0.22);
+}
+
+.vn-dialog.is-danmaku {
+  background: rgba(55, 40, 48, 0.78);
+  border-color: rgba(255, 160, 180, 0.25);
+}
+
+.vn-dialog-name {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.vn-dialog-name:empty {
+  display: none;
+}
+
+.vn-dialog.is-system .vn-dialog-name {
+  background: rgba(120, 160, 255, 0.22);
+}
+
+.vn-dialog.is-danmaku .vn-dialog-name {
+  background: rgba(255, 140, 160, 0.22);
+}
+
+.vn-dialog-text {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 21px);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.vn-dialog-typed,
+.vn-dialog-rest {
+  white-space: inherit;
+}
+
+.vn-dialog-rest {
+  color: transparent;
+  user-select: none;
+}
+
+.vn-dialog.is-typing .vn-dialog-hint {
+  opacity: 0.35;
+}
+
+.vn-dialog-hint {
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  animation: vn-blink 1.2s ease-in-out infinite;
+}
+
+.vn-dialog.is-chat {
+  padding-bottom: 58px;
+}
+
+.vn-dialog.is-chat .vn-dialog-hint {
+  right: auto;
+  left: 28px;
+  bottom: 14px;
+  animation: none;
+  opacity: 0.65;
+}
+
+.vn-ai-row {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.vn-ai-row[hidden] {
+  display: none !important;
+}
+
+.vn-ai-input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(12, 14, 18, 0.55);
+  color: #f5f5f5;
+  font: inherit;
+  font-size: 14px;
+}
+
+.vn-ai-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.vn-ai-send,
+.vn-ai-close {
+  flex: 0 0 auto;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(36, 40, 50, 0.85);
+  color: #f5f5f5;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.vn-ai-send:hover,
+.vn-ai-close:hover {
+  border-color: #fff;
+  background: rgba(48, 52, 64, 0.92);
+}
+
+.vn-ai-send:disabled,
+.vn-ai-input:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.vn-dialog.is-generating .vn-dialog-hint {
+  visibility: hidden;
+  animation: none;
+}
+
+.vn-generating-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 1.35em;
+  padding: 2px 0;
+  color: rgba(245, 245, 245, 0.92);
+}
+
+.vn-generating-dots i {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.28;
+  animation: vn-generating-dot 1.05s infinite ease-in-out;
+}
+
+.vn-generating-dots i:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.vn-generating-dots i:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+@keyframes vn-generating-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.28;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes vn-blink {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.top-bar,
+.back-btn,
+.title-chip,
+.vn-menu,
+.history-panel {
+  z-index: 50;
+}
+
+.hotspot-layer.is-locked {
+  pointer-events: none !important;
+}
+
+.vn-menu {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  z-index: 160;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  transform: translateX(-50%);
+  background: transparent;
+  border: 0;
+}
+
+.vn-menu-btn {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: rgba(242, 242, 242, 0.9);
+  font: inherit;
+  font-size: clamp(12px, 1.35vw, 14px);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+  transition: color 140ms ease, opacity 140ms ease;
+}
+
+.vn-menu-btn:hover {
+  color: #fff;
+}
+
+.vn-menu-btn.is-active,
+.vn-menu-btn[aria-pressed="true"] {
+  color: #fff;
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.history-panel {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 8%;
+  bottom: 52px;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(18, 20, 26, 0.94);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.history-panel[hidden] {
+  display: none;
+}
+
+.history-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-panel-head h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.history-close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.history-list {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 16px 18px;
+}
+
+.history-item {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.history-item .who {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.history-item .msg {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #f2f2f2;
+  white-space: pre-wrap;
+}
+
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 56px;
+  z-index: 110;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(20, 22, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 13px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.toast.is-on {
+  opacity: 1;
+}
