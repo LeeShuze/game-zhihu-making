@@ -266,12 +266,181 @@
     }
   }
 
+  function pickFallback(npc) {
+    const list =
+      npc?.fallback ||
+      window.AmbientNpcs?.getCatalogEntry?.(npc?.id)?.fallback ||
+      ["……"];
+    return list[Math.floor(Math.random() * list.length)] || "……";
+  }
+
+  /** 无 AI 时也尽量接住玩家原话，避免答非所问的罐头感 */
+  function contextualFallback(npc, userText) {
+    const tip = pickFallback(npc);
+    const short = String(userText || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .slice(0, 18);
+    if (!short) return tip;
+    if (/^(你好|您好|嗨|哈喽|在吗|早上好|晚安)/.test(short)) {
+      return npc?.greeting || tip;
+    }
+    if (/(\?|？|为什么|怎么|什么|哪|谁|吗$|么$)/.test(short)) {
+      const asks = [
+        `……你问「${short}」，我只能说：${tip}`,
+        `这种问题不便细说。${tip}`,
+        `哼，问这个？${tip}`,
+      ];
+      return asks[Math.floor(Math.random() * asks.length)];
+    }
+    const bridges = [
+      `「${short}」……${tip}`,
+      `我听见了。${tip}`,
+      `嗯。${tip}`,
+    ];
+    return bridges[Math.floor(Math.random() * bridges.length)];
+  }
+
+  /**
+   * 自由探索闲聊：返回 { ok, text, source, error? }
+   * history: [{role:'user'|'assistant', content}]
+   */
+  async function chatNpc({ npc, userText, history = [], stage } = {}) {
+    const text = String(userText || "").trim().slice(0, 200);
+    if (!text) {
+      return { ok: false, text: "……", source: "empty" };
+    }
+    const cat = window.AmbientNpcs?.getCatalogEntry?.(npc?.id);
+    const role =
+      npc?.role || cat?.role || "你是幸福之家的诡异家人，简短中文回复。";
+    const greeting = npc?.greeting || cat?.greeting || "";
+    const cfg = getConfig();
+    // 闲聊：有 Key 即可（不必依赖「启用 AI 失败支线」开关）；欠费熔断除外
+    const canAi = Boolean(cfg.apiKey) && !skipUntilOk;
+
+    if (!canAi) {
+      lastError = skipUntilOk
+        ? "账号异常，已改用本地短句"
+        : !cfg.apiKey
+          ? "未填写 API Key"
+          : "未启用 AI";
+      return {
+        ok: false,
+        text: contextualFallback(npc, text),
+        source: "fallback",
+        error: lastError,
+      };
+    }
+
+    const hist = (history || [])
+      .filter((m) => m && (m.role === "assistant" || m.role === "user") && m.content)
+      .slice(-10);
+
+    const sys = [
+      "你正在恐怖 Galgame「幸福之家」里与玩家实时闲聊（不推进主线）。",
+      "玩家叫宁念：高度近视，常把诡异当家人；口语回复，1～3 句，不要长篇，不要提自己是 AI。",
+      "硬性：必须直接回应当前玩家这句话，承接上文，禁止答非所问、禁止复读开场白原文。",
+      "禁止剧透：通关钥匙、异世之门、幸福之心、红姐真实图谋、第七天结局、宁君安。",
+      `当前阶段：${stage || npc?.stage || "FREE"}`,
+      `你的角色设定：${role}`,
+      greeting ? `你的开场白是「${greeting}」（已说过，勿原样再念一遍）。` : "",
+      `你的称呼：${npc?.name || cat?.name || "对方"}。`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const messages = [
+      { role: "system", content: sys },
+      ...hist.map((m) => ({
+        role: m.role === "assistant" ? "assistant" : "user",
+        content: String(m.content || "").slice(0, 300),
+      })),
+      { role: "user", content: text },
+    ];
+
+    try {
+      const endpoint = normalizeEndpoint(cfg.endpoint);
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 20000);
+      let res;
+      try {
+        res = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cfg.apiKey}`,
+          },
+          body: JSON.stringify({
+            model: cfg.model || DEFAULTS.model,
+            temperature: 0.8,
+            messages,
+          }),
+          signal: ctrl.signal,
+        });
+      } finally {
+        clearTimeout(timer);
+      }
+
+      const rawText = await res.text();
+      let data = null;
+      try {
+        data = rawText ? JSON.parse(rawText) : null;
+      } catch (_) {
+        data = null;
+      }
+      if (!res.ok) {
+        const msg =
+          data?.error?.message ||
+          data?.message ||
+          rawText.slice(0, 120) ||
+          `HTTP ${res.status}`;
+        if (/overdue|good standing|欠费|Access denied/i.test(msg)) {
+          skipUntilOk = true;
+        }
+        lastError = msg;
+        return {
+          ok: false,
+          text: contextualFallback(npc, text),
+          source: "fallback",
+          error: msg,
+        };
+      }
+      const content = extractMessageContent(data).trim();
+      if (!content) {
+        lastError = "接口无正文";
+        return {
+          ok: false,
+          text: contextualFallback(npc, text),
+          source: "fallback",
+          error: lastError,
+        };
+      }
+      const cleaned = content.replace(FORBIDDEN, "……").slice(0, 240);
+      lastError = "";
+      return {
+        ok: true,
+        text: cleaned || contextualFallback(npc, text),
+        source: "ai",
+      };
+    } catch (err) {
+      if (err?.name === "AbortError") lastError = "请求超时";
+      else lastError = err?.message || String(err);
+      return {
+        ok: false,
+        text: contextualFallback(npc, text),
+        source: "fallback",
+        error: lastError,
+      };
+    }
+  }
+
   window.GalAI = {
     getConfig,
     setConfig,
     getLastError,
     normalizeEndpoint,
     generateFailBeats,
+    chatNpc,
     testConnection,
     DEFAULTS,
   };

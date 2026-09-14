@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>幸福之家</title>
-    <link rel="stylesheet" href="css/style.css?v=choiceAI3" />
-    <link rel="stylesheet" href="css/dialogue.css?v=choiceAI6" />
+    <link rel="stylesheet" href="css/style.css?v=charBody1" />
+    <link rel="stylesheet" href="css/dialogue.css?v=chatDlg1" />
   </head>
   <body data-aspect="16-9" style="--aspect-w: 16; --aspect-h: 9">
     <div class="stage" id="stage">
@@ -16,7 +16,16 @@
 
       <div id="sceneFade" class="scene-fade" aria-hidden="true"></div>
 
-      <div class="horror-meter" id="horrorMeter" aria-live="polite" title="惊悚值">
+      <div class="hud-right" id="hudRight">
+        <button type="button" class="char-info-btn" id="charInfoBtn" aria-label="人物信息" aria-controls="charInfoPanel" title="人物信息">
+          <svg class="char-info-icon" viewBox="0 0 32 32" aria-hidden="true">
+            <circle cx="16" cy="11" r="5.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M7.5 26.5c1.8-5.2 5.2-7.8 8.5-7.8s6.7 2.6 8.5 7.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <rect x="3.5" y="3.5" width="25" height="25" rx="6" fill="none" stroke="currentColor" stroke-width="1.6" opacity="0.55"/>
+          </svg>
+          <span class="char-info-badge" id="charInfoBadge" hidden>1</span>
+        </button>
+        <div class="horror-meter" id="horrorMeter" aria-live="polite" title="惊悚值">
         <div class="horror-icon" aria-hidden="true">
           <svg class="horror-icon-svg" viewBox="0 0 120 120" role="img">
             <!-- 血溅底 -->
@@ -55,6 +64,7 @@
           <span class="horror-label">惊悚值</span>
           <span class="horror-value" id="horrorValue">0</span>
         </div>
+      </div>
       </div>
 
       <div class="history-panel" id="historyPanel" hidden>
@@ -108,8 +118,8 @@
 
             <section class="settings-pane" data-settings-pane="ai" hidden>
               <header class="settings-pane-head">
-                <h2>AI 支线</h2>
-                <p>固定失败结局；偏离选项的过程可由 AI 生成。未填密钥时用本地备用失败线。</p>
+                <h2>AI</h2>
+                <p>失败支线过程生成；自由探索中点击「闲聊」NPC 也可对话。未填密钥时用本地短句。</p>
               </header>
               <div class="ai-settings">
                 <label class="sound-mute">
@@ -235,6 +245,19 @@
               </span>
               <span class="story-choice-label" id="storyConfirmYesLabel">继续。</span>
             </button>
+            <button type="button" class="story-choice" id="storyConfirmChat" hidden>
+              <span class="story-choice-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                  <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  <path
+                    d="M7.5 10.2c0-2.1 1.9-3.7 4.5-3.7s4.5 1.6 4.5 3.7c0 1.5-1 2.7-2.5 3.3v1.1h-4v-1.1c-1.5-.6-2.5-1.8-2.5-3.3z"
+                    fill="currentColor"
+                  />
+                  <circle cx="12" cy="17.2" r="1" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="story-choice-label">闲聊。</span>
+            </button>
             <button type="button" class="story-choice" id="storyConfirmNo">
               <span class="story-choice-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="18" height="18">
@@ -274,23 +297,44 @@
           <button type="button" class="settings-action-btn" id="storyFailRetry">回到岔路</button>
         </div>
       </div>
+
+      <div class="char-info-panel" id="charInfoPanel" hidden>
+        <div class="char-info-shell" role="dialog" aria-modal="true" aria-labelledby="charInfoTitle">
+          <header class="char-info-head">
+            <div class="char-info-head-left">
+              <button type="button" class="char-info-back" id="charInfoBack" hidden aria-label="返回列表">←</button>
+              <div>
+                <p class="char-info-kicker">随剧情更新</p>
+                <h2 id="charInfoTitle">人物信息</h2>
+              </div>
+            </div>
+            <button type="button" class="char-info-close" id="charInfoClose" aria-label="关闭">×</button>
+          </header>
+          <div class="char-info-list" id="charInfoList"></div>
+          <div class="char-info-detail" id="charInfoDetail" hidden></div>
+        </div>
+      </div>
     </div>
 
     <script src="js/scenes.js?v=elevator2"></script>
-    <script src="js/dialogue.js?v=choiceAI7"></script>
+    <script src="js/dialogue.js?v=newArt1"></script>
     <script src="js/story/endings.js?v=choiceAI1"></script>
-    <script src="js/story/ch01_06.js?v=choiceAI1"></script>
-    <script src="js/story/ch07_12.js?v=choiceAI1"></script>
+    <script src="js/story/ambient_npcs.js?v=floorFix1"></script>
+    <script src="js/story/char_info.js?v=charInfo3"></script>
+    <script src="js/story/ch01_06.js?v=ambientAI3"></script>
+    <script src="js/story/ch07_12.js?v=newArt1"></script>
     <script src="js/story/ch13_16.js?v=choiceAI1"></script>
     <script src="js/story/ch17_19.js?v=choiceAI1"></script>
-    <script src="js/story/ch20_end.js?v=choiceAI1"></script>
-    <script src="js/ai.js?v=choiceAI3"></script>
-    <script src="js/story.js?v=choiceAI7"></script>
+    <script src="js/story/ch20_end.js?v=newArt1"></script>
+    <script src="js/ai.js?v=chatFix1"></script>
+    <script src="js/ambient_chat.js?v=closeFix1"></script>
+    <script src="js/char_info_ui.js?v=charInfo3"></script>
+    <script src="js/story.js?v=charInfo2"></script>
     <script src="js/horror.js"></script>
     <script src="js/save.js"></script>
     <script src="js/audio.js"></script>
     <script src="js/menu.js?v=choiceAI3"></script>
-    <script src="js/settings.js?v=choiceAI2"></script>
-    <script src="js/game.js?v=npc2"></script>
+    <script src="js/settings.js?v=chatFix1"></script>
+    <script src="js/game.js?v=greet1"></script>
   </body>
 </html>

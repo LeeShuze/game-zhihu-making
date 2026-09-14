@@ -13,6 +13,8 @@
   let unlockedScenes = null;
   /** @type {null|{scene:string,name?:string,sprite:string,area:object,bubble?:string,prompt?:string}} */
   let resumeNpc = null;
+  /** @type {Array<{id:string,name:string,sprite:string,scene:string,area:object,tag?:string,stage?:string,role?:string,fallback?:string[]}>} */
+  let ambientNpcs = [];
   let contentRect = { left: 0, top: 0, width: 0, height: 0 };
   /** @type {Record<string, { variant: string }>} */
   const sceneState = {};
@@ -133,7 +135,15 @@
     btn.dataset.npcName = spot.name || "角色";
     btn.setAttribute("aria-label", spot.bubble || spot.name || "继续剧情");
 
-    const { x, y, w, h } = spot.area || { x: 60, y: 15, w: 28, h: 75 };
+    const charId = window.AmbientNpcs?.resolveCharId?.(spot) || "default";
+    const preferredCx =
+      spot.area != null
+        ? (Number(spot.area.x) || 50) + (Number(spot.area.w) || 24) / 2
+        : null;
+    const { x, y, w, h } =
+      window.AmbientNpcs?.areaFor?.(scene.id, charId, preferredCx) ||
+      spot.area ||
+      { x: 60, y: 15, w: 28, h: 75 };
     btn.style.left = contentRect.left + (x / 100) * contentRect.width + "px";
     btn.style.top = contentRect.top + (y / 100) * contentRect.height + "px";
     btn.style.width = (w / 100) * contentRect.width + "px";
@@ -156,10 +166,79 @@
 
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      openStoryConfirm(spot.prompt || "是否继续剧情？");
+      openStoryConfirm(spot.prompt || "是否继续剧情？", {
+        chatNpc: resolveChatNpcFromResume(spot),
+      });
     });
 
     hotspotLayer.appendChild(btn);
+  }
+
+  function placeAmbientNpcs(scene) {
+    if (!explorationEnabled || !ambientNpcs?.length) return;
+    ambientNpcs.forEach((npc) => {
+      if (!npc || npc.scene !== scene.id || !npc.sprite) return;
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "story-npc is-ambient";
+      btn.dataset.npcName = npc.name || "角色";
+      btn.dataset.npcId = npc.id || "";
+      btn.setAttribute("aria-label", `${npc.name || "角色"} · 闲聊`);
+
+      const area =
+        window.AmbientNpcs?.ensureNpcArea?.(npc) ||
+        npc.area ||
+        { x: 60, y: 12, w: 22, h: 80 };
+      btn.style.left = contentRect.left + (area.x / 100) * contentRect.width + "px";
+      btn.style.top = contentRect.top + (area.y / 100) * contentRect.height + "px";
+      btn.style.width = (area.w / 100) * contentRect.width + "px";
+      btn.style.height = (area.h / 100) * contentRect.height + "px";
+
+      const img = document.createElement("img");
+      img.src = /\.(png|webp|jpe?g)(\?|$)/i.test(npc.sprite)
+        ? `${npc.sprite}${npc.sprite.includes("?") ? "&" : "?"}v=npc2`
+        : npc.sprite;
+      img.alt = npc.name || "";
+      img.draggable = false;
+      btn.appendChild(img);
+
+      const tag = document.createElement("span");
+      tag.className = "story-npc-tag";
+      tag.textContent = npc.name || npc.tag || "角色";
+      btn.appendChild(tag);
+
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!explorationEnabled) return;
+        window.AmbientChat?.open?.(npc);
+      });
+
+      hotspotLayer.appendChild(btn);
+    });
+  }
+
+  let pendingConfirmChatNpc = null;
+
+  function resolveChatNpcFromResume(spot) {
+    if (!spot?.sprite) return null;
+    const name = spot.name || spot.bubble || "";
+    const id =
+      window.CharInfo?.SPEAKER_TO_ID?.[name] ||
+      Object.keys(window.AmbientNpcs?.CATALOG || {}).find(
+        (k) => window.AmbientNpcs.CATALOG[k].name === name
+      ) ||
+      null;
+    const cat = id ? window.AmbientNpcs?.getCatalogEntry?.(id) : null;
+    return {
+      id: id || "resume_npc",
+      name: name || cat?.name || "对方",
+      sprite: spot.sprite,
+      stage: "FREE_RESUME",
+      role: cat?.role,
+      greeting: cat?.greeting,
+      fallback: cat?.fallback,
+    };
   }
 
   function promptToChoiceLabel(message) {
@@ -173,20 +252,33 @@
     return label;
   }
 
-  function openStoryConfirm(message) {
+  function openStoryConfirm(message, { chatNpc = null } = {}) {
     const panel = document.getElementById("storyConfirm");
     const text = document.getElementById("storyConfirmText");
     const yesLabel = document.getElementById("storyConfirmYesLabel");
+    const chatBtn = document.getElementById("storyConfirmChat");
     if (!panel) return;
     const prompt = message || "是否继续剧情？";
     if (text) text.textContent = prompt;
     if (yesLabel) yesLabel.textContent = promptToChoiceLabel(prompt);
+    pendingConfirmChatNpc = chatNpc || null;
+    if (chatBtn) {
+      const showChat = Boolean(pendingConfirmChatNpc);
+      chatBtn.hidden = !showChat;
+      chatBtn.setAttribute("aria-hidden", showChat ? "false" : "true");
+    }
     panel.hidden = false;
   }
 
   function closeStoryConfirm() {
     const panel = document.getElementById("storyConfirm");
     if (panel) panel.hidden = true;
+    pendingConfirmChatNpc = null;
+    const chatBtn = document.getElementById("storyConfirmChat");
+    if (chatBtn) {
+      chatBtn.hidden = true;
+      chatBtn.setAttribute("aria-hidden", "true");
+    }
   }
 
   function ensureElevatorPanel() {
@@ -285,6 +377,7 @@
     if (scene.floorChoices?.length) {
       placeFloorChoices(scene);
       placeResumeNpc(scene);
+      placeAmbientNpcs(scene);
       return;
     }
 
@@ -337,6 +430,7 @@
     });
 
     placeResumeNpc(scene);
+    placeAmbientNpcs(scene);
   }
 
   function renderScene(sceneId, { withFade = false } = {}) {
@@ -445,6 +539,13 @@
     }
   }
 
+  function setAmbientNpcs(list) {
+    ambientNpcs = Array.isArray(list) ? list.slice() : [];
+    if (currentSceneId && graph.scenes[currentSceneId]) {
+      placeHotspots(graph.scenes[currentSceneId]);
+    }
+  }
+
   function relayout() {
     if (!currentSceneId) return;
     const scene = graph.scenes[currentSceneId];
@@ -456,6 +557,11 @@
   document.getElementById("storyConfirmYes")?.addEventListener("click", async () => {
     closeStoryConfirm();
     await window.Story?.resumeFromPause?.();
+  });
+  document.getElementById("storyConfirmChat")?.addEventListener("click", () => {
+    const npc = pendingConfirmChatNpc;
+    closeStoryConfirm();
+    if (npc) window.AmbientChat?.open?.(npc);
   });
   document.getElementById("storyConfirmNo")?.addEventListener("click", () => {
     closeStoryConfirm();
@@ -469,6 +575,7 @@
     setExplorationEnabled,
     setUnlockedScenes,
     setResumeNpc,
+    setAmbientNpcs,
     getCurrentScene: () => currentSceneId,
     getVariant: (sceneId) => {
       const id = sceneId || currentSceneId;

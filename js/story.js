@@ -39,6 +39,7 @@
     unlock: [],
     resumeNpc: null,
     hint: "",
+    ambientNpcs: [],
   };
 
   function resolveUnlockList(unlock) {
@@ -50,6 +51,15 @@
   }
 
   async function enterPause(beat, resumeFromIndex) {
+    const ambient =
+      Array.isArray(beat.ambientNpcs) && beat.ambientNpcs.length
+        ? beat.ambientNpcs.map((n) => ({ ...n }))
+        : window.AmbientNpcs?.rollForPause?.(
+            beat.id,
+            beat.resumeNpc,
+            resolveUnlockList(beat.unlock)
+          ) || [];
+
     pauseState = {
       active: true,
       checkpointId: beat.id || null,
@@ -57,14 +67,17 @@
       unlock: resolveUnlockList(beat.unlock),
       resumeNpc: beat.resumeNpc || null,
       hint: beat.hint || "自由探索中。",
+      ambientNpcs: ambient,
     };
 
     window.GalDialogue?.setSkipMode?.(false);
     window.GalDialogue?.setAutoMode?.(false);
     window.MenuUI?.syncToggles?.();
+    window.AmbientChat?.close?.();
 
     window.Game?.setUnlockedScenes?.(pauseState.unlock);
     window.Game?.setResumeNpc?.(pauseState.resumeNpc);
+    window.Game?.setAmbientNpcs?.(pauseState.ambientNpcs);
     window.Game?.setExplorationEnabled?.(true);
 
     const dest =
@@ -75,7 +88,15 @@
       await window.Game?.goToScene?.(dest, { withFade: true, force: true });
     }
 
-    window.MenuUI?.toast?.(pauseState.hint);
+    const ambientHint =
+      window.AmbientNpcs?.formatAmbientHint?.(ambient) ||
+      (ambient.length
+        ? `另有可闲聊角色：${ambient.map((n) => n.name).join("、")}。`
+        : "");
+    window.MenuUI?.toast?.(
+      [pauseState.hint, ambientHint].filter(Boolean).join(" "),
+      ambient.length ? 3600 : 1400
+    );
     return "pause";
   }
 
@@ -87,8 +108,11 @@
       unlock: [],
       resumeNpc: null,
       hint: "",
+      ambientNpcs: [],
     };
     window.Game?.setResumeNpc?.(null);
+    window.Game?.setAmbientNpcs?.([]);
+    window.AmbientChat?.close?.();
   }
 
   async function resumeFromPause() {
@@ -99,6 +123,7 @@
     clearPause();
     window.Game?.setExplorationEnabled?.(false);
     window.Game?.setResumeNpc?.(null);
+    window.Game?.setAmbientNpcs?.([]);
     await playStory(currentStory, {
       fromIndex: from,
       resetHorror: false,
@@ -212,6 +237,9 @@
     if (popHistory) window.GalDialogue?.popHistory?.(1);
     await restoreWorldUpTo(prev);
     beatIndex = prev;
+    if (currentStory?.beats) {
+      window.CharInfoUI?.rebuildFromStory?.(currentStory.beats, prev);
+    }
     return true;
   }
 
@@ -221,6 +249,7 @@
 
     if (kind === "pause") {
       // resume index = 下一条 beat
+      window.CharInfoUI?.applyBeat?.(beat);
       return enterPause(beat, beatIndex + 1);
     }
 
@@ -473,8 +502,12 @@
     if (fromIndex === 0 && !replay && resetHorror) {
       window.HorrorMeter?.set?.(0, { animate: false });
       farthestBeatIndex = 0;
+      window.CharInfoUI?.rebuildFromStory?.(story.beats, -1);
     } else if (fromIndex > 0) {
       window.HorrorMeter?.set?.(computeHorrorUpTo(fromIndex - 1), { animate: false });
+      window.CharInfoUI?.rebuildFromStory?.(story.beats, fromIndex - 1);
+    } else {
+      window.CharInfoUI?.rebuildFromStory?.(story.beats, Math.max(0, fromIndex));
     }
     window.Game?.setExplorationEnabled?.(false);
     window.GalDialogue?.setSkipMode?.(false);
@@ -492,6 +525,7 @@
       if (token.cancelled) break;
 
       const beat = story.beats[beatIndex];
+      window.CharInfoUI?.applyBeat?.(beat);
 
       if (!isDialogueBeat(beat)) {
         const metaResult = await runMetaBeat(beat);
@@ -584,6 +618,7 @@
       livingVariant: window.Game?.getVariant?.("floor30_living") || "dirty",
       horror: window.HorrorMeter?.get?.() ?? 0,
       farthestBeatIndex,
+      charInfo: window.CharInfoUI?.getState?.() || null,
       pause: pauseState.active
         ? {
             checkpointId: pauseState.checkpointId,
@@ -591,6 +626,7 @@
             unlock: pauseState.unlock,
             resumeNpc: pauseState.resumeNpc,
             hint: pauseState.hint,
+            ambientNpcs: pauseState.ambientNpcs || [],
           }
         : null,
       exploration: pauseState.active || true,
@@ -622,7 +658,28 @@
       Number(data.beatIndex) || 0
     );
 
+    if (story?.beats) {
+      if (data.charInfo) {
+        window.CharInfoUI?.syncFromSets?.(data.charInfo);
+      }
+      window.CharInfoUI?.rebuildFromStory?.(
+        story.beats,
+        Math.max(0, farthestBeatIndex)
+      );
+    }
+
     if (data.pause?.resumeFromIndex != null && story) {
+      const savedAmbient = Array.isArray(data.pause.ambientNpcs)
+        ? data.pause.ambientNpcs
+        : null;
+      const ambient =
+        savedAmbient ||
+        window.AmbientNpcs?.rollForPause?.(
+          data.pause.checkpointId,
+          data.pause.resumeNpc,
+          data.pause.unlock || resolveUnlockList("home")
+        ) ||
+        [];
       pauseState = {
         active: true,
         checkpointId: data.pause.checkpointId || null,
@@ -630,9 +687,11 @@
         unlock: data.pause.unlock || resolveUnlockList("home"),
         resumeNpc: data.pause.resumeNpc || null,
         hint: data.pause.hint || "自由探索中。",
+        ambientNpcs: ambient,
       };
       window.Game?.setUnlockedScenes?.(pauseState.unlock);
       window.Game?.setResumeNpc?.(pauseState.resumeNpc);
+      window.Game?.setAmbientNpcs?.(pauseState.ambientNpcs);
       window.Game?.setExplorationEnabled?.(true);
       const dest =
         data.sceneId ||

@@ -116,9 +116,11 @@
     });
     syncAiUI();
     toast(
-      cfg?.enabled && cfg?.apiKey
-        ? "AI 设置已保存"
-        : "已保存（需勾选启用并填写 Key）"
+      cfg?.apiKey
+        ? cfg?.enabled
+          ? "AI 设置已保存（失败支线 + 闲聊）"
+          : "已保存：闲聊可用；失败支线需勾选「启用」"
+        : "已保存（请填写 API Key 才能闲聊）"
     );
   }
 

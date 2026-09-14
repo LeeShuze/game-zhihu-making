@@ -9,7 +9,7 @@
 
   function ensureUI(stage) {
     let layer = stage.querySelector(".vn-layer");
-    if (layer && !layer.querySelector(".vn-dock")) {
+    if (layer && (!layer.querySelector(".vn-dock") || !layer.querySelector(".vn-ai-row"))) {
       layer.remove();
       layer = null;
     }
@@ -21,6 +21,11 @@
         dialog: layer.querySelector(".vn-dialog"),
         nameEl: layer.querySelector(".vn-dialog-name"),
         textEl: layer.querySelector(".vn-dialog-text"),
+        hintEl: layer.querySelector(".vn-dialog-hint"),
+        aiRow: layer.querySelector(".vn-ai-row"),
+        aiInput: layer.querySelector(".vn-ai-input"),
+        aiSend: layer.querySelector(".vn-ai-send"),
+        aiClose: layer.querySelector(".vn-ai-close"),
         advanceEl: layer.querySelector("[data-vn-advance]"),
       };
     }
@@ -36,6 +41,11 @@
           <div class="vn-dialog-name"></div>
           <p class="vn-dialog-text"></p>
           <span class="vn-dialog-hint">点击继续 ▾</span>
+          <div class="vn-ai-row" hidden>
+            <input class="vn-ai-input" type="text" maxlength="200" placeholder="直接说点什么…" autocomplete="off" />
+            <button type="button" class="vn-ai-send">发送</button>
+            <button type="button" class="vn-ai-close">关闭</button>
+          </div>
         </div>
       </div>
     `;
@@ -47,6 +57,11 @@
       dialog: layer.querySelector(".vn-dialog"),
       nameEl: layer.querySelector(".vn-dialog-name"),
       textEl: layer.querySelector(".vn-dialog-text"),
+      hintEl: layer.querySelector(".vn-dialog-hint"),
+      aiRow: layer.querySelector(".vn-ai-row"),
+      aiInput: layer.querySelector(".vn-ai-input"),
+      aiSend: layer.querySelector(".vn-ai-send"),
+      aiClose: layer.querySelector(".vn-ai-close"),
       advanceEl: layer.querySelector("[data-vn-advance]"),
     };
   }
@@ -58,20 +73,13 @@
       const side = slot.side || "right";
       const el = document.createElement("div");
       el.className = `vn-character side-${side}`;
-      // 新全身立绘：按 3/4 身裁切（旧特写：phone/sew/soothe/protect、boss_head/chest、nainai_mask 等除外）
-      const isFullBody =
-        /ningnian_front|ningnian_daily|ningnian_normal|ningnian\.png|sisi_front|sisi\.png|sisi_hug|sisi_blood|boss_front|boss_head|boss\.png|yeye_enter|yeye_front|yeye_patched|hongjie|junge|suxiaomo|nainai_front|nainai_enter|huangmao|fangyuan|doghead|boy27|mom27|girl28|twin_/i.test(
-          slot.sprite
-        );
-      if (isFullBody) {
-        el.classList.add("is-body-34");
-      }
+      // 统一按新全身立绘 3/4 身裁切（旧特写资源已替换/弃用）
+      el.classList.add("is-body-34");
       if (activeSide && slot.side && slot.side !== activeSide) {
         el.classList.add("is-dim");
       }
       const img = document.createElement("img");
-      // 新全身立绘强制绕过浏览器缓存
-      img.src = isFullBody ? `${slot.sprite}?v=body34g` : slot.sprite;
+      img.src = `${slot.sprite}${slot.sprite.includes("?") ? "&" : "?"}v=newArt1`;
       img.alt = slot.name || "";
       img.draggable = false;
       el.appendChild(img);
@@ -389,6 +397,98 @@
     return Promise.resolve("done");
   }
 
+  let chatMode = false;
+
+  function blockAdvance(ui) {
+    const block = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    ui.advanceEl.onclick = block;
+    ui.dialog.onclick = (e) => e.stopPropagation();
+    ui.dialog.style.pointerEvents = "auto";
+  }
+
+  /** 闲聊：复用剧情对话框 + 底部输入行（对齐 movable playable） */
+  function openNpcChatUI({ name, sprite, text, side = "right" } = {}) {
+    const stage = document.getElementById("stage");
+    if (!stage) return null;
+    if (activeSession?.abort) activeSession.abort(true);
+    clearAutoTimer();
+    chatMode = true;
+
+    const ui = ensureUI(stage);
+    ui.layer.hidden = false;
+    ui.layer.classList.add("is-active", "is-chat");
+    if (sprite) {
+      setSlots(ui, [{ side, sprite, name: name || "" }], side);
+    } else {
+      ui.chars.innerHTML = "";
+    }
+
+    ui.nameEl.textContent = name || "";
+    ui.dialog.classList.remove("is-system", "is-danmaku", "is-generating");
+    ui.dialog.classList.add("is-visible", "is-chat");
+    ui.textEl.textContent = text || "你可以直接说话。";
+    if (ui.hintEl) {
+      ui.hintEl.textContent = "输入发送 · Esc 关闭";
+      ui.hintEl.hidden = false;
+    }
+    if (ui.aiRow) ui.aiRow.hidden = false;
+    blockAdvance(ui);
+    return ui;
+  }
+
+  function setNpcChatLine({ name, text, generating = false } = {}) {
+    const stage = document.getElementById("stage");
+    if (!stage) return;
+    const ui = ensureUI(stage);
+    if (name != null) ui.nameEl.textContent = name;
+    ui.dialog.classList.toggle("is-generating", !!generating);
+    if (generating) {
+      ui.textEl.innerHTML =
+        '<span class="vn-generating-dots" aria-label="正在生成"><i></i><i></i><i></i></span>';
+    } else {
+      ui.textEl.textContent = text || "";
+    }
+  }
+
+  function setNpcChatBusy(busy) {
+    const stage = document.getElementById("stage");
+    if (!stage) return;
+    const ui = ensureUI(stage);
+    if (ui.aiSend) ui.aiSend.disabled = !!busy;
+    if (ui.aiInput) ui.aiInput.disabled = !!busy;
+    // 关闭必须随时可点
+    if (ui.aiClose) ui.aiClose.disabled = false;
+  }
+
+  function closeNpcChatUI() {
+    const stage = document.getElementById("stage");
+    if (!stage) return;
+    chatMode = false;
+    const ui = ensureUI(stage);
+    if (ui.aiRow) ui.aiRow.hidden = true;
+    if (ui.aiInput) {
+      ui.aiInput.value = "";
+      ui.aiInput.disabled = false;
+    }
+    if (ui.aiSend) ui.aiSend.disabled = false;
+    ui.dialog.classList.remove("is-visible", "is-chat", "is-generating");
+    if (ui.hintEl) {
+      ui.hintEl.textContent = "点击继续 ▾";
+      ui.hintEl.hidden = false;
+    }
+    [...ui.chars.children].forEach((c) => c.classList.remove("is-visible"));
+    ui.chars.innerHTML = "";
+    ui.layer.classList.remove("is-active", "is-chat");
+    ui.layer.hidden = true;
+  }
+
+  function isNpcChatOpen() {
+    return chatMode;
+  }
+
   window.GalDialogue = {
     playDialogue,
     showBeat,
@@ -396,6 +496,11 @@
     hideChoices,
     showGenerating,
     hideGenerating,
+    openNpcChatUI,
+    setNpcChatLine,
+    setNpcChatBusy,
+    closeNpcChatUI,
+    isNpcChatOpen,
     advance: () => activeSession?.advance?.(),
     back: () => activeSession?.back?.() || false,
     hasSession: () => !!activeSession && !activeSession.locked,

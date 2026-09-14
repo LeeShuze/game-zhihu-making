@@ -157,7 +157,7 @@ window.STORY_CH01_06 = {
       id: "before_knock",
       unlock: "outside",
       exploreScene: "downstairs",
-      hint: "自由探索中。乘电梯到 30 层，将鼠标移到门上显示「敲门」后点击可继续。",
+      hint: "自由探索中。乘电梯到 30 层，将鼠标移到门上显示「敲门」后点击可继续。大厅或 1 层外可能遇到仍滞留的玩家闲聊。",
       progress: "§2 选房 / 敲门",
       resumeNpc: {
         scene: "floor30_outside",

@@ -234,11 +234,11 @@ window.STORY_CH20_END = {
     {
       type: "say",
       speaker: "断头",
-      sprite: "assets/chars/boss_chest.png",
+      sprite: "assets/chars/boss_front.png",
       side: "left",
       text: "宁念，那样，我将会永远失去你。\n如果这样，还不如，你先短暂地失去我一段时间。",
       slots: [
-        { side: "left", sprite: "assets/chars/boss_chest.png", name: "断头" },
+        { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
         { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
       ],
     },

@@ -13,7 +13,7 @@ window.STORY_CH07_12 = {
     boss: "assets/chars/boss_front.png",
     sisi: "assets/chars/sisi_front.png",
     sisiBlood: "assets/chars/sisi_blood_front.png",
-    yeye: "assets/chars/yeye_enter.png",
+    yeye: "assets/chars/yeye_front.png",
     yeyePatched: "assets/chars/yeye_patched_front.png",
     nainai: "assets/chars/nainai_front.png",
   },
@@ -67,13 +67,13 @@ window.STORY_CH07_12 = {
       id: "after_night1",
       unlock: "home",
       exploreScene: "master_bedroom",
-      hint: "自由探索中。在主卧点击思思可继续剧情（进入第二天）。",
+      hint: "自由探索中。在主卧点击思思可继续剧情（进入第二天）。家里也可能遇到其他家人闲聊。",
       progress: "§7 第一夜之后",
       resumeNpc: {
         scene: "master_bedroom",
         name: "思思",
         sprite: "assets/chars/sisi_front.png",
-        area: { x: 64, y: 28, w: 22, h: 52 },
+        area: { x: 62, y: 10, w: 24, h: 80 },
         bubble: "思思",
         prompt: "是否继续剧情？",
       },
@@ -168,12 +168,12 @@ window.STORY_CH07_12 = {
     {
       type: "say",
       speaker: "黑老太",
-      sprite: "assets/chars/nainai_enter.png",
+      sprite: "assets/chars/nainai_front.png",
       side: "left",
       text: "你个黑心肝的毒妇！你怎么敢伤害我儿子？我要你偿命！",
       slots: [
-        { side: "left", sprite: "assets/chars/nainai_enter.png", name: "黑老太" },
-        { side: "right", sprite: "assets/chars/yeye_enter.png", name: "肠大爷" },
+        { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
+        { side: "right", sprite: "assets/chars/yeye_front.png", name: "肠大爷" },
       ],
     },
     {
@@ -188,18 +188,18 @@ window.STORY_CH07_12 = {
       side: "right",
       text: "妈，您的皮肤怎么干燥成这样？\n昨晚我自己用黄瓜做了一套面膜，要不要拿来给您试试？",
       slots: [
-        { side: "left", sprite: "assets/chars/nainai_enter.png", name: "黑老太" },
+        { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
         { side: "right", sprite: "assets/chars/ningnian_soothe.png", name: "宁念" },
       ],
     },
     {
       type: "say",
       speaker: "黑老太",
-      sprite: "assets/chars/nainai_mask.png",
+      sprite: "assets/chars/nainai_front.png",
       side: "left",
       text: "啊，也、也行……",
       slots: [
-        { side: "left", sprite: "assets/chars/nainai_mask.png", name: "黑老太" },
+        { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
         { side: "right", sprite: "assets/chars/ningnian_soothe.png", name: "宁念" },
       ],
     },
@@ -209,12 +209,12 @@ window.STORY_CH07_12 = {
     {
       type: "say",
       speaker: "肠大爷",
-      sprite: "assets/chars/yeye_enter.png",
+      sprite: "assets/chars/yeye_front.png",
       side: "right",
       text: "死老太婆，你不是说，要好好吓唬吓唬新来的儿媳吗？",
       slots: [
         { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
-        { side: "right", sprite: "assets/chars/yeye_enter.png", name: "肠大爷" },
+        { side: "right", sprite: "assets/chars/yeye_front.png", name: "肠大爷" },
       ],
     },
     {
@@ -253,7 +253,7 @@ window.STORY_CH07_12 = {
       text: "死老头子，就你话多，滚去做饭。",
       slots: [
         { side: "left", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
-        { side: "right", sprite: "assets/chars/yeye_enter.png", name: "肠大爷" },
+        { side: "right", sprite: "assets/chars/yeye_front.png", name: "肠大爷" },
       ],
     },
     { type: "scene", scene: "kitchen" },
@@ -277,7 +277,7 @@ window.STORY_CH07_12 = {
     {
       type: "say",
       speaker: "肠大爷",
-      sprite: "assets/chars/yeye_enter.png",
+      sprite: "assets/chars/yeye_front.png",
       side: "right",
       text: "乖孙女，还是来陪爷爷做饭吧。",
     },
@@ -302,7 +302,7 @@ window.STORY_CH07_12 = {
       text: "老爸，我帮您补补衣服吧？看您这拖着毛线满地跑，也挺不方便的。\n而且毛线还褪色，我昨天刚拖的地啊！",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
-        { side: "right", sprite: "assets/chars/yeye_enter.png", name: "肠大爷" },
+        { side: "right", sprite: "assets/chars/yeye_front.png", name: "肠大爷" },
       ],
     },
     { type: "danmaku", text: "闹半天，敢情宁念不是胆子大，是眼瞎？" },
@@ -320,18 +320,18 @@ window.STORY_CH07_12 = {
       text: "这毛线怎么还是湿的？老爸，是不是你刚刚洗菜掉进水池了？",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_sew.png", name: "宁念" },
-        { side: "right", sprite: "assets/chars/yeye_enter.png", name: "肠大爷" },
+        { side: "right", sprite: "assets/chars/yeye_front.png", name: "肠大爷" },
       ],
     },
     {
       type: "say",
       speaker: "肠大爷",
-      sprite: "assets/chars/yeye_enter.png",
+      sprite: "assets/chars/yeye_front.png",
       side: "right",
       text: "啊，应、应该吧。",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_sew.png", name: "宁念" },
-        { side: "right", sprite: "assets/chars/yeye_enter.png", name: "肠大爷" },
+        { side: "right", sprite: "assets/chars/yeye_front.png", name: "肠大爷" },
       ],
     },
     {
@@ -530,13 +530,13 @@ window.STORY_CH07_12 = {
       id: "before_departure",
       unlock: "home",
       exploreScene: "floor30_living",
-      hint: "自由探索中。在客厅点击断头可继续剧情（领取家人馈赠）。",
+      hint: "自由探索中。在客厅点击断头可继续剧情（领取家人馈赠）。可先与其他家人闲聊。",
       progress: "§12 出门前",
       resumeNpc: {
         scene: "floor30_living",
         name: "断头",
         sprite: "assets/chars/boss_front.png",
-        area: { x: 66, y: 24, w: 22, h: 56 },
+        area: { x: 58, y: 6, w: 28, h: 88 },
         bubble: "断头",
         prompt: "是否继续剧情？",
       },
