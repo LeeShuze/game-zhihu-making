@@ -183,6 +183,31 @@ window.STORY_UNLOCK_PRESETS = {
   ],
 };
 
+window.STORY_SCENE_LABELS = {
+  downstairs: "大楼门口",
+  floor01_outside: "1层楼梯间",
+  elevator: "电梯",
+  floor30_outside: "30层门外",
+  floor30_living: "客厅",
+  dining: "餐厅",
+  kitchen: "厨房",
+  balcony: "阳台",
+  corridor: "走廊",
+  sisi_room: "思思的房间",
+  master_bedroom: "主卧",
+  bathroom: "浴室",
+  floor29_outside: "29层门外",
+  floor29_living: "29层室内",
+  floor28_outside: "28层门外",
+  floor28_room: "28层室内",
+  floor27_outside: "27层门外",
+  floor27_dining: "27层室内",
+  floor10_outside: "10层门外",
+  floor09_outside: "9层门外",
+  three_doors: "一楼异世之门",
+  family_photo: "全家福",
+};
+
 window.SCENE_GRAPH = {
   start: "downstairs",
   scenes: {

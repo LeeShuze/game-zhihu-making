@@ -6,6 +6,14 @@
   const historyLog = [];
   const AUTO_MS = 2600;
   const SKIP_MS = 40;
+  const TYPE_MS = 36;
+
+  const typing = {
+    timer: null,
+    el: null,
+    full: "",
+    index: 0,
+  };
 
   function ensureUI(stage) {
     let layer = stage.querySelector(".vn-layer");
@@ -158,9 +166,107 @@
     }
   }
 
+  function isTyping() {
+    return typing.timer != null;
+  }
+
+  function charDelay(ch) {
+    if (/[。！？!?…]/.test(ch)) return TYPE_MS * 6;
+    if (/[，、；：,.~—]/.test(ch)) return TYPE_MS * 3;
+    if (ch === "\n") return TYPE_MS * 2;
+    return TYPE_MS;
+  }
+
+  function ensureTypeSpans(textEl) {
+    let typed = textEl.querySelector(".vn-dialog-typed");
+    let rest = textEl.querySelector(".vn-dialog-rest");
+    if (!typed || !rest || typed.parentNode !== textEl || rest.parentNode !== textEl) {
+      textEl.textContent = "";
+      typed = document.createElement("span");
+      typed.className = "vn-dialog-typed";
+      rest = document.createElement("span");
+      rest.className = "vn-dialog-rest";
+      rest.setAttribute("aria-hidden", "true");
+      textEl.appendChild(typed);
+      textEl.appendChild(rest);
+    }
+    return { typed, rest };
+  }
+
+  function setDialogText(textEl, full, shown) {
+    if (!textEl) return;
+    const chars = [...String(full || "")];
+    const n = Math.max(0, Math.min(Number(shown) || 0, chars.length));
+    const { typed, rest } = ensureTypeSpans(textEl);
+    typed.textContent = chars.slice(0, n).join("");
+    rest.textContent = chars.slice(n).join("");
+  }
+
+  function stopTyping() {
+    if (typing.timer) {
+      clearTimeout(typing.timer);
+      typing.timer = null;
+    }
+    typing.el = null;
+    typing.full = "";
+    typing.index = 0;
+  }
+
+  function revealLineHint(ui, done) {
+    if (!ui?.dialog) return;
+    ui.dialog.classList.toggle("is-typing", !done);
+    ui.dialog.setAttribute("aria-busy", done ? "false" : "true");
+    ui.dialog.setAttribute("aria-live", done ? "polite" : "off");
+    if (!ui.hintEl) return;
+    ui.hintEl.hidden = false;
+    ui.hintEl.textContent = done ? "点击继续 ▾" : "……";
+  }
+
+  function completeTyping() {
+    if (!isTyping() && !typing.el) return false;
+    const el = typing.el;
+    const full = typing.full;
+    stopTyping();
+    if (el) setDialogText(el, full, [...full].length);
+    const ui = activeSession?.ui;
+    if (ui) revealLineHint(ui, true);
+    return true;
+  }
+
+  function startTyping(ui, full) {
+    stopTyping();
+    const textEl = ui.textEl;
+    const chars = [...String(full || "")];
+    if (!textEl || skipMode || chars.length <= 1) {
+      setDialogText(textEl, full, chars.length);
+      revealLineHint(ui, true);
+      scheduleAuto();
+      return;
+    }
+    typing.el = textEl;
+    typing.full = full;
+    typing.index = 0;
+    revealLineHint(ui, false);
+    setDialogText(textEl, full, 0);
+    const tick = () => {
+      typing.index += 1;
+      setDialogText(textEl, full, typing.index);
+      if (typing.index >= chars.length) {
+        typing.timer = null;
+        typing.el = null;
+        revealLineHint(ui, true);
+        scheduleAuto();
+        return;
+      }
+      typing.timer = setTimeout(tick, charDelay(chars[typing.index - 1]));
+    };
+    tick();
+  }
+
   function scheduleAuto() {
     clearAutoTimer();
     if (!activeSession || activeSession.locked) return;
+    if (isTyping()) return;
     if (!autoMode && !skipMode) return;
     const delay = skipMode ? SKIP_MS : AUTO_MS;
     autoTimer = setTimeout(() => {
@@ -201,6 +307,8 @@
         finished = true;
         locked = true;
         clearAutoTimer();
+        if (activeSession?.resolve === resolve) stopTyping();
+        ui.dialog.classList.remove("is-typing");
         if (onKey) document.removeEventListener("keydown", onKey);
         const delay =
           reason === "aborted" || reason === "back" || skipMode || opts.keepVisible ? 0 : 220;
@@ -220,7 +328,7 @@
             resolve(reason || "done");
             return;
           }
-          ui.dialog.classList.remove("is-visible", "is-system", "is-danmaku");
+          ui.dialog.classList.remove("is-visible", "is-system", "is-danmaku", "is-typing");
           [...ui.chars.children].forEach((c) => c.classList.remove("is-visible"));
           ui.layer.hidden = true;
           ui.layer.classList.remove("is-active");
@@ -230,7 +338,7 @@
         }, delay);
       };
 
-      const showLine = ({ recordHistory = true } = {}) => {
+      const showLine = ({ recordHistory = true, instant = false } = {}) => {
         const line = lines[index];
         const type = line.type || "say";
 
@@ -241,10 +349,6 @@
           choiceBox.innerHTML = "";
         }
         if (ui.textEl) ui.textEl.hidden = false;
-        if (ui.hintEl) {
-          ui.hintEl.hidden = false;
-          ui.hintEl.textContent = "点击继续 ▾";
-        }
         ui.dialog.classList.toggle("is-system", type === "system");
         ui.dialog.classList.toggle("is-danmaku", type === "danmaku");
 
@@ -271,14 +375,26 @@
           line.speaker ||
           (type === "system" ? "系统" : type === "danmaku" ? "弹幕" : "");
         ui.dialog.classList.remove("is-generating");
-        ui.textEl.textContent = line.text || "";
         ui.dialog.classList.add("is-visible");
         if (recordHistory) pushHistory(line);
-        scheduleAuto();
+        const full = line.text || "";
+        if (instant || skipMode) {
+          stopTyping();
+          setDialogText(ui.textEl, full, [...full].length);
+          revealLineHint(ui, true);
+          scheduleAuto();
+        } else {
+          startTyping(ui, full);
+        }
       };
 
       const advance = () => {
         if (locked) return;
+        if (isTyping()) {
+          completeTyping();
+          if (skipMode || autoMode) scheduleAuto();
+          return;
+        }
         if (index < lines.length - 1) {
           index += 1;
           showLine();
@@ -289,10 +405,11 @@
 
       const back = () => {
         if (locked) return false;
+        stopTyping();
         if (index > 0) {
           index -= 1;
           popHistory(1);
-          showLine({ recordHistory: false });
+          showLine({ recordHistory: false, instant: true });
           return true;
         }
         // 本段第一句：不改历史，由剧情引擎决定是否跳到上一个对话框
@@ -301,6 +418,8 @@
       };
 
       onKey = (e) => {
+        if (e.isComposing) return;
+        if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
         if (e.key === "Enter" || e.key === " " || e.key === "ArrowRight") {
           e.preventDefault();
           advance();
@@ -313,6 +432,7 @@
         back,
         abort: (silent) => finish(silent ? "aborted" : "done"),
         getIndex: () => index,
+        ui,
       };
 
       Object.defineProperty(activeSession, "locked", {
@@ -370,6 +490,7 @@
   function holdDialogueLine(line = {}, { waiting = false } = {}) {
     const stage = document.getElementById("stage");
     if (!stage || !String(line.text || "").trim()) return;
+    stopTyping();
     const ui = ensureUI(stage);
     ui.layer.hidden = false;
     ui.layer.classList.add("is-active");
@@ -394,7 +515,10 @@
       line.speaker ||
       (type === "system" ? "系统" : type === "danmaku" ? "弹幕" : "");
     ui.textEl.hidden = false;
-    ui.textEl.textContent = line.text;
+    setDialogText(ui.textEl, line.text, [...String(line.text || "")].length);
+    ui.dialog.classList.remove("is-typing");
+    ui.dialog.setAttribute("aria-busy", "false");
+    ui.dialog.setAttribute("aria-live", "polite");
     if (ui.hintEl) {
       if (waiting) {
         ui.hintEl.hidden = false;
@@ -501,7 +625,7 @@
     if (slots?.length) setSlots(ui, slots, null);
 
     ui.nameEl.textContent = "";
-    ui.dialog.classList.remove("is-system", "is-danmaku", "is-choices");
+    ui.dialog.classList.remove("is-system", "is-danmaku", "is-choices", "is-typing");
     ui.dialog.classList.add("is-visible", "is-generating");
     const choiceBox = ui.dialog.querySelector(".vn-dialog-choices");
     if (choiceBox) {
@@ -707,6 +831,7 @@
     setSkipMode: (on) => {
       skipMode = !!on;
       if (skipMode) autoMode = false;
+      if (skipMode) completeTyping();
       scheduleAuto();
     },
     isAuto: () => autoMode,

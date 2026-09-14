@@ -9,6 +9,12 @@
     muted: false,
   };
 
+  let bgmEl = null;
+  let currentSrc = "";
+  let fadeTimer = 0;
+  let unlockArmed = false;
+  let bgmGen = 0;
+
   function clamp(n) {
     return Math.max(0, Math.min(100, Number(n) || 0));
   }
@@ -45,6 +51,7 @@
     document.documentElement.style.setProperty("--vol-bgm", String(effective("bgm")));
     document.documentElement.style.setProperty("--vol-se", String(effective("se")));
     document.documentElement.style.setProperty("--vol-voice", String(effective("voice")));
+    applyBgmVolume(false);
     window.dispatchEvent(new CustomEvent("gal-audio-change", { detail: { ...state } }));
   }
 
@@ -57,6 +64,145 @@
     persist();
   }
 
+  function targetBgmVolume() {
+    return effective("bgm");
+  }
+
+  function applyBgmVolume(snap) {
+    if (!bgmEl) return;
+    if (snap || !fadeTimer) bgmEl.volume = targetBgmVolume();
+  }
+
+  function clearFade() {
+    if (fadeTimer) {
+      cancelAnimationFrame(fadeTimer);
+      fadeTimer = 0;
+    }
+  }
+
+  function fadeVolume(to, ms, onDone) {
+    const el = bgmEl;
+    if (!el) {
+      onDone?.();
+      return;
+    }
+    clearFade();
+    const from = el.volume;
+    const dur = Math.max(0, Number(ms) || 0);
+    if (dur <= 0 || Math.abs(from - to) < 0.01) {
+      el.volume = to;
+      onDone?.();
+      return;
+    }
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      el.volume = from + (to - from) * t;
+      if (t < 1) {
+        fadeTimer = requestAnimationFrame(tick);
+        return;
+      }
+      fadeTimer = 0;
+      el.volume = to;
+      onDone?.();
+    };
+    fadeTimer = requestAnimationFrame(tick);
+  }
+
+  function ensureEl() {
+    if (bgmEl) return bgmEl;
+    bgmEl = new Audio();
+    bgmEl.preload = "auto";
+    bgmEl.loop = true;
+    bgmEl.volume = targetBgmVolume();
+    return bgmEl;
+  }
+
+  function armUnlock() {
+    if (unlockArmed) return;
+    unlockArmed = true;
+    const tryPlay = () => {
+      document.removeEventListener("pointerdown", tryPlay, true);
+      unlockArmed = false;
+      if (!currentSrc || !bgmEl) return;
+      bgmEl.play().catch(() => {});
+    };
+    document.addEventListener("pointerdown", tryPlay, true);
+  }
+
+  function play(src, { loop = true, restart = false, fadeMs = 500 } = {}) {
+    if (!src) return;
+    const gen = ++bgmGen;
+    const el = ensureEl();
+    const same = currentSrc === src && !el.paused;
+    if (same && !restart) {
+      el.loop = loop !== false;
+      applyBgmVolume(true);
+      return;
+    }
+    clearFade();
+    currentSrc = src;
+    el.loop = loop !== false;
+    if (!same) {
+      el.src = src;
+      try {
+        el.currentTime = 0;
+      } catch (_) {
+        /* ignore */
+      }
+    }
+    el.volume = 0;
+    const start = () => {
+      if (gen !== bgmGen) return;
+      fadeVolume(targetBgmVolume(), fadeMs);
+    };
+    const p = el.play();
+    if (p && typeof p.then === "function") {
+      p.then(start).catch(() => {
+        if (gen !== bgmGen) return;
+        el.volume = targetBgmVolume();
+        armUnlock();
+      });
+    } else {
+      start();
+    }
+  }
+
+  function stop({ fadeMs = 700 } = {}) {
+    const gen = ++bgmGen;
+    currentSrc = "";
+    if (!bgmEl) return;
+    const el = bgmEl;
+    fadeVolume(0, fadeMs, () => {
+      if (gen !== bgmGen) return;
+      el.pause();
+      el.removeAttribute("src");
+      el.load();
+    });
+  }
+
+  function syncFromStory(beats, upToIndex) {
+    let src = null;
+    let loop = true;
+    if (!Array.isArray(beats)) {
+      stop({ fadeMs: 0 });
+      return;
+    }
+    const end = Math.max(0, Number(upToIndex) || 0);
+    for (let i = 0; i <= end; i += 1) {
+      const b = beats[i];
+      if (b?.type !== "bgm") continue;
+      if (b.stop) {
+        src = null;
+      } else if (b.src) {
+        src = b.src;
+        loop = b.loop !== false;
+      }
+    }
+    if (src) play(src, { loop, restart: false, fadeMs: 0 });
+    else stop({ fadeMs: 400 });
+  }
+
   load();
   apply();
 
@@ -64,5 +210,11 @@
     get: () => ({ ...state }),
     set,
     effective,
+  };
+
+  window.GalAudio = {
+    play,
+    stop,
+    syncFromStory,
   };
 })();

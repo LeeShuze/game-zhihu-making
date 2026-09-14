@@ -19,6 +19,57 @@
   /** @type {Record<string, { variant: string }>} */
   const sceneState = {};
 
+  function sceneLabel(id) {
+    return (window.STORY_SCENE_LABELS && window.STORY_SCENE_LABELS[id]) || id || "";
+  }
+
+  function formatExploreHow(current, npc) {
+    if (!npc) return "四处看看。";
+    const name = npc.name || "";
+    const door = Boolean(npc.hotspotId);
+    const atTarget = current === npc.scene;
+    const floor = (() => {
+      const m = String(npc.scene || "").match(/^floor(\d+)/);
+      return m ? `${Number(m[1])}层` : sceneLabel(npc.scene);
+    })();
+
+    if (atTarget) {
+      if (door) return "去敲门。";
+      if (name) return `去找${name}。`;
+      return "继续往下。";
+    }
+    if (door) {
+      if (current === "elevator") return `到${floor}，去敲门。`;
+      if (current === "downstairs" || current === "floor01_outside") {
+        return `进楼乘电梯到${floor}，去敲门。`;
+      }
+      return `去${floor}敲门。`;
+    }
+    if (name) return `找${name}。`;
+    return `去${sceneLabel(npc.scene)}。`;
+  }
+
+  function refreshExploreHint() {
+    const el = document.getElementById("exploreHint");
+    const whereEl = document.getElementById("exploreHintWhere");
+    const howEl = document.getElementById("exploreHintHow");
+    if (!el) return;
+    const pause = window.Story?.getPauseState?.();
+    if (!explorationEnabled || !pause?.active) {
+      el.hidden = true;
+      return;
+    }
+    const npc = pause.resumeNpc || resumeNpc;
+    const targetId = npc?.scene || "";
+    const atTarget = currentSceneId && targetId && currentSceneId === targetId;
+    const label = sceneLabel(targetId);
+    if (whereEl) {
+      whereEl.textContent = label ? (atTarget ? label : `去${label}`) : "先四处看看";
+    }
+    if (howEl) howEl.textContent = formatExploreHow(currentSceneId, npc);
+    el.hidden = false;
+  }
+
   function getVariant(scene) {
     if (!scene?.variants) return null;
     return sceneState[scene.id]?.variant || scene.defaultVariant || Object.keys(scene.variants)[0];
@@ -406,6 +457,7 @@
 
     if (!explorationEnabled) {
       hideElevatorPanel();
+      refreshExploreHint();
       return;
     }
 
@@ -413,6 +465,7 @@
       placeFloorChoices(scene);
       placeResumeNpc(scene);
       placeAmbientNpcs(scene);
+      refreshExploreHint();
       return;
     }
 
@@ -468,6 +521,7 @@
 
     placeResumeNpc(scene);
     placeAmbientNpcs(scene);
+    refreshExploreHint();
   }
 
   function renderScene(sceneId, { withFade = false } = {}) {
@@ -555,6 +609,8 @@
     explorationEnabled = !!on;
     if (currentSceneId && graph.scenes[currentSceneId]) {
       placeHotspots(graph.scenes[currentSceneId]);
+    } else {
+      refreshExploreHint();
     }
   }
 

@@ -36,7 +36,7 @@
       const b = beats[i];
       if (!b?.text) continue;
       if (
-        ["scene", "variant", "wait", "horror", "pause", "choice", "flavorChoice"].includes(
+        ["scene", "variant", "wait", "horror", "pause", "choice", "flavorChoice", "bgm"].includes(
           b.type
         )
       ) {
@@ -234,7 +234,7 @@
 
   function isDialogueBeat(beat) {
     if (!beat || !beat.text) return false;
-    return !["scene", "variant", "wait", "horror", "pause", "choice", "flavorChoice"].includes(
+    return !["scene", "variant", "wait", "horror", "pause", "choice", "flavorChoice", "bgm"].includes(
       beat.type
     );
   }
@@ -412,7 +412,7 @@
       const b = currentStory.beats[i];
       if (!b) continue;
       if (b.type === "flavorChoice" || b.type === "choice") return i;
-      if (b.type === "horror" || b.type === "wait") continue;
+      if (b.type === "horror" || b.type === "wait" || b.type === "bgm") continue;
       return null;
     }
     return null;
@@ -479,6 +479,7 @@
       });
     }
     window.HorrorMeter?.set?.(computeHorrorUpTo(targetIndex), { animate: false });
+    window.GalAudio?.syncFromStory?.(currentStory.beats, targetIndex);
   }
 
   async function handleBackToPrevDialogue(fromIndex, { popHistory = true } = {}) {
@@ -506,6 +507,17 @@
     if (kind === "horror") {
       window.HorrorMeter?.applyBeat?.(beat);
       await wait(skip ? 0 : 180);
+      return;
+    }
+
+    if (kind === "bgm") {
+      if (beat.stop) window.GalAudio?.stop?.({ fadeMs: skip ? 0 : 700 });
+      else if (beat.src) {
+        window.GalAudio?.play?.(beat.src, {
+          loop: beat.loop !== false,
+          fadeMs: skip ? 0 : 500,
+        });
+      }
       return;
     }
 
@@ -1133,6 +1145,7 @@
     prefetchFlavorOptions(story, fromIndex);
     if (fromIndex === 0 && !replay && resetHorror) {
       window.HorrorMeter?.set?.(0, { animate: false });
+      window.GalAudio?.stop?.({ fadeMs: 0 });
       farthestBeatIndex = 0;
       window.CharInfoUI?.rebuildFromStory?.(story.beats, -1);
     } else if (fromIndex > 0) {

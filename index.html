@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>幸福之家</title>
-    <link rel="stylesheet" href="css/style.css?v=flavor30" />
-    <link rel="stylesheet" href="css/dialogue.css?v=flavor21" />
+    <link rel="stylesheet" href="css/style.css?v=flavor31" />
+    <link rel="stylesheet" href="css/dialogue.css?v=type1" />
   </head>
   <body data-aspect="16-9" style="--aspect-w: 16; --aspect-h: 9">
     <div class="stage" id="stage">
@@ -15,6 +15,12 @@
       </div>
 
       <div id="sceneFade" class="scene-fade" aria-hidden="true"></div>
+
+      <aside class="hud-left explore-hint" id="exploreHint" hidden>
+        <p class="explore-hint-kicker">自由探索</p>
+        <p class="explore-hint-where" id="exploreHintWhere"></p>
+        <p class="explore-hint-how" id="exploreHintHow"></p>
+      </aside>
 
       <div class="hud-right" id="hudRight">
         <button type="button" class="char-info-btn" id="charInfoBtn" aria-label="人物信息" aria-controls="charInfoPanel" title="人物信息">
@@ -316,25 +322,25 @@
       </div>
     </div>
 
-    <script src="js/scenes.js?v=familyPhoto1"></script>
-    <script src="js/dialogue.js?v=flavor22"></script>
+    <script src="js/scenes.js?v=exploreHint1"></script>
+    <script src="js/dialogue.js?v=type1"></script>
     <script src="js/story/endings.js?v=dress1"></script>
     <script src="js/story/ambient_npcs.js?v=floorFix1"></script>
     <script src="js/story/char_info.js?v=charInfo3"></script>
-    <script src="js/story/ch01_06.js?v=flavor32"></script>
-    <script src="js/story/ch07_12.js?v=flavor39"></script>
-    <script src="js/story/ch13_16.js?v=flavor28"></script>
-    <script src="js/story/ch17_19.js?v=flavor31"></script>
-    <script src="js/story/ch20_end.js?v=flavor41"></script>
+    <script src="js/story/ch01_06.js?v=flavor37"></script>
+    <script src="js/story/ch07_12.js?v=flavor44"></script>
+    <script src="js/story/ch13_16.js?v=flavor31"></script>
+    <script src="js/story/ch17_19.js?v=flavor36"></script>
+    <script src="js/story/ch20_end.js?v=flavor46"></script>
     <script src="js/ai.js?v=flavor39"></script>
     <script src="js/ambient_chat.js?v=greet2"></script>
     <script src="js/char_info_ui.js?v=charInfo3"></script>
-    <script src="js/story.js?v=flavor36"></script>
+    <script src="js/story.js?v=flavor37"></script>
     <script src="js/horror.js"></script>
     <script src="js/save.js"></script>
-    <script src="js/audio.js"></script>
+    <script src="js/audio.js?v=bgm1"></script>
     <script src="js/menu.js?v=choiceAI3"></script>
     <script src="js/settings.js?v=flavor9"></script>
-    <script src="js/game.js?v=greet2"></script>
+    <script src="js/game.js?v=exploreHint2"></script>
   </body>
 </html>

@@ -164,6 +164,20 @@
   white-space: pre-wrap;
 }
 
+.vn-dialog-typed,
+.vn-dialog-rest {
+  white-space: inherit;
+}
+
+.vn-dialog-rest {
+  color: transparent;
+  user-select: none;
+}
+
+.vn-dialog.is-typing .vn-dialog-hint {
+  opacity: 0.35;
+}
+
 .vn-dialog-hint {
   position: absolute;
   right: 18px;
