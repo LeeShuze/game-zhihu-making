@@ -124,20 +124,15 @@ window.STORY_CH01_06 = {
     // —— 2 选房 ——
     {
       type: "narration",
-      text: "很快，我们要选房间了。\n红姐说：三十层一梯一户，每层只能住一名玩家。",
+      text: "很快，我们要选房间了。",
       clearSprites: true,
     },
     {
-      type: "narration",
-      text: "幸福之家是角色扮演类恐怖副本——\n房里的诡异会扮演你的各种亲密关系，同吃同住七天。",
-    },
-    { type: "horror", add: 4 },
-    {
       type: "say",
-      speaker: "俊哥",
-      sprite: "assets/chars/junge_front.png",
-      side: "right",
-      text: "走。",
+      speaker: "红姐",
+      sprite: "assets/chars/hongjie_front.png",
+      side: "left",
+      text: "虽然之前这个副本无人通关，但前面死的那些玩家也摸索了一点经验。\n这栋楼一共三十层，一梯一户，每层只能住一名玩家。",
       slots: [
         { side: "left", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
         { side: "right", sprite: "assets/chars/junge_front.png", name: "俊哥" },
@@ -145,7 +140,13 @@ window.STORY_CH01_06 = {
     },
     {
       type: "narration",
-      text: "老玩家选了一楼和二楼，明眼人跟着抢低层。\n因为近视，我跑不过，最后只剩 30 层。",
+      text: "幸福之家其实属于角色扮演类恐怖副本。\n每个房子里都有一些诡异入住，他们会扮演玩家的各种亲密关系，同吃同住七天。",
+      clearSprites: true,
+    },
+    { type: "horror", add: 4 },
+    {
+      type: "narration",
+      text: "俊哥急忙打断红姐，拉着她选了一楼和二楼。明眼人跟着抢低层。\n因为近视，我跑不过，最后只剩 30 层。",
       clearSprites: true,
     },
     { type: "horror", set: 16 },
@@ -181,27 +182,28 @@ window.STORY_CH01_06 = {
     // —— 3 见思思 ——
     {
       type: "narration",
-      text: "既然是角色扮演，要和诡异当一家人，当然怎么自然怎么来。",
+      text: "其实是他们不懂我的脑回路。\n既然是角色扮演，要和诡异成为一家人，那肯定是怎么自然怎么相处啊。\n难道现实中回自己家，还要非常礼貌地说：「你好，有人在吗？请帮我开门。」",
       clearSprites: true,
     },
     { type: "scene", scene: "floor30_door_open" },
     {
       type: "narration",
-      text: "门「咯吱」一声打开，凉意席卷全身——简直是避暑胜地。",
+      text: "敲门声落，门「咯吱」一声打开，凉意席卷全身。\n我舒服地喟叹一声——简直是避暑胜地，夏天都不用开空调。",
     },
     { type: "horror", add: 8 },
     {
-      type: "say",
-      speaker: "？？？",
-      sprite: "assets/chars/sisi_blood_enter.png",
-      side: "left",
-      text: "……",
+      type: "narration",
+      text: "我低头，看到了一个矮小的红色「人影」。\n虽然视线一直模糊不清，但两条辫子一甩一甩的，应该是个穿着红裙的小孩。",
     },
     {
       type: "narration",
-      text: "一个矮小的红色人影猛地扑来，冰凉的小手掐住我的脖子。",
+      text: "小孩阴森一笑，猛地朝我扑来，冰凉的小手掐住了我的脖子。",
     },
     { type: "horror", set: 28 },
+    {
+      type: "narration",
+      text: "我顺势把她搂在怀里，摸到她裙子是湿漉漉的，立刻不满地说——",
+    },
     {
       type: "say",
       speaker: "宁念",
@@ -215,6 +217,11 @@ window.STORY_CH01_06 = {
     },
     { type: "horror", set: 14 },
     {
+      type: "narration",
+      text: "鼻子动了动，闻到一阵血腥味，又焦急地问——",
+      clearSprites: true,
+    },
+    {
       type: "say",
       speaker: "宁念",
       sprite: "assets/chars/ningnian_daily_front.png",
@@ -225,12 +232,19 @@ window.STORY_CH01_06 = {
         { side: "right", sprite: "assets/chars/ningnian_daily_front.png", name: "宁念" },
       ],
     },
-    { type: "danmaku", text: "那是血裙啊大姐！死亡之家的 Boss 之一！" },
+    {
+      type: "danmaku",
+      text: "大姐，睁开你的狗眼看看，这可是死亡之家的 Boss 之一！她穿的不是湿漉漉的红裙，那是把玩家杀人分尸染红的！血腥味也不是她受伤了，是裙子上玩家的血。",
+    },
     { type: "scene", scene: "sisi_room" },
     {
       type: "narration",
-      text: "我抱着她走进家门，从公主房翻出新的白裙子给她换上，\n又一点一点擦干净她脸上的血污。",
+      text: "我一边抱着小孩走进家门，一边帮她脱下红裙子，从精致的公主房翻出新的白裙子给她穿上。\n她掐在我脖子上的小手，不知不觉松开了。",
       clearSprites: true,
+    },
+    {
+      type: "narration",
+      text: "感受到她的无措，我拿起热毛巾，凑近了些，一点一点把她脸上的血污擦了个干净。\n这才看清，原来是个可爱的小萝莉。",
     },
     { type: "horror", set: 8 },
     {
@@ -245,6 +259,11 @@ window.STORY_CH01_06 = {
       ],
     },
     {
+      type: "narration",
+      text: "小萝莉扭捏地扯着白裙子，悄悄凑到我脸上，「啪叽」一口又快速离开——",
+      clearSprites: true,
+    },
+    {
       type: "say",
       speaker: "思思",
       sprite: "assets/chars/sisi_hug.png",
@@ -257,7 +276,7 @@ window.STORY_CH01_06 = {
     },
     {
       type: "narration",
-      text: "啥？妈妈？\n俺无痛当妈啦！泰裤辣！",
+      text: "啥？妈妈？\n俺无痛当妈啦！这简直是泰裤辣！\n要知道，我现实中就听惯了各种死在生产台上的事情——我虽然渴望家庭，但最怕的就是生孩子了。",
       clearSprites: true,
     },
     { type: "horror", set: 4 },
@@ -265,12 +284,12 @@ window.STORY_CH01_06 = {
     { type: "variant", scene: "floor30_living", variant: "dirty" },
     {
       type: "narration",
-      text: "我哄她午休。耳边忽然响起机械音——",
+      text: "我刚哄好小萝莉，让她午休一会，就听耳边传来机械音播报——",
     },
     { type: "system", text: "初始玩家：30 人；现存活：20 人。" },
     {
       type: "narration",
-      text: "仅仅选房子就死了十人。群里说：黄毛住进 3 楼，被狗头诡异吞了；\n还有人惊悚值直接飙到 100……当然，这些都跟我无关。",
+      text: "没想到，仅仅是选房子，居然就死了 10 名玩家。\n我打开手机，把手机捧到眼睛前，这才勉强看清屏幕上的字。\n群里说：黄毛住进 3 楼，被狗头诡异吞了；还有人惊悚值直接飙到 100……当然，这些都跟我无关。",
     },
     { type: "horror", set: 3 },
     {
@@ -335,7 +354,11 @@ window.STORY_CH01_06 = {
     { type: "horror", set: 18 },
     {
       type: "narration",
-      text: "我本想给他一巴掌，手一滑——薅住了他的腹肌。\n啧，这手感，没忍住多摸了两把。",
+      text: "我忍不了了，一骨碌从沙发上爬起来。\n本想给他一巴掌，手一滑——薅住了他的腹肌。啧，这手感，没忍住多摸了两把。",
+    },
+    {
+      type: "narration",
+      text: "眼见他濒临暴怒，浑身冒黑气，我急忙找补——",
     },
     {
       type: "say",
@@ -348,7 +371,23 @@ window.STORY_CH01_06 = {
         { side: "right", sprite: "assets/chars/boss_front.png", name: "？？？" },
       ],
     },
+    {
+      type: "say",
+      speaker: "宁念",
+      sprite: "assets/chars/ningnian_front.png",
+      side: "left",
+      text: "没事，现在我来了，我以后每天都给你们做好吃的，保证你们父女都长得高高的。",
+      slots: [
+        { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "？？？" },
+      ],
+    },
     { type: "danmaku", text: "她怎么敢在断头大 Boss 面前说这些的！！" },
+    {
+      type: "narration",
+      text: "没想到，下一秒，男人抬手，忽然把手里拎着的脑袋安在了脖子上。",
+      clearSprites: true,
+    },
     {
       type: "say",
       speaker: "断头",
@@ -370,6 +409,11 @@ window.STORY_CH01_06 = {
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
       ],
+    },
+    {
+      type: "narration",
+      text: "我猛地拽住他的领带，让他完全压在我身上，一边呢喃——",
+      clearSprites: true,
     },
     {
       type: "say",
@@ -401,7 +445,7 @@ window.STORY_CH01_06 = {
     },
     {
       type: "narration",
-      text: "下一秒，骨头刚拼好的思思冲来，一脚把男人踹上天花板。",
+      text: "下一秒，骨头刚拼好的思思冲来，一脚把男人踹上天花板。\n随后她过来和我贴贴脸，眼神湿润——",
     },
     { type: "horror", add: 5 },
     {
@@ -417,13 +461,63 @@ window.STORY_CH01_06 = {
     },
     {
       type: "narration",
-      text: "这谁顶得住啊！我立刻去做饭。\n父女俩把碗盆舔得干干净净。",
+      text: "这谁顶得住啊！\n我立刻从冰箱里翻出食材，眯着眼睛，屁颠屁颠去给小萝莉……和老公做饭了。\n父女俩把碗盆舔得干干净净。",
       clearSprites: true,
     },
     { type: "horror", set: 4 },
     {
       type: "narration",
-      text: "洗澡时隐约听见——\n「留着这个女人也行，做饭挺好吃的。」",
+      text: "我去浴室洗澡时，似乎听到他们父慈女孝地在交谈——",
+    },
+    {
+      type: "say",
+      speaker: "断头",
+      sprite: "assets/chars/boss_front.png",
+      side: "right",
+      text: "思思，其实留着这个女人也行，她做饭挺好吃的。",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+    },
+    {
+      type: "say",
+      speaker: "思思",
+      sprite: "assets/chars/sisi_front.png",
+      side: "left",
+      text: "可是，爸爸，明天那两位回来，知道我们以后不吃他们做的饭会爆炸的。",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+    },
+    {
+      type: "say",
+      speaker: "断头",
+      sprite: "assets/chars/boss_front.png",
+      side: "right",
+      text: "那也叫饭？他们敢有疑问，我先杀了他们。",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+    },
+    {
+      type: "say",
+      speaker: "思思",
+      sprite: "assets/chars/sisi_front.png",
+      side: "left",
+      text: "好的，我给你放风。",
+      slots: [
+        { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
+        { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
+      ],
+    },
+    { type: "scene", scene: "master_bedroom" },
+    {
+      type: "narration",
+      text: "洗完澡的我很自觉地占领主卧，鬼鬼祟祟地从被窝里探出脑袋，看那道黑影一直坐在沙发上不动。\n于是，我柔声柔气地开始展示自己的贤惠——",
+      clearSprites: true,
     },
     {
       type: "say",
@@ -438,9 +532,10 @@ window.STORY_CH01_06 = {
     { type: "scene", scene: "kitchen" },
     {
       type: "narration",
-      text: "更离谱的是，他居然同意了。\n对我这个高度近视而言，手里就是在洗一个长了毛的黑皮西瓜。",
+      text: "更离谱的是，断头大 Boss 居然同意了。最终，我和他进行了分头行动。\n我在厨房一边洗着男人的头，一边哼着歌。\n对我这个高度近视而言，手里其实就是在洗一个长了毛的黑皮西瓜而已。",
       clearSprites: true,
     },
+    { type: "danmaku", text: "依我看，不是一家人，不进一家门，这宁念也是个死变态。" },
     { type: "horror", set: 3 },
     {
       type: "say",
@@ -461,6 +556,11 @@ window.STORY_CH01_06 = {
       ],
     },
     {
+      type: "narration",
+      text: "黑皮西瓜凝视着我，忽然咧嘴一笑，诡异又俊俏——",
+      clearSprites: true,
+    },
+    {
       type: "say",
       speaker: "断头",
       sprite: "assets/chars/boss_front.png",
@@ -472,6 +572,11 @@ window.STORY_CH01_06 = {
       ],
     },
     {
+      type: "narration",
+      text: "我温柔地看着他……其实也看不清，不要在意这些细节。",
+      clearSprites: true,
+    },
+    {
       type: "say",
       speaker: "宁念",
       sprite: "assets/chars/ningnian_front.png",
@@ -481,6 +586,10 @@ window.STORY_CH01_06 = {
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
       ],
+    },
+    {
+      type: "narration",
+      text: "话音刚落，他的头忽然飞出厨房，与刚走出浴室的身体完美衔接，又变成那个帅气逼人的一米八六大个子。",
     },
     {
       type: "say",
@@ -495,13 +604,13 @@ window.STORY_CH01_06 = {
     },
     {
       type: "narration",
-      text: "他说完便去客房睡了。\n啧，这老公真小气，就不能让我摸着腹肌睡觉吗？",
+      text: "说完，男人快速离开，情绪低沉地去客房睡觉。\n啧，这老公真小气，就不能让我摸着腹肌睡觉吗？",
       clearSprites: true,
     },
     { type: "scene", scene: "master_bedroom" },
     {
       type: "narration",
-      text: "正思索时，被子里钻出一双漆黑的眼睛——简直是咒怨现场。\n幸好我看不清，只看到一团模糊的白影。",
+      text: "正思索时，下一秒，一双漆黑的眼睛在我被子里出现，小脸散发着幽光——简直是咒怨现场。\n幸好我看不清，只看到一团模糊的白影。",
     },
     { type: "horror", set: 18 },
     {
@@ -510,6 +619,11 @@ window.STORY_CH01_06 = {
       sprite: "assets/chars/sisi_front.png",
       side: "left",
       text: "妈妈，别理那个断头老怪物，今晚，思思要跟妈妈睡。",
+    },
+    {
+      type: "narration",
+      text: "原来是思思，不知道她什么时候钻进我被窝里了。\n我捏了捏她的小脸，把她提溜到我怀里，轻声教导——",
+      clearSprites: true,
     },
     { type: "horror", set: 7 },
     {
@@ -522,6 +636,11 @@ window.STORY_CH01_06 = {
         { side: "left", sprite: "assets/chars/sisi_front.png", name: "思思" },
         { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
       ],
+    },
+    {
+      type: "narration",
+      text: "思思不解地看着我，张了张嘴，露出被拔光牙齿的血淋淋光秃秃的嘴——",
+      clearSprites: true,
     },
     {
       type: "say",

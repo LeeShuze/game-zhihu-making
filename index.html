@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>幸福之家</title>
-    <link rel="stylesheet" href="css/style.css?v=elevator2" />
-    <link rel="stylesheet" href="css/dialogue.css" />
+    <link rel="stylesheet" href="css/style.css?v=npc2" />
+    <link rel="stylesheet" href="css/dialogue.css?v=body34g" />
   </head>
   <body data-aspect="16-9" style="--aspect-w: 16; --aspect-h: 9">
     <div class="stage" id="stage">
@@ -176,20 +176,46 @@
       </div>
 
       <div class="story-confirm" id="storyConfirm" hidden>
-        <div class="story-confirm-card" role="dialog" aria-modal="true" aria-labelledby="storyConfirmText">
-          <p id="storyConfirmText">是否继续剧情？</p>
-          <div class="story-confirm-actions">
-            <button type="button" class="story-confirm-btn is-primary" id="storyConfirmYes">继续</button>
-            <button type="button" class="story-confirm-btn" id="storyConfirmNo">取消</button>
+        <div class="story-confirm-dock" role="dialog" aria-modal="true" aria-labelledby="storyConfirmText">
+          <div class="story-confirm-dialog">
+            <p class="story-confirm-text" id="storyConfirmText">是否继续剧情？</p>
+          </div>
+          <div class="story-confirm-choices" role="group" aria-label="选项">
+            <button type="button" class="story-choice" id="storyConfirmYes">
+              <span class="story-choice-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                  <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  <path
+                    d="M7.5 10.2c0-2.1 1.9-3.7 4.5-3.7s4.5 1.6 4.5 3.7c0 1.5-1 2.7-2.5 3.3v1.1h-4v-1.1c-1.5-.6-2.5-1.8-2.5-3.3z"
+                    fill="currentColor"
+                  />
+                  <circle cx="12" cy="17.2" r="1" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="story-choice-label" id="storyConfirmYesLabel">继续。</span>
+            </button>
+            <button type="button" class="story-choice" id="storyConfirmNo">
+              <span class="story-choice-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                  <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  <path
+                    d="M7.5 10.2c0-2.1 1.9-3.7 4.5-3.7s4.5 1.6 4.5 3.7c0 1.5-1 2.7-2.5 3.3v1.1h-4v-1.1c-1.5-.6-2.5-1.8-2.5-3.3z"
+                    fill="currentColor"
+                  />
+                  <circle cx="12" cy="17.2" r="1" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="story-choice-label">再四处看看。</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
     <script src="js/scenes.js?v=elevator2"></script>
-    <script src="js/dialogue.js"></script>
+    <script src="js/dialogue.js?v=body34g"></script>
     <script src="js/story/ch01_06.js"></script>
-    <script src="js/story/ch07_12.js"></script>
+    <script src="js/story/ch07_12.js?v=npc2"></script>
     <script src="js/story/ch13_16.js"></script>
     <script src="js/story/ch17_19.js"></script>
     <script src="js/story/ch20_end.js"></script>
@@ -199,6 +225,6 @@
     <script src="js/audio.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/settings.js"></script>
-    <script src="js/game.js?v=elevator2"></script>
+    <script src="js/game.js?v=npc2"></script>
   </body>
 </html>

@@ -58,11 +58,20 @@
       const side = slot.side || "right";
       const el = document.createElement("div");
       el.className = `vn-character side-${side}`;
+      // 新全身立绘：按 3/4 身裁切（旧特写：phone/sew/soothe/protect、boss_head/chest、nainai_mask 等除外）
+      const isFullBody =
+        /ningnian_front|ningnian_daily|ningnian_normal|ningnian\.png|sisi_front|sisi\.png|sisi_hug|sisi_blood|boss_front|boss_head|boss\.png|yeye_enter|yeye_front|yeye_patched|hongjie|junge|suxiaomo|nainai_front|nainai_enter|huangmao|fangyuan|doghead|boy27|mom27|girl28|twin_/i.test(
+          slot.sprite
+        );
+      if (isFullBody) {
+        el.classList.add("is-body-34");
+      }
       if (activeSide && slot.side && slot.side !== activeSide) {
         el.classList.add("is-dim");
       }
       const img = document.createElement("img");
-      img.src = slot.sprite;
+      // 新全身立绘强制绕过浏览器缓存
+      img.src = isFullBody ? `${slot.sprite}?v=body34g` : slot.sprite;
       img.alt = slot.name || "";
       img.draggable = false;
       el.appendChild(img);

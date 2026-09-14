@@ -1,5 +1,5 @@
 /**
- * 全文第 17～19 节（第六天：10 层狗头 / 9 层红姐俊哥）
+ * 全文第 16 尾～19 节（中层开解 → 回 30 层日常 → 第六天：10 层狗头 / 9 层红姐俊哥）
  *
  * 本章接在 27 层之后连续播放，中间不停；
  * 结束后直接进入第 20 节（回 30 层讲故事）。
@@ -15,31 +15,56 @@ window.STORY_CH17_19 = {
     junge: "assets/chars/junge_front.png",
   },
   beats: [
-    // —— 17 蒙太奇 → 10 层 ——
-    { type: "scene", scene: "floor10_outside" },
+    // —— 16 尾：中层开解 → 回 30 层日常 → 第六天 10 层 ——
     {
       type: "narration",
-      text: "这两天下来，我严格按照朝九晚五做任务。\n每天一回 30 层，思思就像小猫咪扑来，蹭着脸说：「妈妈，我好想你。」",
+      text: "我一路往下，看到了很多熟悉又陌生的诡异。\n有寻亲路上惨死的男孩，有被校园霸凌致死的少年。\n我选择一一开解他们，并宽慰了他们。\n……",
       clearSprites: true,
+    },
+    { type: "scene", scene: "floor30_living" },
+    {
+      type: "narration",
+      text: "这两天下来，我严格按照朝九晚五的作息做任务。\n每天一回 30 层，思思就像个小猫咪一样扑来，在我脸上蹭啊蹭——",
+    },
+    {
+      type: "say",
+      speaker: "思思",
+      sprite: "assets/chars/sisi_hug.png",
+      side: "left",
+      text: "妈妈，我好想你。",
     },
     {
       type: "narration",
-      text: "断头则主动做好饭菜，一脸哀怨拉着我的手：「其实我也想你。」\n救命！父女争锋，我享清福。",
+      text: "我简直都要萌化了。\n断头则主动做好饭菜，一脸哀怨地拉着我的小手，不甘示弱地低语——",
+      clearSprites: true,
+    },
+    {
+      type: "say",
+      speaker: "断头",
+      sprite: "assets/chars/boss_front.png",
+      side: "right",
+      text: "其实我也想你。",
+    },
+    {
+      type: "narration",
+      text: "救命！父女争锋，我享清福。\n多来点，我好爱。",
+      clearSprites: true,
     },
     { type: "danmaku", text: "死丫头，命真好，让我演两集！" },
     { type: "danmaku", text: "别想了，你上 30 层，我看你活不过一集（天）。" },
     {
       type: "narration",
-      text: "一路往下，我开解了许多熟悉又陌生的诡异——\n寻亲路上惨死的男孩，被校园霸凌致死的少年……\n插科打诨间，时间来到了第六天。我也来到了第 10 层。",
+      text: "这样插科打诨，时间来到了第六天。\n我也来到了第 10 层。",
     },
+    { type: "scene", scene: "floor10_outside" },
     { type: "horror", set: 22 },
     {
       type: "narration",
-      text: "此时手里已有一堆拜访卡片。\n从 20 层往下 Boss 没那么恐怖，我还发现了两名幸存玩家——\n不过他们不敢跟我作对，也轮不到他们帮我攻略邻居。",
+      text: "此时，我手里已经收集了一堆拜访卡片。\n其实从 20 层开始往下，Boss 没有那么恐怖了，我发现了两名幸存玩家——\n不过，他们都不敢跟我作对。当然，也轮不到他们帮我攻略邻居。",
     },
     {
       type: "narration",
-      text: "邻居们都很热情：主动开门，主动送卡片。\n后来他们也跟着我一起往下，来到第 10 层。",
+      text: "因为这些邻居都很热情，也很可爱啊，主动开门，主动把拜访卡片送到我手中哎！\n后来，他们也跟着我一起拜访其他邻居，我们一路往下，来到了第 10 层。",
     },
     { type: "danmaku", text: "30 层四尊大佛盯着呢，敢不送吗？" },
     {
@@ -59,7 +84,7 @@ window.STORY_CH17_19 = {
     },
     {
       type: "narration",
-      text: "它递过来三张拜访卡片，忽然面向我，微微俯下身——\n即使高度近视，我也看清了犬齿间的碎肉，甚至还卡着人类的指头。",
+      text: "它递过来三张拜访卡片。我张了张嘴，正想说点什么，它忽然面向我，微微俯下身——\n即使高度近视，我也看清了犬齿间的碎肉，甚至还卡着人类的指头。",
       clearSprites: true,
     },
     { type: "horror", set: 38 },
@@ -99,7 +124,7 @@ window.STORY_CH17_19 = {
     },
     {
       type: "narration",
-      text: "菜刀这才气哼哼安稳下来。\n部分人类大肆虐杀猫狗，所以在这个世界，出现只在第 10 层虐杀人类的人身狗头——听起来，似乎很公平。",
+      text: "菜刀这才气哼哼安稳下来。\n人身狗头怪物和人类的恩怨，或许要不仅追溯到它活着时，更要追溯到如今的现实。\n部分人类大肆虐杀猫狗，所以在这个世界，出现只在第 10 层虐杀人类的人身狗头——听起来，似乎很公平。",
       clearSprites: true,
     },
     {
@@ -126,7 +151,7 @@ window.STORY_CH17_19 = {
     },
     {
       type: "narration",
-      text: "气氛正尴尬时，楼下传来凄厉的呼救声。",
+      text: "气氛正尴尬时，楼下传来凄厉的呼救声。\n人身狗头怪物狰狞一笑——",
       clearSprites: true,
     },
     {
@@ -158,17 +183,6 @@ window.STORY_CH17_19 = {
     {
       type: "narration",
       text: "玩家群里死一般沉寂。\n我打头阵，学生妹紧随其后，健身教练断后，小心翼翼朝下走去。",
-    },
-    {
-      type: "say",
-      speaker: "学生妹",
-      sprite: "assets/chars/suxiaomo_front.png",
-      side: "left",
-      text: "宁、宁念姐……真的只剩五个人了吗？",
-      slots: [
-        { side: "left", sprite: "assets/chars/suxiaomo_front.png", name: "学生妹" },
-        { side: "right", sprite: "assets/chars/fangyuan_front.png", name: "健身教练" },
-      ],
     },
     {
       type: "narration",
@@ -238,7 +252,7 @@ window.STORY_CH17_19 = {
       speaker: "红姐",
       sprite: "assets/chars/hongjie_front.png",
       side: "left",
-      text: "宁念，我错了！我只是太想复活了，求求你不要杀我们！",
+      text: "宁念，我错了，我错了，我只是太想复活了，求求你不要杀我们，饶我们一命！",
       slots: [
         { side: "left", sprite: "assets/chars/hongjie_front.png", name: "红姐" },
         { side: "right", sprite: "assets/chars/junge_front.png", name: "俊哥" },
@@ -269,19 +283,20 @@ window.STORY_CH17_19 = {
     },
     {
       type: "narration",
-      text: "我把红姐俊哥靠杀同伴收集的拜访卡片，让给了学生妹和健身教练，\n并交代他们可以去拜访 20～30 层——就说是 30 层宁念的朋友。",
+      text: "我把红姐俊哥靠杀同伴收集的拜访卡片，让给了学生妹和健身教练，并交代他们可以去拜访 20～30 层。",
       clearSprites: true,
     },
     {
       type: "say",
-      speaker: "学生妹",
-      sprite: "assets/chars/suxiaomo_front.png",
-      side: "left",
-      text: "谢谢宁念姐！我们一定好好活下去！",
-      slots: [
-        { side: "left", sprite: "assets/chars/suxiaomo_front.png", name: "学生妹" },
-        { side: "right", sprite: "assets/chars/fangyuan_front.png", name: "健身教练" },
-      ],
+      speaker: "宁念",
+      sprite: "assets/chars/ningnian_front.png",
+      side: "right",
+      text: "如果诡异针对你们，就说你们是 30 层宁念的朋友，她叫你们上来拿卡片的。",
+    },
+    {
+      type: "narration",
+      text: "学生妹和健身教练感激不已，连连对我鞠躬。",
+      clearSprites: true,
     },
     {
       type: "narration",

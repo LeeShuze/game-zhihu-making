@@ -140,7 +140,9 @@
     btn.style.height = (h / 100) * contentRect.height + "px";
 
     const img = document.createElement("img");
-    img.src = spot.sprite;
+    img.src = /\.(png|webp|jpe?g)(\?|$)/i.test(spot.sprite)
+      ? `${spot.sprite}${spot.sprite.includes("?") ? "&" : "?"}v=npc2`
+      : spot.sprite;
     img.alt = spot.name || "";
     img.draggable = false;
     btn.appendChild(img);
@@ -160,11 +162,25 @@
     hotspotLayer.appendChild(btn);
   }
 
+  function promptToChoiceLabel(message) {
+    let label = String(message || "是否继续剧情？")
+      .trim()
+      .replace(/^是否/, "")
+      .replace(/[？?]+$/, "")
+      .trim();
+    if (!label) label = "继续剧情";
+    if (!/[。！.!?]$/.test(label)) label += "。";
+    return label;
+  }
+
   function openStoryConfirm(message) {
     const panel = document.getElementById("storyConfirm");
     const text = document.getElementById("storyConfirmText");
+    const yesLabel = document.getElementById("storyConfirmYesLabel");
     if (!panel) return;
-    if (text) text.textContent = message || "是否继续剧情？";
+    const prompt = message || "是否继续剧情？";
+    if (text) text.textContent = prompt;
+    if (yesLabel) yesLabel.textContent = promptToChoiceLabel(prompt);
     panel.hidden = false;
   }
 
@@ -443,9 +459,6 @@
   });
   document.getElementById("storyConfirmNo")?.addEventListener("click", () => {
     closeStoryConfirm();
-  });
-  document.getElementById("storyConfirm")?.addEventListener("click", (e) => {
-    if (e.target.id === "storyConfirm") closeStoryConfirm();
   });
 
   // 对外暴露，方便以后剧情/对话触发跳转与变体切换

@@ -64,7 +64,7 @@ window.STORY_CH20_END = {
     },
     {
       type: "say",
-      speaker: "断头",
+      speaker: "家人",
       sprite: "assets/chars/boss_front.png",
       side: "right",
       text: "刚刚你那两位朋友上来，我们已经把拜访卡片给他们啦。\n接下来，你的第七天属于我们。让我们做一天真正的一家人吧！",
@@ -214,7 +214,7 @@ window.STORY_CH20_END = {
       speaker: "断头",
       sprite: "assets/chars/boss_front.png",
       side: "left",
-      text: "宁念，你猜到了钥匙是什么，所以才这么抗拒，对吗？\n可是如果你迷失在这里，你并不会变成我们诡异中的一员，你只会变成四周的一缕黑雾。",
+      text: "宁念，你猜到了钥匙是什么，所以才这么抗拒，对吗？\n可是，你不知道，如果你迷失在这里，你并不会变成我们诡异中的一员，你只会变成四周的一缕黑雾。",
       slots: [
         { side: "left", sprite: "assets/chars/boss_front.png", name: "断头" },
         { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
@@ -253,7 +253,17 @@ window.STORY_CH20_END = {
     },
     {
       type: "narration",
-      text: "打开门的钥匙，就是诡异家人们的心——必须是「幸福之心」。\n方远和苏小茉哀求地看向他们的诡异家人。\n可那三只诡异齐齐摇头：心不是红色的，不是幸福之心。剖开胸膛，果然是三颗死寂的黑心。",
+      text: "打开门的钥匙，就是诡异家人们的心——必须是「幸福之心」。\n方远和苏小茉哀求地看向他们的诡异家人。",
+      clearSprites: true,
+    },
+    {
+      type: "say",
+      speaker: "诡异家人",
+      text: "抱歉，我们的心不是红色的，不是幸福之心。",
+    },
+    {
+      type: "narration",
+      text: "说着，他们顺手剖开胸膛。果然，是三颗死寂的、黑色的心脏。",
     },
     {
       type: "narration",
@@ -302,7 +312,7 @@ window.STORY_CH20_END = {
       speaker: "思思",
       sprite: "assets/chars/sisi_blood_front.png",
       side: "left",
-      text: "妈妈，思思也舍不得你，但是思思更希望你鲜活地活着——\n即使那个地方没有思思，而不是变成一缕黑雾。",
+      text: "妈妈，思思也舍不得你，但是，思思更希望你鲜活地活着，即使那个地方没有思思，而不是变成一缕黑雾。",
       slots: [
         { side: "left", sprite: "assets/chars/sisi_blood_front.png", name: "思思" },
         { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },

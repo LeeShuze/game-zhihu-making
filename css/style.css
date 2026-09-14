@@ -746,7 +746,7 @@ body[data-aspect="fit"] .stage {
   border: 0;
   background: transparent;
   cursor: pointer;
-  overflow: hidden;
+  overflow: visible;
   pointer-events: auto;
 }
 
@@ -755,12 +755,14 @@ body[data-aspect="fit"] .stage {
   left: 50%;
   bottom: 0;
   width: auto;
-  height: 130%;
-  max-width: none;
+  /* 探索中断用全身立绘：比对话立绘小一圈，并保证头顶不被裁掉 */
+  height: 88%;
+  max-width: 92%;
+  max-height: 88%;
   transform: translateX(-50%);
   object-fit: contain;
-  object-position: center top;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
+  object-position: center bottom;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
   pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
@@ -769,7 +771,7 @@ body[data-aspect="fit"] .stage {
 .story-npc-tag {
   position: absolute;
   left: 50%;
-  bottom: 10%;
+  bottom: 2%;
   z-index: 2;
   transform: translateX(-50%);
   padding: 4px 10px;
@@ -797,60 +799,109 @@ body[data-aspect="fit"] .stage {
   position: absolute;
   inset: 0;
   z-index: 120;
-  display: grid;
-  place-items: center;
-  background: rgba(8, 10, 14, 0.55);
-  backdrop-filter: blur(4px);
+  pointer-events: auto;
+  background: transparent;
 }
 
 .story-confirm[hidden] {
   display: none;
 }
 
-.story-confirm-card {
-  width: min(360px, calc(100% - 40px));
-  padding: 22px 20px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(22, 24, 30, 0.94);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-  text-align: center;
+.story-confirm-dock {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-.story-confirm-card p {
-  margin: 0 0 18px;
-  font-size: 16px;
-  line-height: 1.5;
+.story-confirm-dialog {
+  position: absolute;
+  left: 3.5%;
+  right: 3.5%;
+  bottom: 48px;
+  z-index: 2;
+  min-height: 18%;
+  padding: 20px 28px 28px;
+  border-radius: 10px;
+  background: rgba(28, 30, 36, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  color: #f5f5f5;
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
-.story-confirm-actions {
+.story-confirm-text {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 21px);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.story-confirm-choices {
+  position: absolute;
+  right: 4.5%;
+  bottom: calc(48px + 22%);
+  z-index: 3;
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  width: min(420px, 46%);
+  pointer-events: auto;
 }
 
-.story-confirm-btn {
+.story-choice {
   appearance: none;
-  min-width: 96px;
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 18px 10px 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
+  background: rgba(18, 20, 26, 0.62);
+  color: #f5f5f5;
   font: inherit;
-  font-size: 14px;
+  font-size: clamp(14px, 1.5vw, 17px);
+  letter-spacing: 0.02em;
+  text-align: left;
   cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 120ms ease;
 }
 
-.story-confirm-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
+.story-choice:hover,
+.story-choice:focus-visible {
+  outline: none;
+  background: rgba(36, 40, 50, 0.78);
+  border-color: #fff;
+  transform: translateX(-2px);
 }
 
-.story-confirm-btn.is-primary {
-  border-color: rgba(220, 90, 110, 0.45);
-  background: rgba(160, 48, 64, 0.45);
+.story-choice:active {
+  transform: translateX(0);
 }
 
-.story-confirm-btn.is-primary:hover {
-  background: rgba(180, 58, 78, 0.6);
+.story-choice-icon {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  color: #fff;
+}
+
+.story-choice-icon svg {
+  display: block;
+}
+
+.story-choice-label {
+  flex: 1 1 auto;
+  line-height: 1.35;
 }

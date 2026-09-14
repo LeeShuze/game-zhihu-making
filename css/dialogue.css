@@ -85,6 +85,19 @@
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
 }
 
+/* 宁念 / 思思全身立绘：露出约 3/4 身（头～大腿；脚部向下裁切） */
+.vn-character.is-body-34 {
+  width: min(36%, 400px);
+}
+
+.vn-character.is-body-34 img {
+  /* 相对容器向下偏移，裁掉脚部，保留头顶 */
+  top: auto;
+  bottom: -33%;
+  height: 133%;
+  object-position: center top;
+}
+
 .vn-dialog {
   position: absolute;
   left: 3.5%;

@@ -188,7 +188,7 @@ window.STORY_CH13_16 = {
       speaker: "宁念",
       sprite: "assets/chars/ningnian_front.png",
       side: "right",
-      text: "被圈住的从来都不是你，而是他们。\n你去世后那些年，他们或长大、或结婚、或生子，但总归不幸福——有些人甚至进了精神病院。",
+      text: "你知道吗？被圈住的从来都不是你，而是他们。\n你去世后那些年，他们或长大、或结婚、或生子，但总归不幸福——有些人甚至进了精神病院，因为他们过于偏执。",
       slots: [
         { side: "left", sprite: "assets/chars/girl28_front.png", name: "28层女孩" },
         { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
@@ -294,7 +294,7 @@ window.STORY_CH13_16 = {
       speaker: "小男孩",
       sprite: "assets/chars/boy27_front.png",
       side: "left",
-      text: "偷偷告诉你，其实三天前入住我家的那个人，就是曾经欺负过妈妈的人。\n临死之前他苦苦哀求，说只是在网上转发了一条相关动态，没有骂过妈妈。\n可我还是杀了他——因为我觉得，他是帮凶。",
+      text: "嘿嘿，偷偷告诉你，其实三天前入住我家的那个人，就是曾经欺负过妈妈的人。\n临死之前他苦苦哀求，说只是在网上转发了一条相关动态，没有骂过妈妈。\n可我还是杀了他——因为我觉得，他是帮凶。",
       slots: [
         { side: "left", sprite: "assets/chars/boy27_front.png", name: "小男孩" },
         { side: "right", sprite: "assets/chars/mom27_front.png", name: "27层母亲" },
@@ -321,18 +321,23 @@ window.STORY_CH13_16 = {
       speaker: "宁念",
       sprite: "assets/chars/ningnian_front.png",
       side: "right",
-      text: "你也是超人。\n你的超能力，就是让你的妈妈变开心。",
+      text: "你也是超人。",
       slots: [
         { side: "left", sprite: "assets/chars/boy27_front.png", name: "小男孩" },
         { side: "right", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
       ],
+    },
+    {
+      type: "narration",
+      text: "你的超能力，就是让你的妈妈变开心。",
+      clearSprites: true,
     },
     { type: "danmaku", text: "我就说，我们宁神是有大智慧的人！我的女神！" },
     { type: "danmaku", text: "好感人，念念真的是天使，是来救赎大家的天使。" },
     { type: "horror", set: 3 },
     {
       type: "narration",
-      text: "拜访卡片到手。\n再往下还有许多诡异——可中层场景尚未全部收录。\n这两天先按朝九晚五做任务；第六天，再从楼梯下到 10 层。",
+      text: "拜访卡片到手。\n再往下，还有许多熟悉又陌生的诡异等着我。",
       clearSprites: true,
     },
   ],

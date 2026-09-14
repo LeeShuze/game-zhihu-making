@@ -52,7 +52,7 @@ window.STORY_CH07_12 = {
       speaker: "思思",
       sprite: "assets/chars/sisi_front.png",
       side: "left",
-      text: "妈妈会伤心的……不能让妈妈伤心。",
+      text: "妈妈会伤心的，不能让妈妈伤心。",
     },
     { type: "danmaku", text: "第一次看到血衣萝莉的鬼气波动这么大！最后裙子居然一直是白色了！" },
     { type: "danmaku", text: "我靠，这个新玩家改变了血衣萝莉的属性？" },
@@ -72,7 +72,7 @@ window.STORY_CH07_12 = {
         scene: "master_bedroom",
         name: "思思",
         sprite: "assets/chars/sisi_front.png",
-        area: { x: 58, y: 18, w: 30, h: 72 },
+        area: { x: 64, y: 28, w: 22, h: 52 },
         bubble: "思思",
         prompt: "是否继续剧情？",
       },
@@ -86,15 +86,20 @@ window.STORY_CH07_12 = {
     { type: "horror", add: 3 },
     {
       type: "system",
-      text: "【红姐私聊】宁念，你还好吗？前三天一定要抓紧攻略自己的「家人」。\n怪我没提前说选房规则，害你住进 30 层——就当补偿啦。",
-    },
-    {
-      type: "system",
-      text: "【俊哥】干吗告诉这些新玩家？帮助他们对我们又没好处。\n【红姐】相识一场不容易，别这样计较。",
+      text: "【红姐私聊】宁念，你还好吗？昨天我一直在和二层的诡异交锋，一直没来得及跟你说——前三天，你一定要抓紧时间攻略自己的「家人」。\n我看过当初明神的直播，这是我已知的信息，就当给你的补偿了。怪我没有提前说选房规则，导致你不得不住在 30 层。",
     },
     {
       type: "narration",
-      text: "这两个老玩家，有点意思。\n我把脸贴到屏幕上回复：【我挺好的，多谢关心。】",
+      text: "除此之外，红姐还在群里给不少新玩家提建议。俊哥则偶尔出来骂一句——",
+      clearSprites: true,
+    },
+    {
+      type: "system",
+      text: "【俊哥】干吗告诉这些新玩家，我看你就是太善良，帮助他们对我们又没什么好处。\n【红姐】相识一场不容易，别这样计较。",
+    },
+    {
+      type: "narration",
+      text: "于是，生存下来的玩家都对红姐感恩戴德。\n这两个老玩家，有点意思。\n我微微一笑，把脸贴到屏幕上回复：【我挺好的，多谢关心。】",
     },
     { type: "scene", scene: "floor30_living" },
     {
@@ -114,7 +119,7 @@ window.STORY_CH07_12 = {
     },
     {
       type: "narration",
-      text: "话没说完，他忽然捂着心口倒下。\n思思急忙扶住他，我也冲过去用身体接住——\n副本机制禁止 NPC 向玩家透露具体通关信息。",
+      text: "话没说完，他忽然捂着心口倒下。\n思思皱着小脸，一脸担忧地扶住他，我也冲过去用身体接住——\n副本机制限定 NPC 对玩家透露具体的通关信息。",
       clearSprites: true,
     },
     { type: "horror", set: 12 },
@@ -266,11 +271,26 @@ window.STORY_CH07_12 = {
     },
     {
       type: "narration",
-      text: "话音未落，老头从肚皮甩出一截肠子，把思思飞速卷进厨房。\n「乖孙女，还是来陪爷爷做饭吧。」",
+      text: "话音未落，老头从肚皮甩出一截肠子，把思思飞速卷进厨房。",
+    },
+    {
+      type: "say",
+      speaker: "肠大爷",
+      sprite: "assets/chars/yeye_enter.png",
+      side: "right",
+      text: "乖孙女，还是来陪爷爷做饭吧。",
     },
     {
       type: "narration",
-      text: "我看着满地的「毛线」，回房间找针线：\n「哎，老爸这毛衣脱线了怎么也不补补呢？」",
+      text: "我看着满地的「毛线」，回房间找针线——",
+      clearSprites: true,
+    },
+    {
+      type: "say",
+      speaker: "宁念",
+      sprite: "assets/chars/ningnian_front.png",
+      side: "left",
+      text: "哎，老爸这毛衣脱线了怎么也不补补呢？",
     },
     { type: "scene", scene: "dining" },
     {
@@ -287,11 +307,16 @@ window.STORY_CH07_12 = {
     { type: "danmaku", text: "闹半天，敢情宁念不是胆子大，是眼瞎？" },
     { type: "danmaku", text: "我愿称她为宁神，开辟了一条意想不到的通关思路。" },
     {
+      type: "narration",
+      text: "这句话刚飘过，我就薅住了老头的肠子，开始缝补。\n因为讲究公媳避嫌，距离还是有点远，始终没看清是什么，只感觉湿漉漉的，于是抱怨——",
+      clearSprites: true,
+    },
+    {
       type: "say",
       speaker: "宁念",
       sprite: "assets/chars/ningnian_sew.png",
       side: "left",
-      text: "这毛线怎么还是湿的？是不是刚刚洗菜掉进水池了？",
+      text: "这毛线怎么还是湿的？老爸，是不是你刚刚洗菜掉进水池了？",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_sew.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/yeye_enter.png", name: "肠大爷" },
@@ -310,7 +335,7 @@ window.STORY_CH07_12 = {
     },
     {
       type: "narration",
-      text: "缝好后，大家才尴尬地坐到桌前。\n见大家不动，我自来熟夹了一筷子「鸡爪」。",
+      text: "缝好后，大家才和（尴）谐（尬）地坐在桌子前准备吃饭。\n见大家不动，我自来熟地夹了一筷子「鸡爪」。\n见我往嘴里送，四个诡异满脸邪恶地盯着我。",
     },
     {
       type: "say",
@@ -341,6 +366,11 @@ window.STORY_CH07_12 = {
       ],
     },
     {
+      type: "narration",
+      text: "血衣萝莉一脸看好戏。肠老头和黑老太满脸惊喜，急忙叫儿子把我抱进房间休息。\n断头则面红耳赤，抱着我仓皇起身，凑在我耳边低声呵斥——",
+      clearSprites: true,
+    },
+    {
       type: "say",
       speaker: "断头",
       sprite: "assets/chars/boss_front.png",
@@ -350,6 +380,11 @@ window.STORY_CH07_12 = {
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
       ],
+    },
+    {
+      type: "narration",
+      text: "太纯情了，连「睡过」这两个字都说不出口。\n见此，我歪倒在他怀里，趁机摸了摸腹肌，也压低声音说——",
+      clearSprites: true,
     },
     {
       type: "say",
@@ -378,7 +413,7 @@ window.STORY_CH07_12 = {
       speaker: "断头",
       sprite: "assets/chars/boss_front.png",
       side: "right",
-      text: "宁念，很抱歉你对我的爱意。虽然时间很短，但我对你也的确有不一样的感觉。",
+      text: "宁念，很抱歉你对我的爱意。虽然时间很短，但我承认，我对你也的确有不一样的感觉。",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
@@ -389,7 +424,7 @@ window.STORY_CH07_12 = {
       speaker: "断头",
       sprite: "assets/chars/boss_front.png",
       side: "right",
-      text: "只是，思思是我的孩子。即使这是游戏，我也希望取得她的赞同再生二胎——\n这是我身为父亲的责任。",
+      text: "只是，思思是我的孩子。即使这是假的，是你们口中的游戏，我也希望能取得她的赞同再生二胎——\n这是我身为一位父亲的责任。",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_front.png", name: "断头" },
@@ -467,7 +502,7 @@ window.STORY_CH07_12 = {
       speaker: "宁念",
       sprite: "assets/chars/ningnian_front.png",
       side: "right",
-      text: "住手！你们不要再打了啦！\n我跟你们两个一起睡就是了啦！",
+      text: "住手！你们不要再打了啦！不要再打了啦！\n我跟你们两个一起睡就是了啦！",
     },
     {
       type: "narration",
@@ -477,12 +512,17 @@ window.STORY_CH07_12 = {
     { type: "horror", set: 4 },
     { type: "system", text: "初始玩家：30 人；现存活：12 人。" },
     {
+      type: "narration",
+      text: "第三天晚上，我忽然收到红姐的私聊——",
+      clearSprites: true,
+    },
+    {
       type: "system",
-      text: "【红姐私聊】明天开始就要拜访邻居了。听说拜访完 30 层全部诡异，才能解锁全部楼层。\n你在最难的 30 层，一定要帮大家……可惜明神死在第六天，拜访断头大 Boss 时被杀，我们也不知道第七天会发生什么。",
+      text: "【红姐私聊】宁念，明天开始就要拜访邻居了。听说只有拜访完这栋楼 30 层的全部诡异，才能解锁全部楼层，然后或许会出现最终的通关提示。\n你在最难的 30 层，一定要帮助大家成功拜访 30 楼的诡异啊。当然，除去那些已经死去的玩家，剩下的玩家也会帮你说话，帮你拜访他们的「家人」。\n可惜了，当时明神死在第六天，拜访断头大 Boss 时被杀，我们也不知道第七天会发生什么。",
     },
     {
       type: "narration",
-      text: "我伸了个懒腰，淡定回复：【多谢，我当然愿意互帮互助啦。】\n既然不知道第七天，那就先完成接下来三天的任务吧——\n出门拜访前，还可以再在家里准备一下。",
+      text: "看着红姐关切的话语和透露的信息，我伸了个懒腰，淡定回复：【多谢，我当然愿意互帮互助啦。】\n既然不知道第七天会发生什么，那就先好好完成接下来三天的任务吧——\n出门拜访前，还可以再在家里准备一下。",
     },
     {
       type: "pause",
@@ -494,7 +534,7 @@ window.STORY_CH07_12 = {
         scene: "floor30_living",
         name: "断头",
         sprite: "assets/chars/boss_front.png",
-        area: { x: 62, y: 14, w: 28, h: 74 },
+        area: { x: 66, y: 24, w: 22, h: 56 },
         bubble: "断头",
         prompt: "是否继续剧情？",
       },
@@ -540,7 +580,7 @@ window.STORY_CH07_12 = {
       speaker: "黑老太",
       sprite: "assets/chars/nainai_front.png",
       side: "right",
-      text: "你们没读《幸福之家居民管理条例》吗？\n原住民这三天不能下楼跟着儿媳，只能靠她自己。",
+      text: "不是，你们没有读《幸福之家居民管理条例》吗？\n我们身为原住民，这三天是不能下楼跟着儿媳的，只能靠她自己。",
       slots: [
         { side: "left", sprite: "assets/chars/yeye_patched_front.png", name: "肠大爷" },
         { side: "right", sprite: "assets/chars/nainai_front.png", name: "黑老太" },
@@ -556,7 +596,7 @@ window.STORY_CH07_12 = {
       speaker: "断头",
       sprite: "assets/chars/boss_head.png",
       side: "right",
-      text: "念念，拿着它，没人敢对你动手。\n它能断我的头，定然也能断楼下所有诡异的头。",
+      text: "念念，拿着它，没人敢对你动手。\n论实力，我应当算幸福之家最强，它能断我的头，定然也能断楼下所有诡异的头。",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/boss_head.png", name: "断头" },
@@ -583,11 +623,16 @@ window.STORY_CH07_12 = {
     },
     { type: "system", text: "恭喜玩家，获得 SSSS 级道具「天使之裙」。" },
     {
+      type: "narration",
+      text: "他忽然扯开缝好的「毛衣」，从里面掏出一个毛线团，递到我面前。",
+      clearSprites: true,
+    },
+    {
       type: "say",
       speaker: "肠大爷",
       sprite: "assets/chars/yeye_patched_front.png",
       side: "right",
-      text: "（掏出毛线团）拿着，防身。",
+      text: "拿着，防身。",
       slots: [
         { side: "left", sprite: "assets/chars/ningnian_front.png", name: "宁念" },
         { side: "right", sprite: "assets/chars/yeye_patched_front.png", name: "肠大爷" },
