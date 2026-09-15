@@ -68,6 +68,6 @@ http
       res.writeHead(400).end('Bad request');
     }
   })
-  .listen(port, '127.0.0.1', () => {
+  .listen(port, process.env.HOST || '127.0.0.1', () => {
     console.log(`幸福之家：http://127.0.0.1:${port}/`);
   });

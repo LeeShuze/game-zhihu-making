@@ -1,13 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
   <head>
+
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%231771ed'/%3E%3Cpath d='M10 9h9v24h-9zm12 0h8v24h-8z' fill='white'/%3E%3C/svg%3E">
     <meta charset="UTF-8" />
     
     
     
     
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script src="../mobile/device.js?v=4"></script>
     <meta
       name="description"
       content="《幸福之家》——一楼值班室的第一人称 3D 沉浸式序章。"
@@ -22,7 +24,7 @@
     <script
       type="module"
       crossorigin
-      src="./big-pengu-runtime/assets/index-Hxh_mXsm.js"
+      src="./big-pengu-runtime/assets/index-Hxh_mXsm.js?mobile=7"
     ></script>
     <link
       rel="stylesheet"
@@ -92,9 +94,14 @@
       @keyframes happiness-departure-reveal { from { opacity:0; margin-right:-12px; } to { opacity:1; margin-right:0; } }
       @media (prefers-reduced-motion:reduce) { #happiness-go-30f { animation:none; transition:none; } }
     </style>
-    <script type="module" crossorigin src="./assets/index-Bb-fNYbi.js"></script>
-  </head>
+    <script type="module" crossorigin src="./assets/index-Bb-fNYbi.js?mobile=7"></script>
+      <link rel="stylesheet" href="../mobile/layout.css?v=7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="幸福之家">
+</head>
   <body>
+    <section id="mobile-orientation" role="dialog" aria-modal="true"><div class="rotate-phone" aria-hidden="true">↻</div><h1>请先解锁旋转，再横置手机</h1><p>请关闭手机的“竖屏锁定”或“旋转锁定”。<br>安卓手机请开启“自动旋转”。<br>然后将手机横过来，画面转为横屏后会自动进入游戏。</p></section>
     <div id="root"></div>
     <script id="site-audio-script">
       (function () {

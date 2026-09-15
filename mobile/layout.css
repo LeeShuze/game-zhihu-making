@@ -1,0 +1,59 @@
+/* Only the selected touch profile gets these overrides. */
+#mobile-orientation{display:none}html[data-mobile="true"]{height:100%;overflow:hidden}html[data-mobile="true"] body{height:var(--game-height,100dvh);min-width:0!important;overscroll-behavior:none}html[data-mobile="true"] button{touch-action:manipulation}html[data-mobile="true"] #mobile-fullscreen{position:fixed;right:max(10px,env(safe-area-inset-right));top:max(6px,env(safe-area-inset-top));z-index:2100;border:1px solid #aaa5;background:#101214b0;color:#ddd;padding:8px 12px;font-size:12px;border-radius:4px}html[data-mobile="true"].portrait-blocked #mobile-orientation{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:28px;background:#090c10;color:#e2e4df;text-align:center}#mobile-orientation h1{font:400 24px/1.5 "Songti SC",serif;letter-spacing:.14em}#mobile-orientation p{font:14px/2 sans-serif;color:#a5adaf}#mobile-orientation .rotate-phone{font:64px/1 sans-serif}html[data-mobile="true"] input,html[data-mobile="true"] select{font-size:16px}html[data-mobile="true"] #mobile-duty-hint{position:fixed;left:max(14px,env(safe-area-inset-left));bottom:5px;z-index:60;color:#ddd9;font:11px sans-serif;pointer-events:none}
+@media(orientation:landscape){
+html[data-mobile="true"] #app,html[data-mobile="true"] #root{min-width:0!important;height:var(--game-height,100dvh)!important}
+/* Entrance: keep the book/details split but reduce desktop whitespace. */
+html[data-mobile="true"] .masthead{padding:14px max(22px,env(safe-area-inset-left))}
+html[data-mobile="true"] .gallery-wordmark{font-size:20px}html[data-mobile="true"] .gallery-leaning-mascot{max-height:66px}
+html[data-mobile="true"] .selection-panel{bottom:35px;max-width:65%;padding:0 12px}html[data-mobile="true"] .selection-copy h2{font-size:20px}
+html[data-mobile="true"] .archive-footer{bottom:10px;padding:0 22px}html[data-mobile="true"] .detail-panel{min-width:0;padding:0}
+html[data-mobile="true"] .detail-header{top:10px;right:18px}html[data-mobile="true"] .detail-content{max-height:calc(var(--game-height) - 70px);overflow-y:auto;padding:12px 0}
+html[data-mobile="true"] .detail-title{font-size:26px;line-height:1.2}html[data-mobile="true"] .detail-summary{font-size:13px;line-height:1.65}
+html[data-mobile="true"] #story-confirm h2{font-size:26px}
+/* Duty: remove desktop minimum and keep collection/close controls inside the viewport. */
+html[data-mobile="true"] #root canvas{touch-action:none}
+html[data-mobile="true"] [aria-label^="查看"]>section{left:auto!important;right:max(12px,env(safe-area-inset-right))!important;width:35%!important;max-height:88dvh;overflow:auto;padding:14px!important}
+html[data-mobile="true"] [aria-label^="查看"] h2{font-size:20px!important;margin-bottom:10px!important}html[data-mobile="true"] [aria-label^="查看"] p{font-size:13px!important;margin-bottom:12px!important}html[data-mobile="true"] [aria-label^="查看"] button{min-height:42px;padding:9px!important;font-size:14px!important}
+html[data-mobile="true"] #happiness-go-30f{right:max(12px,env(safe-area-inset-right))!important;padding:12px 16px!important;font-size:15px!important;max-width:40vw}
+html[data-mobile="true"] .bpas-panel{max-height:88dvh;overflow:auto;padding:18px!important}
+/* Elevator: left thumb moves, right thumb drags the canvas to look. */
+html[data-mobile="true"] #joystick{display:block!important;left:max(24px,env(safe-area-inset-left));bottom:max(24px,env(safe-area-inset-bottom));width:108px;height:108px;touch-action:none}
+html[data-mobile="true"] .inventory{right:max(18px,env(safe-area-inset-right));bottom:18px;font-size:12px;gap:10px}
+html[data-mobile="true"] #torch-item{min-height:44px;padding:10px 12px}html[data-mobile="true"] #objective{top:14px;font-size:13px;max-width:65vw}
+html[data-mobile="true"] #welcome{padding:5vh max(28px,env(safe-area-inset-left));overflow:auto}html[data-mobile="true"] .welcome-card{max-width:440px}html[data-mobile="true"] .welcome-card h1{font-size:26px;margin:12px 0}html[data-mobile="true"] .welcome-card p{font-size:14px;line-height:1.7;margin:12px 0}html[data-mobile="true"] #start{padding:12px 28px;margin:6px 0}html[data-mobile="true"] .welcome-card .controls{font-size:12px}
+#mobile-pause{position:absolute;top:12px;left:max(16px,env(safe-area-inset-left));pointer-events:auto;padding:10px 14px;background:#101410b0;color:#ddd;border:1px solid #aaa5;border-radius:4px}
+/* AVG: use the available landscape area, readable dialogue and scrollable panels. */
+html[data-mobile="true"] body>.stage{width:calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right));height:var(--game-height,100dvh)}
+html[data-mobile="true"] .vn-dialog{bottom:44px;padding:12px 20px;min-height:90px;max-height:43dvh;overflow-y:auto}html[data-mobile="true"] .vn-dialog-name{font-size:14px;margin-bottom:5px}html[data-mobile="true"] .vn-dialog-text{font-size:15px;line-height:1.65}html[data-mobile="true"] .vn-dialog-hint{font-size:10px}
+html[data-mobile="true"] .vn-menu{bottom:4px;gap:3px;padding:3px 8px;max-width:100%;overflow-x:auto;justify-content:center}html[data-mobile="true"] .vn-menu-btn{min-height:36px;padding:6px 10px;font-size:12px;white-space:nowrap}
+html[data-mobile="true"] .hud-right{top:8px;right:70px;transform:scale(.8);transform-origin:top right}html[data-mobile="true"] .explore-hint{top:8px;left:12px;max-width:40%;padding:8px 12px}html[data-mobile="true"] .explore-hint p{font-size:12px;margin:3px 0}
+html[data-mobile="true"] .settings-shell{width:94vw;height:92dvh;max-height:92dvh;grid-template-columns:120px 1fr}html[data-mobile="true"] .settings-main{padding:18px;overflow-y:auto}html[data-mobile="true"] .settings-nav{padding:14px 10px;overflow-y:auto}html[data-mobile="true"] .settings-nav-btn{padding:10px;font-size:13px}html[data-mobile="true"] .settings-pane-head{margin-bottom:12px}html[data-mobile="true"] .settings-pane-head h2{font-size:23px}
+html[data-mobile="true"] .history-panel,html[data-mobile="true"] .char-info-shell{max-height:90dvh;overflow:auto}
+html[data-mobile="true"] .story-confirm-dock{bottom:48px;max-height:80dvh;overflow-y:auto}html[data-mobile="true"] .story-choice{padding:10px 16px;font-size:14px;min-height:42px}html[data-mobile="true"] .story-confirm-text{font-size:15px}
+}
+@media(orientation:landscape){
+html[data-mobile="true"] #app{min-height:0!important}
+html[data-mobile="true"] .masthead{top:0;left:0}
+html[data-mobile="true"] #detail-title{font-size:24px;margin:8px 0}html[data-mobile="true"] .detail-author{font-size:14px}html[data-mobile="true"] .detail-panel{inset:12% 5% 8% 58%;overflow-y:auto}html[data-mobile="true"] .detail-panel p{font-size:13px;line-height:1.65}html[data-mobile="true"] .detail-panel button{padding:10px 14px;min-height:42px}
+html[data-mobile="true"] #book-title{font-size:20px}html[data-mobile="true"] #mobile-fullscreen:has(~ #mobile-orientation){display:block}
+}
+
+@media(orientation:landscape){html[data-mobile="true"] .key-hint{display:none}html[data-mobile="true"] .inventory{max-width:55vw;flex-wrap:wrap;justify-content:flex-end}html[data-mobile="true"] #exit-story{font-size:14px;padding:12px 20px;min-height:44px}html[data-mobile="true"] .detail-scroll{min-height:0}html[data-mobile="true"] .detail-header{position:relative;top:auto;right:auto;flex-shrink:0}html[data-mobile="true"] .detail-footer{flex-shrink:0;padding-top:8px}html[data-mobile="true"] .close-detail{font-size:12px}html[data-mobile="true"] .close-detail-icon{width:30px;height:30px}}
+
+/* CSS and script share the same orientation query, including delayed mobile resize events. */
+@media(orientation:landscape){html[data-mobile="true"].portrait-blocked #mobile-orientation{display:none}}
+
+/* Read clues at source resolution; zoomed pages scroll without moving the scene. */
+html[data-mobile="true"] .mobile-clue-viewer{position:fixed;inset:0 0 auto;height:var(--game-height,100dvh);z-index:3000;box-sizing:border-box;padding:8px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:6px;background:#11110ff5;color:#e0d8c4;font:13px/1.4 sans-serif}
+.mobile-clue-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0}.mobile-clue-toolbar>span{margin-right:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mobile-clue-toolbar button{min-height:44px;white-space:nowrap;padding:8px 12px;background:#29271f;border:1px solid #817251;color:#eee4cf;border-radius:3px}
+.mobile-clue-scroll{position:relative;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch}
+.mobile-clue-scroll img{display:block;user-select:none}.mobile-clue-status{position:absolute;left:10px;top:10px;background:#171710dd;padding:10px;pointer-events:none}
+.mobile-clue-viewer small{text-align:center;color:#aaa18c;flex-shrink:0}
+@media(orientation:landscape){
+html[data-mobile="true"] #app>canvas{height:var(--game-height,100dvh)!important}
+html[data-mobile="true"] #welcome,html[data-mobile="true"] #hud{height:var(--game-height,100dvh);box-sizing:border-box}
+html[data-mobile="true"] [aria-label^="查看"]>section{max-height:calc(var(--game-height) - 24px)}
+}
+
+html[data-mobile="true"] .mobile-clue-viewer.mobile-clue-photo{background:rgba(17,17,15,.38)}

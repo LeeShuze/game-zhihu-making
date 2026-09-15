@@ -1,0 +1,708 @@
+[
+  {
+    "source": "duty/big-pengu-runtime/models/CLIP.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/CLIP.glb",
+    "originalBytes": 7522888,
+    "mobileBytes": 1980552,
+    "textures": [
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ]
+    ],
+    "sourceSha256": "7a568f455e2178095c8fbca5075417d0b4a7a59ff480003b66a9dced491b8b9e"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/antique_desk.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/antique_desk.glb",
+    "originalBytes": 20541312,
+    "mobileBytes": 5562268,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "8f8b2a72c0616613c93078490530d075744831b7f6fa7436ab54a3be9e11e986"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/ashtray.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/ashtray.glb",
+    "originalBytes": 3495260,
+    "mobileBytes": 1000076,
+    "textures": [
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ]
+    ],
+    "sourceSha256": "e478bbd27a01a4b22a6f10ce1a956882d1dbd9b212399175d65ec2c8ab5b9460"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/board_background.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/board_background.glb",
+    "originalBytes": 8810016,
+    "mobileBytes": 2197572,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "c72322ac5d96806dce014749598ac2429793f5c57bd800f14190e2c592844eae"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/coffee.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/coffee.glb",
+    "originalBytes": 295148,
+    "mobileBytes": 295148,
+    "textures": [],
+    "sourceSha256": "66682cc2fb31e4ccfb1265d85beae991886b8b340ca845f124f5f2f6fee6fdd2"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/document_file_folder.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/document_file_folder.glb",
+    "originalBytes": 3760036,
+    "mobileBytes": 1444632,
+    "textures": [
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ]
+    ],
+    "sourceSha256": "b76278b17af716f53e9e2e044bac9d5811be7d19a039fc832c64bfa36da3b3d9"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/flashlight.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/flashlight.glb",
+    "originalBytes": 8922148,
+    "mobileBytes": 2779068,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "d11f7c1f700815c9ae07cc4a56cf2190b47d940d9413a2e16c7d5f1f4e55c339"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/handcuffs.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/handcuffs.glb",
+    "originalBytes": 6354948,
+    "mobileBytes": 1755996,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "cf362c8c347b98e9583838954c461e04e3a82c41e9b8ab23c0ee817260412d85"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/key_with_tag.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/key_with_tag.glb",
+    "originalBytes": 2162724,
+    "mobileBytes": 2162724,
+    "textures": [],
+    "sourceSha256": "b9c4037c95c6c66c5e2597031e9c4a67955a192aefd3185804c6bdec811dd2d1"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/lamp.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/lamp.glb",
+    "originalBytes": 2438816,
+    "mobileBytes": 1188568,
+    "textures": [
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ]
+    ],
+    "sourceSha256": "6f0c18023faf2869a3be3a6d1bfd130f15768b008d6135a39097fac9dc81cbea"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/phone.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/phone.glb",
+    "originalBytes": 7817268,
+    "mobileBytes": 4206444,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "a47f2219feea3e46c0d562273078ec61aaff7378d99103173e768d528b3056da"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/retrofuturistic_computer.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/retrofuturistic_computer.glb",
+    "originalBytes": 14095220,
+    "mobileBytes": 3485060,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "1f0a735a987be228c97fd86be9d588aa6593162403ff718cc98c67a47045e25e"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/vintage_sony_digimatic_flip_clock_radio.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/vintage_sony_digimatic_flip_clock_radio.glb",
+    "originalBytes": 30179296,
+    "mobileBytes": 3079676,
+    "textures": [
+      [
+        4096,
+        4096,
+        1024,
+        1024
+      ],
+      [
+        4096,
+        4096,
+        1024,
+        1024
+      ],
+      [
+        4096,
+        4096,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "3d3a2f601afeb6a5f4825145f5726842a8a24fb2ba168a1a2f5c564af6432599"
+  },
+  {
+    "source": "duty/big-pengu-runtime/models/zippo_lighter_-_60s_style_vietnam_war_era.glb",
+    "mobile": "duty/big-pengu-runtime/models/mobile/zippo_lighter_-_60s_style_vietnam_war_era.glb",
+    "originalBytes": 9355388,
+    "mobileBytes": 2709084,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "2c1ab701a0454ef82267f55fd99483c72fb2b454297389c3cc3edd410f8e9f72"
+  },
+  {
+    "source": "elevator/models/flashlight.glb",
+    "mobile": "elevator/models/mobile/flashlight.glb",
+    "originalBytes": 8922148,
+    "mobileBytes": 2779068,
+    "textures": [
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ]
+    ],
+    "sourceSha256": "d11f7c1f700815c9ae07cc4a56cf2190b47d940d9413a2e16c7d5f1f4e55c339"
+  },
+  {
+    "source": "elevator/models/parking-elevator.glb",
+    "mobile": "elevator/models/mobile/parking-elevator.glb",
+    "originalBytes": 87021260,
+    "mobileBytes": 24733164,
+    "textures": [
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        2048,
+        2048,
+        1024,
+        1024
+      ],
+      [
+        1024,
+        1024,
+        512,
+        512
+      ]
+    ],
+    "sourceSha256": "6a492290c7923636b537c67b10c4d79c6d222a90d6baf547f4da95b0fe6d88bc"
+  }
+]

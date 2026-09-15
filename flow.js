@@ -26,6 +26,7 @@ export function blackCover() {
   document.body.append(cover);return cover;
 }
 export function warmNext(manifestUrl) {
+  if(window.HappinessDevice?.mobile)return;
   // Browser-managed low-priority downloads only. No iframe, JS execution, audio or WebGL context.
   const controller=new AbortController();
   addEventListener('pagehide',()=>controller.abort(),{once:true});

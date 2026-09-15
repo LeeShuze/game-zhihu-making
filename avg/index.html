@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
+
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script src="../mobile/device.js?v=4"></script>
     <title>幸福之家</title>
     <link rel="stylesheet" href="css/style.css?v=flavor31" />
     <link rel="stylesheet" href="css/dialogue.css?v=type1" />
-  </head>
+      <link rel="stylesheet" href="../mobile/layout.css?v=4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="幸福之家">
+</head>
   <body data-aspect="16-9" style="--aspect-w: 16; --aspect-h: 9">
+    <section id="mobile-orientation" role="dialog" aria-modal="true"><div class="rotate-phone" aria-hidden="true">↻</div><h1>请先解锁旋转，再横置手机</h1><p>请关闭手机的“竖屏锁定”或“旋转锁定”。<br>安卓手机请开启“自动旋转”。<br>然后将手机横过来，画面转为横屏后会自动进入游戏。</p></section>
     <div class="stage" id="stage">
       <div class="scene-root">
         <img id="sceneImage" class="scene-image" alt="" draggable="false" />
