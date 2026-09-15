@@ -2,9 +2,13 @@ import { recordStage, blackCover } from './flow.js';
 
 addEventListener(
   'zhihu:enter-story',
-  (event) => {
+  async (event) => {
     event.stopImmediatePropagation();
     event.preventDefault();
+    if (!await window.HappinessAuth?.requireLogin()) {
+      event.detail?.fail?.();
+      return;
+    }
     const next = new URL('avg/', document.baseURI);
     const cover = blackCover();
     cover.style.transition = 'none';

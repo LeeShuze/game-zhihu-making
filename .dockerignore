@@ -1,0 +1,12 @@
+.git
+node_modules
+.env
+.env.*
+*.db
+*.db-*
+*.sqlite*
+tests
+tools
+docs
+.DS_Store
+**/_bak_opaque
